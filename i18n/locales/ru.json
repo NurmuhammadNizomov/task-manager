@@ -1,0 +1,31 @@
+﻿{
+  "auth": {
+    "loginTitle": "Вход",
+    "loginSubtitle": "Введите email и пароль, чтобы продолжить.",
+    "registerTitle": "Регистрация",
+    "registerSubtitle": "Создайте аккаунт, чтобы начать.",
+    "email": "Email",
+    "password": "Пароль",
+    "confirmPassword": "Подтвердите пароль",
+    "fullName": "Полное имя",
+    "forgot": "Забыли пароль?",
+    "showPassword": "Показать пароль",
+    "hidePassword": "Скрыть пароль",
+    "continue": "Перейти в дашборд",
+    "createAccount": "Создать аккаунт",
+    "newHere": "Еще нет аккаунта?",
+    "alreadyHave": "Уже есть аккаунт?",
+    "goToSignup": "Перейти к регистрации",
+    "goToSignin": "Перейти ко входу",
+    "language": "Язык",
+    "theme": "Тема"
+  },
+  "theme": {
+    "system": "Системная",
+    "light": "Светлая",
+    "dark": "Темная"
+  },
+  "common": {
+    "home": "На главную"
+  }
+}

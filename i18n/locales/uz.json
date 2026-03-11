@@ -1,0 +1,31 @@
+﻿{
+  "auth": {
+    "loginTitle": "Kirish",
+    "loginSubtitle": "Davom etish uchun email va parolni kiriting.",
+    "registerTitle": "Ro'yxatdan o'tish",
+    "registerSubtitle": "Boshlash uchun akkaunt yarating.",
+    "email": "Email",
+    "password": "Parol",
+    "confirmPassword": "Parolni tasdiqlang",
+    "fullName": "To'liq ism",
+    "forgot": "Parol esdan chiqdimi?",
+    "showPassword": "Parolni ko'rsatish",
+    "hidePassword": "Parolni yashirish",
+    "continue": "Dashboardga o'tish",
+    "createAccount": "Akkaunt yaratish",
+    "newHere": "Akkauntingiz yo'qmi?",
+    "alreadyHave": "Akkauntingiz bormi?",
+    "goToSignup": "Ro'yxatdan o'tishga o'tish",
+    "goToSignin": "Kirishga o'tish",
+    "language": "Til",
+    "theme": "Mavzu"
+  },
+  "theme": {
+    "system": "Tizim",
+    "light": "Yorug'",
+    "dark": "Qorong'i"
+  },
+  "common": {
+    "home": "Bosh sahifaga"
+  }
+}
