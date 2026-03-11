@@ -1,20 +1,23 @@
+﻿<script setup lang="ts">
+const { t } = useI18n()
+</script>
+
 <template>
   <UContainer class="py-12 md:py-16">
     <section class="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
       <div>
-        <UBadge color="primary" variant="soft" class="mb-4">Nuxt 4 + @nuxt/ui</UBadge>
+        <UBadge color="primary" variant="soft" class="mb-4">{{ t('home.badge') }}</UBadge>
         <h1 class="text-4xl font-semibold tracking-tight md:text-5xl">
-          Task Manager uchun toza auth va dashboard bazasi
+          {{ t('home.title') }}
         </h1>
         <p class="mt-4 max-w-2xl text-gray-600 dark:text-gray-300">
-          Login, register, main va dashboard sahifalari alohida layoutlarda ishlaydi.
-          Hozir UI flow tayyor, keyingi qadamda API/auth logikasini to'g'ridan-to'g'ri ulaymiz.
+          {{ t('home.description') }}
         </p>
 
         <div class="mt-8 flex flex-wrap gap-3">
-          <UButton to="/login" size="lg">Login</UButton>
-          <UButton to="/register" size="lg" variant="outline">Register</UButton>
-          <UButton to="/dashboard" size="lg" variant="soft" color="neutral">Open dashboard</UButton>
+          <UButton to="/login" size="lg">{{ t('home.actions.login') }}</UButton>
+          <UButton to="/register" size="lg" variant="outline">{{ t('home.actions.register') }}</UButton>
+          <UButton to="/dashboard" size="lg" variant="soft" color="neutral">{{ t('home.actions.openDashboard') }}</UButton>
         </div>
       </div>
 
@@ -23,7 +26,7 @@
           <div class="grid gap-4">
             <div class="rounded-xl bg-white/90 p-4 dark:bg-gray-900/80">
               <div class="flex items-center justify-between">
-                <p class="text-sm text-gray-500">Active users</p>
+                <p class="text-sm text-gray-500">{{ t('home.stats.activeUsers') }}</p>
                 <Icon name="lucide:users" class="text-primary-600" />
               </div>
               <p class="mt-2 text-2xl font-semibold">1,284</p>
@@ -31,7 +34,7 @@
 
             <div class="rounded-xl bg-white/90 p-4 dark:bg-gray-900/80">
               <div class="flex items-center justify-between">
-                <p class="text-sm text-gray-500">Tasks completed</p>
+                <p class="text-sm text-gray-500">{{ t('home.stats.tasksCompleted') }}</p>
                 <Icon name="lucide:check-check" class="text-primary-600" />
               </div>
               <p class="mt-2 text-2xl font-semibold">92%</p>
@@ -39,10 +42,10 @@
 
             <div class="rounded-xl bg-white/90 p-4 dark:bg-gray-900/80">
               <div class="flex items-center justify-between">
-                <p class="text-sm text-gray-500">System status</p>
+                <p class="text-sm text-gray-500">{{ t('home.stats.systemStatus') }}</p>
                 <Icon name="lucide:activity" class="text-green-600" />
               </div>
-              <p class="mt-2 text-2xl font-semibold">Healthy</p>
+              <p class="mt-2 text-2xl font-semibold">{{ t('home.stats.healthy') }}</p>
             </div>
           </div>
         </div>

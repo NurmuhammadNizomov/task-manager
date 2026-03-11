@@ -1,50 +1,42 @@
-﻿import { createError } from 'h3'
 import { UserModel } from '../../modules/auth/models/User'
 import { AuthSessionModel } from '../../modules/auth/models/AuthSession'
 import { connectDB } from '../../utils/db'
+import { tServer } from '../../utils/i18n'
 import { setRefreshTokenCookie } from '../../modules/auth/utils/cookies'
 import { signAccessToken, signRefreshToken } from '../../modules/auth/utils/jwt'
 import { enforceRateLimit } from '../../modules/auth/utils/rate-limit'
 import { loginSchema, readValidatedBody } from '../../modules/auth/utils/validation'
+import { apiError, apiSuccess, defineApiHandler } from '../../utils/api-response'
 
-type LoginBody = {
+interface LoginBody {
   email: string
   password: string
 }
 
-export default defineEventHandler(async (event) => {
+export default defineApiHandler(async (event) => {
   await enforceRateLimit(event, 'login')
   const body = await readValidatedBody<LoginBody>(event, loginSchema)
 
-  await connectDB()
+  await connectDB(event)
 
   const user = await UserModel.findOne({ email: body.email })
 
   if (!user) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Invalid email or password'
-    })
+    apiError(401, 'AUTH_INVALID_CREDENTIALS', tServer(event, 'errors.invalidCredentials'))
   }
 
   const isPasswordCorrect = await user.comparePassword(body.password)
 
   if (!isPasswordCorrect) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Invalid email or password'
-    })
+    apiError(401, 'AUTH_INVALID_CREDENTIALS', tServer(event, 'errors.invalidCredentials'))
   }
 
   if (!user.isEmailVerified) {
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Please verify your email first'
-    })
+    apiError(403, 'AUTH_EMAIL_NOT_VERIFIED', tServer(event, 'errors.emailNotVerified'))
   }
 
-  const accessToken = signAccessToken(String(user._id), user.email)
-  const refreshToken = signRefreshToken(String(user._id), user.email)
+  const accessToken = signAccessToken(String(user._id), user.email, event)
+  const refreshToken = signRefreshToken(String(user._id), user.email, event)
 
   await AuthSessionModel.findOneAndUpdate(
     { userId: user._id },
@@ -54,8 +46,7 @@ export default defineEventHandler(async (event) => {
 
   setRefreshTokenCookie(event, refreshToken)
 
-  return {
-    success: true,
+  return apiSuccess({
     accessToken,
     refreshToken,
     user: {
@@ -65,9 +56,5 @@ export default defineEventHandler(async (event) => {
       language: user.language,
       theme: user.theme
     }
-  }
+  })
 })
-
-
-
-

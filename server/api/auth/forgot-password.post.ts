@@ -2,24 +2,26 @@ import { UserModel } from '../../modules/auth/models/User'
 import { AuthOtpModel } from '../../modules/auth/models/AuthOtp'
 import { AuthTokenModel } from '../../modules/auth/models/AuthToken'
 import { connectDB } from '../../utils/db'
+import { tServer } from '../../utils/i18n'
 import { createOtpCode, hashOtpCode } from '../../modules/auth/utils/otp'
 import { enforceRateLimit } from '../../modules/auth/utils/rate-limit'
 import { sendPasswordResetEmail } from '../../modules/auth/utils/resend'
 import { createRawToken, hashToken } from '../../modules/auth/utils/token'
 import { forgotPasswordSchema, readValidatedBody } from '../../modules/auth/utils/validation'
+import { apiSuccess, defineApiHandler } from '../../utils/api-response'
 
-type ForgotPasswordBody = {
+interface ForgotPasswordBody {
   email: string
 }
 
 const PASSWORD_RESET_TOKEN_LIFETIME_MS = 1000 * 60 * 15
 const PASSWORD_RESET_OTP_LIFETIME_MS = 1000 * 60 * 10
 
-export default defineEventHandler(async (event) => {
+export default defineApiHandler(async (event) => {
   await enforceRateLimit(event, 'forgotPassword')
   const body = await readValidatedBody<ForgotPasswordBody>(event, forgotPasswordSchema)
 
-  await connectDB()
+  await connectDB(event)
 
   const user = await UserModel.findOne({ email: body.email })
 
@@ -66,11 +68,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  return {
-    success: true,
-    message: 'If that email exists, a reset link and OTP code have been sent.'
-  }
+  return apiSuccess({
+    message: tServer(event, 'success.forgotPasswordSent')
+  })
 })
-
-
-

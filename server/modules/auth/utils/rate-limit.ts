@@ -1,5 +1,7 @@
 import { RateLimiterMemory } from 'rate-limiter-flexible'
-import { createError, getRequestIP, type H3Event } from 'h3'
+import { getRequestIP, type H3Event } from 'h3'
+import { tServer } from '../../../utils/i18n'
+import { apiError } from '../../../utils/api-response'
 
 const limiters = {
   register: new RateLimiterMemory({ points: 5, duration: 60 }),
@@ -16,9 +18,6 @@ export const enforceRateLimit = async (event: H3Event, key: LimiterKey) => {
   try {
     await limiters[key].consume(ip)
   } catch {
-    throw createError({
-      statusCode: 429,
-      statusMessage: 'Too many requests. Please try again later.'
-    })
+    apiError(429, 'RATE_LIMIT_EXCEEDED', tServer(event, 'errors.tooManyRequests'))
   }
 }

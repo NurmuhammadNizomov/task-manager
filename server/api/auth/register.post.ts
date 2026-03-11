@@ -1,15 +1,16 @@
-﻿import { createError } from 'h3'
 import { UserModel } from '../../modules/auth/models/User'
 import { AuthOtpModel } from '../../modules/auth/models/AuthOtp'
 import { AuthTokenModel } from '../../modules/auth/models/AuthToken'
 import { connectDB } from '../../utils/db'
+import { tServer } from '../../utils/i18n'
 import { createOtpCode, hashOtpCode } from '../../modules/auth/utils/otp'
 import { enforceRateLimit } from '../../modules/auth/utils/rate-limit'
 import { sendVerificationEmail } from '../../modules/auth/utils/resend'
 import { createRawToken, hashToken } from '../../modules/auth/utils/token'
 import { readValidatedBody, registerSchema } from '../../modules/auth/utils/validation'
+import { apiError, apiSuccess, defineApiHandler } from '../../utils/api-response'
 
-type RegisterBody = {
+interface RegisterBody {
   fullName: string
   email: string
   password: string
@@ -20,19 +21,16 @@ type RegisterBody = {
 const EMAIL_VERIFY_TOKEN_LIFETIME_MS = 1000 * 60 * 60 * 24
 const EMAIL_VERIFY_OTP_LIFETIME_MS = 1000 * 60 * 10
 
-export default defineEventHandler(async (event) => {
+export default defineApiHandler(async (event) => {
   await enforceRateLimit(event, 'register')
   const body = await readValidatedBody<RegisterBody>(event, registerSchema)
 
-  await connectDB()
+  await connectDB(event)
 
   const existingUser = await UserModel.findOne({ email: body.email }).lean()
 
   if (existingUser) {
-    throw createError({
-      statusCode: 409,
-      statusMessage: 'User with this email already exists'
-    })
+    apiError(409, 'AUTH_USER_ALREADY_EXISTS', tServer(event, 'errors.userAlreadyExists'))
   }
 
   const verificationTokenRaw = createRawToken()
@@ -87,11 +85,10 @@ export default defineEventHandler(async (event) => {
     otpCode: verificationOtpCode
   })
 
-  return {
-    success: true,
+  return apiSuccess({
     message: mailResult.sent
-      ? 'Registration successful. Verify email via link or OTP code.'
-      : 'Registration successful. Configure RESEND to enable email verification.',
+      ? tServer(event, 'success.registerVerifyWithEmail')
+      : tServer(event, 'success.registerVerifyResendNotConfigured'),
     user: {
       id: user._id,
       fullName: user.fullName,
@@ -100,6 +97,5 @@ export default defineEventHandler(async (event) => {
       language: user.language,
       theme: user.theme
     }
-  }
+  })
 })
-

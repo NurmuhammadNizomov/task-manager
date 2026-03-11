@@ -77,8 +77,8 @@ const submit = async () => {
   try {
     if (form.password !== form.confirmPassword) {
       toast.add({
-        title: 'Validation error',
-        description: 'Passwords do not match.',
+        title: t('auth.validationError'),
+        description: t('auth.passwordsDoNotMatch'),
         color: 'error',
         icon: 'lucide:circle-alert'
       })
@@ -98,8 +98,8 @@ const submit = async () => {
     })
 
     toast.add({
-      title: 'Success',
-      description: 'Account created successfully.',
+      title: t('common.success'),
+      description: t('auth.registerSuccess'),
       color: 'success',
       icon: 'lucide:check-circle'
     })
@@ -107,8 +107,9 @@ const submit = async () => {
     await navigateTo('/login')
   } catch (error: any) {
     toast.add({
-      title: 'Register failed',
-      description: error?.data?.statusMessage || error?.message || 'Please try again.',
+      title: t('auth.registerFailed'),
+      description:
+        error?.data?.error?.message || error?.data?.statusMessage || error?.message || t('common.tryAgain'),
       color: 'error',
       icon: 'lucide:circle-alert'
     })
@@ -129,7 +130,7 @@ const submit = async () => {
 
     <form class="space-y-4" @submit.prevent="submit">
       <UFormField :label="t('auth.fullName')">
-        <UInput v-model="form.fullName" size="xl" class="w-full" autocomplete="name" placeholder="John Doe" />
+        <UInput v-model="form.fullName" size="xl" class="w-full" autocomplete="name" :placeholder="t('auth.placeholders.fullName')" />
       </UFormField>
 
       <UFormField :label="t('auth.email')">
@@ -139,7 +140,7 @@ const submit = async () => {
           size="xl"
           class="w-full"
           autocomplete="email"
-          placeholder="you@example.com"
+          :placeholder="t('auth.placeholders.email')"
         />
       </UFormField>
 
@@ -151,7 +152,7 @@ const submit = async () => {
             size="xl"
             class="w-full pe-10"
             autocomplete="new-password"
-            placeholder="********"
+            :placeholder="t('auth.placeholders.password')"
           />
           <button
             type="button"
@@ -171,7 +172,7 @@ const submit = async () => {
             size="xl"
             class="w-full pe-10"
             autocomplete="new-password"
-            placeholder="********"
+            :placeholder="t('auth.placeholders.password')"
           />
           <button
             type="button"

@@ -1,39 +1,35 @@
-import { createError, getCookie } from 'h3'
+import { getCookie } from 'h3'
 import { UserModel } from '../../modules/auth/models/User'
 import { AuthSessionModel } from '../../modules/auth/models/AuthSession'
 import { connectDB } from '../../utils/db'
+import { tServer } from '../../utils/i18n'
 import { setRefreshTokenCookie } from '../../modules/auth/utils/cookies'
 import { signAccessToken, signRefreshToken, verifyRefreshToken } from '../../modules/auth/utils/jwt'
 import { enforceRateLimit } from '../../modules/auth/utils/rate-limit'
 import { readValidatedBody, refreshSchema } from '../../modules/auth/utils/validation'
+import { apiError, apiSuccess, defineApiHandler } from '../../utils/api-response'
 
-type RefreshBody = {
+interface RefreshBody {
   refreshToken?: string
 }
 
-export default defineEventHandler(async (event) => {
+export default defineApiHandler(async (event) => {
   await enforceRateLimit(event, 'refresh')
 
   const body = await readValidatedBody<RefreshBody>(event, refreshSchema)
   const refreshToken = body.refreshToken || getCookie(event, 'refresh_token')
 
   if (!refreshToken) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Refresh token is required'
-    })
+    apiError(401, 'AUTH_REFRESH_TOKEN_REQUIRED', tServer(event, 'errors.refreshTokenRequired'))
   }
 
-  await connectDB()
+  await connectDB(event)
 
   let payload
   try {
-    payload = verifyRefreshToken(refreshToken)
+    payload = verifyRefreshToken(refreshToken, event)
   } catch {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Invalid refresh token'
-    })
+    apiError(401, 'AUTH_INVALID_REFRESH_TOKEN', tServer(event, 'errors.invalidRefreshToken'))
   }
 
   const [user, session] = await Promise.all([
@@ -42,14 +38,11 @@ export default defineEventHandler(async (event) => {
   ])
 
   if (!user || !session) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Refresh token is not valid anymore'
-    })
+    apiError(401, 'AUTH_REFRESH_TOKEN_REVOKED', tServer(event, 'errors.refreshTokenNotValidAnymore'))
   }
 
-  const newAccessToken = signAccessToken(String(user._id), user.email)
-  const newRefreshToken = signRefreshToken(String(user._id), user.email)
+  const newAccessToken = signAccessToken(String(user._id), user.email, event)
+  const newRefreshToken = signRefreshToken(String(user._id), user.email, event)
 
   session.accessToken = newAccessToken
   session.refreshToken = newRefreshToken
@@ -57,12 +50,8 @@ export default defineEventHandler(async (event) => {
 
   setRefreshTokenCookie(event, newRefreshToken)
 
-  return {
-    success: true,
+  return apiSuccess({
     accessToken: newAccessToken,
     refreshToken: newRefreshToken
-  }
+  })
 })
-
-
-

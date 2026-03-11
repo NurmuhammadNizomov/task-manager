@@ -25,21 +25,23 @@ const submit = async () => {
       password: form.password
     })
 
-    if (response.user?.language) {
-      await setLocale(response.user.language)
+    const payload = response.data
+
+    if (payload.user?.language) {
+      await setLocale(payload.user.language)
     }
 
-    if (response.user?.theme) {
-      colorMode.preference = response.user.theme
+    if (payload.user?.theme) {
+      colorMode.preference = payload.user.theme
     }
 
     if (import.meta.client) {
-      localStorage.setItem('access_token', response.accessToken)
+      localStorage.setItem('access_token', payload.accessToken)
     }
 
     toast.add({
-      title: 'Success',
-      description: 'You are signed in.',
+      title: t('common.success'),
+      description: t('auth.loginSuccess'),
       color: 'success',
       icon: 'lucide:check-circle'
     })
@@ -47,8 +49,8 @@ const submit = async () => {
     await navigateTo('/dashboard')
   } catch (error: any) {
     toast.add({
-      title: 'Login failed',
-      description: error?.data?.statusMessage || 'Please try again.',
+      title: t('auth.loginFailed'),
+      description: error?.data?.error?.message || error?.data?.statusMessage || t('common.tryAgain'),
       color: 'error',
       icon: 'lucide:circle-alert'
     })
@@ -75,7 +77,7 @@ const submit = async () => {
           size="xl"
           class="w-full"
           autocomplete="email"
-          placeholder="you@example.com"
+          :placeholder="t('auth.placeholders.email')"
         />
       </UFormField>
 
@@ -87,7 +89,7 @@ const submit = async () => {
             size="xl"
             class="w-full pe-10"
             autocomplete="current-password"
-            placeholder="********"
+            :placeholder="t('auth.placeholders.password')"
           />
           <button
             type="button"

@@ -47,7 +47,7 @@ const savePreference = async (payload: { language?: AppLanguage; theme?: 'system
   try {
     await updatePreferences(accessToken, payload)
   } catch {
-    // Ignore preference sync errors in layout-level UI.
+    // Ignore preference sync errors in header-level UI.
   }
 }
 
@@ -84,48 +84,21 @@ watch(
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-100 dark:bg-gray-950">
-    <div class="mx-auto flex min-h-screen w-full max-w-[1400px] flex-col lg:flex-row">
-      <aside class="w-full border-b border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900 lg:w-72 lg:border-b-0 lg:border-r">
-        <div class="flex items-center gap-3">
+  <header class="sticky top-0 z-20 border-b border-gray-200/80 bg-white/80 backdrop-blur dark:border-gray-800/80 dark:bg-gray-950/80">
+    <UContainer class="py-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <NuxtLink to="/" class="flex items-center gap-3">
           <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary-100 dark:bg-primary-900/40">
-            <Icon name="lucide:layout-dashboard" class="text-primary-700 dark:text-primary-300" />
+            <Icon name="lucide:shield-check" class="text-primary-700 dark:text-primary-300" />
           </div>
           <div>
-            <p class="text-xs uppercase tracking-wider text-gray-500">{{ t('common.appName') }}</p>
-            <p class="font-semibold">{{ t('dashboard.sidebarTitle') }}</p>
+            <p class="text-xs uppercase tracking-widest text-gray-500">{{ t('common.appName') }}</p>
+            <p class="text-lg font-semibold">{{ t('common.appSubtitle') }}</p>
           </div>
-        </div>
+        </NuxtLink>
 
-        <nav class="mt-6 grid gap-2">
-          <UButton variant="soft" color="primary" class="justify-start">
-            <template #leading>
-              <Icon name="lucide:home" />
-            </template>
-            {{ t('dashboard.overview') }}
-          </UButton>
-          <UButton variant="ghost" color="neutral" class="justify-start">
-            <template #leading>
-              <Icon name="lucide:check-square" />
-            </template>
-            {{ t('dashboard.nav.tasks') }}
-          </UButton>
-          <UButton variant="ghost" color="neutral" class="justify-start">
-            <template #leading>
-              <Icon name="lucide:users" />
-            </template>
-            {{ t('dashboard.nav.team') }}
-          </UButton>
-          <UButton variant="ghost" color="neutral" class="justify-start">
-            <template #leading>
-              <Icon name="lucide:settings" />
-            </template>
-            {{ t('dashboard.nav.settings') }}
-          </UButton>
-        </nav>
-
-        <div class="mt-6 flex flex-wrap items-center gap-2 lg:mt-10">
-          <UDropdownMenu :items="languageMenuItems" :content="{ side: 'bottom', align: 'start' }">
+        <div class="flex items-center gap-1">
+          <UDropdownMenu :items="languageMenuItems" :content="{ side: 'bottom', align: 'end' }">
             <UButton
               variant="ghost"
               color="neutral"
@@ -137,7 +110,7 @@ watch(
             </UButton>
           </UDropdownMenu>
 
-          <UDropdownMenu :items="themeMenuItems" :content="{ side: 'bottom', align: 'start' }">
+          <UDropdownMenu :items="themeMenuItems" :content="{ side: 'bottom', align: 'end' }">
             <UButton
               variant="ghost"
               color="neutral"
@@ -147,14 +120,8 @@ watch(
               <Icon :name="currentTheme?.icon || 'lucide:monitor'" class="size-5" />
             </UButton>
           </UDropdownMenu>
-
-          <UButton to="/login" size="sm" variant="ghost" color="neutral">{{ t('dashboard.actions.logout') }}</UButton>
         </div>
-      </aside>
-
-      <div class="flex-1 p-5 md:p-8">
-        <slot />
       </div>
-    </div>
-  </div>
+    </UContainer>
+  </header>
 </template>

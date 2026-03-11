@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   modules: ['@nuxt/ui', '@pinia/nuxt', '@nuxt/image', '@nuxt/icon', '@nuxt/fonts', '@nuxtjs/i18n'],
   css: ['~/assets/css/main.css'],
   colorMode: {
-    preference: 'light',
+    preference: 'system',
     fallback: 'light',
     classSuffix: ''
   },
@@ -18,12 +18,7 @@ export default defineNuxtConfig({
       { code: 'ru', language: 'ru-RU', name: 'Russian', file: 'ru.json' },
       { code: 'uz', language: 'uz-UZ', name: 'Uzbek', file: 'uz.json' }
     ],
-    detectBrowserLanguage: {
-      useCookie: true,
-      cookieKey: 'i18n_redirected',
-      fallbackLocale: 'en',
-      redirectOn: 'root'
-    }
+    detectBrowserLanguage: false
   },
   fonts: {
     families: [

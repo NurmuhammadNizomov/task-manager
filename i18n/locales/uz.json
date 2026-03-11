@@ -18,7 +18,18 @@
     "goToSignup": "Ro'yxatdan o'tishga o'tish",
     "goToSignin": "Kirishga o'tish",
     "language": "Til",
-    "theme": "Mavzu"
+    "theme": "Mavzu",
+    "loginSuccess": "Siz tizimga kirdingiz.",
+    "loginFailed": "Kirishda xatolik",
+    "registerSuccess": "Akkaunt muvaffaqiyatli yaratildi.",
+    "registerFailed": "Ro'yxatdan o'tishda xatolik",
+    "validationError": "Tekshiruv xatosi",
+    "passwordsDoNotMatch": "Parollar mos kelmadi.",
+    "placeholders": {
+      "fullName": "John Doe",
+      "email": "you@example.com",
+      "password": "********"
+    }
   },
   "theme": {
     "system": "Tizim",
@@ -26,6 +37,138 @@
     "dark": "Qorong'i"
   },
   "common": {
-    "home": "Bosh sahifaga"
+    "home": "Bosh sahifaga",
+    "appName": "Vazifalar menejeri",
+    "appSubtitle": "Nuxt autentifikatsiya platformasi",
+    "success": "Muvaffaqiyat",
+    "tryAgain": "Iltimos, qayta urinib ko'ring."
+  },
+  "home": {
+    "badge": "Nuxt 4 + @nuxt/ui",
+    "title": "Task Manager uchun toza auth va dashboard bazasi",
+    "description": "Login, register, main va dashboard sahifalari alohida layoutlarda ishlaydi. UI flow tayyor, keyingi qadamda API/auth logikasini to'liq ulaymiz.",
+    "actions": {
+      "login": "Kirish",
+      "register": "Ro'yxatdan o'tish",
+      "openDashboard": "Dashboardni ochish"
+    },
+    "stats": {
+      "activeUsers": "Faol foydalanuvchilar",
+      "tasksCompleted": "Bajarilgan vazifalar",
+      "systemStatus": "Tizim holati",
+      "healthy": "Barqaror"
+    }
+  },
+  "dashboard": {
+    "overview": "Umumiy ko'rinish",
+    "sidebarTitle": "Dashboard",
+    "title": "Dashboardga xush kelibsiz",
+    "subtitle": "Joriy holat, vazifalar va jamoa faolligi shu yerda ko'rsatiladi.",
+    "actions": {
+      "filter": "Filtr",
+      "newTask": "Yangi vazifa",
+      "logout": "Chiqish"
+    },
+    "stats": {
+      "openTasks": "Ochiq vazifalar",
+      "openTasksHint": "7 ta yuqori prioritet",
+      "completedWeek": "Haftada bajarilgan",
+      "completedWeekHint": "o'tgan haftaga nisbatan +18%",
+      "teamMembers": "Jamoa a'zolari",
+      "teamMembersHint": "hozir 2 tasi online"
+    },
+    "todayTasks": "Bugungi vazifalar",
+    "tasks": {
+      "roadmap": "Mahsulot roadmapini yangilash",
+      "otpResend": "Auth OTP resend flow'ni tuzatish",
+      "deployStaging": "Staging build deploy qilish"
+    },
+    "priority": {
+      "label": "Prioritet",
+      "high": "Yuqori",
+      "medium": "O'rta",
+      "low": "Past"
+    },
+    "status": {
+      "inProgress": "Jarayonda",
+      "planned": "Rejalashtirilgan",
+      "done": "Tayyor"
+    },
+    "nav": {
+      "tasks": "Vazifalar",
+      "team": "Jamoa",
+      "settings": "Sozlamalar"
+    },
+    "quickLinks": {
+      "title": "Tezkor havolalar",
+      "main": "Asosiy sahifaga o'tish",
+      "login": "Kirish sahifasiga o'tish",
+      "register": "Ro'yxatdan o'tish sahifasiga o'tish"
+    }
+  },
+  "errorPage": {
+    "title": "Xatolik yuz berdi",
+    "notFoundTitle": "Sahifa topilmadi",
+    "notFoundMessage": "Qidirilgan sahifa mavjud emas.",
+    "defaultMessage": "Kutilmagan xatolik sodir bo'ldi.",
+    "backHome": "Bosh sahifaga",
+    "dismiss": "Yopish"
+  },
+  "server": {
+    "fields": {
+      "field": "Maydon",
+      "fullName": "To'liq ism",
+      "email": "Email",
+      "password": "Parol",
+      "confirmPassword": "Parol tasdig'i",
+      "language": "Til",
+      "theme": "Mavzu",
+      "token": "Token",
+      "otp": "OTP kod",
+      "refreshToken": "Refresh token"
+    },
+    "validation": {
+      "invalidBody": "So'rov body qismi noto'g'ri.",
+      "required": "{field} kiritilishi shart.",
+      "stringBase": "{field} matn bo'lishi kerak.",
+      "stringEmail": "{field} to'g'ri email formatida bo'lishi kerak.",
+      "stringMin": "{field} kamida {limit} ta belgidan iborat bo'lishi kerak.",
+      "stringMax": "{field} ko'pi bilan {limit} ta belgidan iborat bo'lishi kerak.",
+      "stringPatternBase": "{field} formati noto'g'ri.",
+      "anyOnly": "{field} qiymati qo'llab-quvvatlanmaydi.",
+      "objectMissing": "Yangilash uchun kamida bitta maydon yuboring.",
+      "default": "{field} qiymati noto'g'ri."
+    },
+    "errors": {
+      "userAlreadyExists": "Bu email bilan foydalanuvchi allaqachon mavjud.",
+      "invalidCredentials": "Email yoki parol noto'g'ri.",
+      "emailNotVerified": "Avval emailingizni tasdiqlang.",
+      "otpInvalidOrExpired": "OTP kod noto'g'ri yoki muddati tugagan.",
+      "resetTokenInvalidOrExpired": "Parol tiklash tokeni noto'g'ri yoki muddati tugagan.",
+      "verificationTokenRequired": "Tasdiqlash tokeni kerak.",
+      "verificationTokenInvalidOrExpired": "Tasdiqlash tokeni noto'g'ri yoki muddati tugagan.",
+      "userNotFound": "Foydalanuvchi topilmadi.",
+      "refreshTokenRequired": "Refresh token kerak.",
+      "invalidRefreshToken": "Refresh token noto'g'ri.",
+      "refreshTokenNotValidAnymore": "Refresh token endi yaroqsiz.",
+      "authorizationTokenRequired": "Authorization token kerak.",
+      "invalidAccessToken": "Access token noto'g'ri.",
+      "sessionInvalid": "Sessiya yaroqsiz.",
+      "tooManyRequests": "Juda ko'p so'rov yuborildi. Keyinroq qayta urinib ko'ring.",
+      "mongodbUriNotConfigured": "MONGODB_URI sozlanmagan.",
+      "jwtSecretsNotConfigured": "JWT secretlar sozlanmagan.",
+      "endpointNotFound": "API endpoint topilmadi.",
+      "unexpectedError": "Kutilmagan server xatosi."
+    },
+    "success": {
+      "registerVerifyWithEmail": "Ro'yxatdan o'tish muvaffaqiyatli. Emailni link yoki OTP kod orqali tasdiqlang.",
+      "registerVerifyResendNotConfigured": "Ro'yxatdan o'tish muvaffaqiyatli. Email tasdiqlash uchun RESEND ni sozlang.",
+      "forgotPasswordSent": "Agar email mavjud bo'lsa, parolni tiklash havolasi va OTP kod yuborildi.",
+      "passwordResetSuccess": "Parol muvaffaqiyatli yangilandi. Qayta login qiling.",
+      "emailAlreadyVerified": "Email allaqachon tasdiqlangan.",
+      "emailVerifiedSuccess": "Email muvaffaqiyatli tasdiqlandi.",
+      "loggedOut": "Tizimdan muvaffaqiyatli chiqdingiz.",
+      "preferencesUpdated": "Sozlamalar muvaffaqiyatli yangilandi."
+    }
   }
 }

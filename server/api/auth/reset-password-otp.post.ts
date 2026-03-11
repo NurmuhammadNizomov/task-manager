@@ -1,13 +1,15 @@
-import { createError, deleteCookie } from 'h3'
+import { deleteCookie } from 'h3'
 import { UserModel } from '../../modules/auth/models/User'
 import { AuthOtpModel } from '../../modules/auth/models/AuthOtp'
 import { AuthTokenModel } from '../../modules/auth/models/AuthToken'
 import { AuthSessionModel } from '../../modules/auth/models/AuthSession'
 import { connectDB } from '../../utils/db'
+import { tServer } from '../../utils/i18n'
 import { hashOtpCode } from '../../modules/auth/utils/otp'
 import { readValidatedBody, resetPasswordOtpSchema } from '../../modules/auth/utils/validation'
+import { apiError, apiSuccess, defineApiHandler } from '../../utils/api-response'
 
-type ResetPasswordOtpBody = {
+interface ResetPasswordOtpBody {
   email: string
   otp: string
   password: string
@@ -15,18 +17,15 @@ type ResetPasswordOtpBody = {
 
 const MAX_OTP_ATTEMPTS = 5
 
-export default defineEventHandler(async (event) => {
+export default defineApiHandler(async (event) => {
   const body = await readValidatedBody<ResetPasswordOtpBody>(event, resetPasswordOtpSchema)
 
-  await connectDB()
+  await connectDB(event)
 
   const user = await UserModel.findOne({ email: body.email })
 
   if (!user) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'OTP code is invalid or expired'
-    })
+    apiError(400, 'AUTH_OTP_INVALID_OR_EXPIRED', tServer(event, 'errors.otpInvalidOrExpired'))
   }
 
   const otpEntry = await AuthOtpModel.findOne({
@@ -37,10 +36,7 @@ export default defineEventHandler(async (event) => {
   })
 
   if (!otpEntry) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'OTP code is invalid or expired'
-    })
+    apiError(400, 'AUTH_OTP_INVALID_OR_EXPIRED', tServer(event, 'errors.otpInvalidOrExpired'))
   }
 
   const otpHash = hashOtpCode(body.otp)
@@ -54,10 +50,7 @@ export default defineEventHandler(async (event) => {
 
     await otpEntry.save()
 
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'OTP code is invalid or expired'
-    })
+    apiError(400, 'AUTH_OTP_INVALID_OR_EXPIRED', tServer(event, 'errors.otpInvalidOrExpired'))
   }
 
   user.password = body.password
@@ -81,11 +74,7 @@ export default defineEventHandler(async (event) => {
 
   deleteCookie(event, 'refresh_token', { path: '/' })
 
-  return {
-    success: true,
-    message: 'Password reset successful. Please login again.'
-  }
+  return apiSuccess({
+    message: tServer(event, 'success.passwordResetSuccess')
+  })
 })
-
-
-

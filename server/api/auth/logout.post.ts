@@ -1,16 +1,18 @@
 import { deleteCookie, getCookie } from 'h3'
 import { AuthSessionModel } from '../../modules/auth/models/AuthSession'
 import { connectDB } from '../../utils/db'
+import { tServer } from '../../utils/i18n'
 import { verifyRefreshToken } from '../../modules/auth/utils/jwt'
+import { apiSuccess, defineApiHandler } from '../../utils/api-response'
 
-export default defineEventHandler(async (event) => {
+export default defineApiHandler(async (event) => {
   const refreshToken = getCookie(event, 'refresh_token')
 
-  await connectDB()
+  await connectDB(event)
 
   if (refreshToken) {
     try {
-      const payload = verifyRefreshToken(refreshToken)
+      const payload = verifyRefreshToken(refreshToken, event)
 
       await AuthSessionModel.findOneAndUpdate(
         { userId: payload.sub, refreshToken },
@@ -23,11 +25,7 @@ export default defineEventHandler(async (event) => {
 
   deleteCookie(event, 'refresh_token', { path: '/' })
 
-  return {
-    success: true,
-    message: 'Logged out successfully'
-  }
+  return apiSuccess({
+    message: tServer(event, 'success.loggedOut')
+  })
 })
-
-
-

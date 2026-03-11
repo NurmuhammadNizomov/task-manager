@@ -1,28 +1,63 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 definePageMeta({
   layout: 'dashboard'
 })
 
-const stats = [
-  { title: 'Open tasks', value: '24', icon: 'lucide:list-todo', hint: '7 high priority' },
-  { title: 'Completed this week', value: '61', icon: 'lucide:check-circle-2', hint: '+18% vs last week' },
-  { title: 'Team members', value: '8', icon: 'lucide:users', hint: '2 online now' }
-]
+const { t } = useI18n()
 
-const todayTasks = [
-  { title: 'Product roadmap update', status: 'In progress', priority: 'High' },
-  { title: 'Fix auth OTP resend flow', status: 'Planned', priority: 'Medium' },
-  { title: 'Deploy staging build', status: 'Done', priority: 'Low' }
-]
+type TaskStatus = 'inProgress' | 'planned' | 'done'
+type TaskPriority = 'high' | 'medium' | 'low'
+
+const stats = computed(() => [
+  {
+    title: t('dashboard.stats.openTasks'),
+    value: '24',
+    icon: 'lucide:list-todo',
+    hint: t('dashboard.stats.openTasksHint')
+  },
+  {
+    title: t('dashboard.stats.completedWeek'),
+    value: '61',
+    icon: 'lucide:check-circle-2',
+    hint: t('dashboard.stats.completedWeekHint')
+  },
+  {
+    title: t('dashboard.stats.teamMembers'),
+    value: '8',
+    icon: 'lucide:users',
+    hint: t('dashboard.stats.teamMembersHint')
+  }
+])
+
+const todayTasks = computed(
+  () =>
+    [
+      { title: t('dashboard.tasks.roadmap'), status: 'inProgress', priority: 'high' },
+      { title: t('dashboard.tasks.otpResend'), status: 'planned', priority: 'medium' },
+      { title: t('dashboard.tasks.deployStaging'), status: 'done', priority: 'low' }
+    ] as Array<{ title: string; status: TaskStatus; priority: TaskPriority }>
+)
+
+const resolveStatusColor = (status: TaskStatus) => {
+  if (status === 'done') {
+    return 'success'
+  }
+
+  if (status === 'inProgress') {
+    return 'primary'
+  }
+
+  return 'neutral'
+}
 </script>
 
 <template>
   <div class="space-y-8">
     <section class="flex flex-wrap items-start justify-between gap-3">
       <div>
-        <p class="text-sm text-gray-500">Overview</p>
-        <h1 class="text-3xl font-semibold tracking-tight">Welcome to your dashboard</h1>
-        <p class="mt-2 text-gray-600 dark:text-gray-300">Joriy holat, vazifalar va jamoa aktivligi shu yerda.</p>
+        <p class="text-sm text-gray-500">{{ t('dashboard.overview') }}</p>
+        <h1 class="text-3xl font-semibold tracking-tight">{{ t('dashboard.title') }}</h1>
+        <p class="mt-2 text-gray-600 dark:text-gray-300">{{ t('dashboard.subtitle') }}</p>
       </div>
 
       <div class="flex gap-2">
@@ -30,13 +65,13 @@ const todayTasks = [
           <template #leading>
             <Icon name="lucide:filter" />
           </template>
-          Filter
+          {{ t('dashboard.actions.filter') }}
         </UButton>
         <UButton>
           <template #leading>
             <Icon name="lucide:plus" />
           </template>
-          New task
+          {{ t('dashboard.actions.newTask') }}
         </UButton>
       </div>
     </section>
@@ -59,7 +94,7 @@ const todayTasks = [
     <section class="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
       <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
         <template #header>
-          <h2 class="font-semibold">Today's tasks</h2>
+          <h2 class="font-semibold">{{ t('dashboard.todayTasks') }}</h2>
         </template>
 
         <div class="space-y-3">
@@ -70,13 +105,13 @@ const todayTasks = [
           >
             <div>
               <p class="font-medium">{{ task.title }}</p>
-              <p class="text-xs text-gray-500">Priority: {{ task.priority }}</p>
+              <p class="text-xs text-gray-500">{{ t('dashboard.priority.label') }}: {{ t(`dashboard.priority.${task.priority}`) }}</p>
             </div>
             <UBadge
-              :color="task.status === 'Done' ? 'success' : task.status === 'In progress' ? 'primary' : 'neutral'"
+              :color="resolveStatusColor(task.status)"
               variant="soft"
             >
-              {{ task.status }}
+              {{ t(`dashboard.status.${task.status}`) }}
             </UBadge>
           </div>
         </div>
@@ -84,13 +119,13 @@ const todayTasks = [
 
       <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
         <template #header>
-          <h2 class="font-semibold">Quick links</h2>
+          <h2 class="font-semibold">{{ t('dashboard.quickLinks.title') }}</h2>
         </template>
 
         <div class="grid gap-2">
-          <UButton to="/" variant="ghost" color="neutral" class="justify-start">Go to main page</UButton>
-          <UButton to="/login" variant="ghost" color="neutral" class="justify-start">Go to login</UButton>
-          <UButton to="/register" variant="ghost" color="neutral" class="justify-start">Go to register</UButton>
+          <UButton to="/" variant="ghost" color="neutral" class="justify-start">{{ t('dashboard.quickLinks.main') }}</UButton>
+          <UButton to="/login" variant="ghost" color="neutral" class="justify-start">{{ t('dashboard.quickLinks.login') }}</UButton>
+          <UButton to="/register" variant="ghost" color="neutral" class="justify-start">{{ t('dashboard.quickLinks.register') }}</UButton>
         </div>
       </UCard>
     </section>

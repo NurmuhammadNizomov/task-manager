@@ -1,5 +1,7 @@
 import jwt, { type SignOptions } from 'jsonwebtoken'
-import { createError } from 'h3'
+import { type H3Event } from 'h3'
+import { tServer } from '../../../utils/i18n'
+import { apiError } from '../../../utils/api-response'
 
 
 export type AuthJwtPayload = {
@@ -8,21 +10,18 @@ export type AuthJwtPayload = {
   type: 'access' | 'refresh'
 }
 
-const getJwtConfig = () => {
+const getJwtConfig = (event?: H3Event) => {
   const config = useRuntimeConfig()
 
   if (!config.jwtAccessSecret || !config.jwtRefreshSecret) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'JWT secrets are not configured'
-    })
+    apiError(500, 'CONFIG_JWT_SECRETS_MISSING', tServer(event, 'errors.jwtSecretsNotConfigured'))
   }
 
   return config
 }
 
-export const signAccessToken = (userId: string, email: string) => {
-  const config = getJwtConfig()
+export const signAccessToken = (userId: string, email: string, event?: H3Event) => {
+  const config = getJwtConfig(event)
 
   return jwt.sign(
     { sub: userId, email, type: 'access' },
@@ -31,8 +30,8 @@ export const signAccessToken = (userId: string, email: string) => {
   )
 }
 
-export const signRefreshToken = (userId: string, email: string) => {
-  const config = getJwtConfig()
+export const signRefreshToken = (userId: string, email: string, event?: H3Event) => {
+  const config = getJwtConfig(event)
 
   return jwt.sign(
     { sub: userId, email, type: 'refresh' },
@@ -41,12 +40,12 @@ export const signRefreshToken = (userId: string, email: string) => {
   )
 }
 
-export const verifyAccessToken = (token: string) => {
-  const config = getJwtConfig()
+export const verifyAccessToken = (token: string, event?: H3Event) => {
+  const config = getJwtConfig(event)
   return jwt.verify(token, config.jwtAccessSecret) as AuthJwtPayload
 }
 
-export const verifyRefreshToken = (token: string) => {
-  const config = getJwtConfig()
+export const verifyRefreshToken = (token: string, event?: H3Event) => {
+  const config = getJwtConfig(event)
   return jwt.verify(token, config.jwtRefreshSecret) as AuthJwtPayload
 }

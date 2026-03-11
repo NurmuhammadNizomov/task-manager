@@ -18,7 +18,18 @@
     "goToSignup": "Перейти к регистрации",
     "goToSignin": "Перейти ко входу",
     "language": "Язык",
-    "theme": "Тема"
+    "theme": "Тема",
+    "loginSuccess": "Вы успешно вошли.",
+    "loginFailed": "Ошибка входа",
+    "registerSuccess": "Аккаунт успешно создан.",
+    "registerFailed": "Ошибка регистрации",
+    "validationError": "Ошибка валидации",
+    "passwordsDoNotMatch": "Пароли не совпадают.",
+    "placeholders": {
+      "fullName": "Иван Иванов",
+      "email": "you@example.com",
+      "password": "********"
+    }
   },
   "theme": {
     "system": "Системная",
@@ -26,6 +37,138 @@
     "dark": "Темная"
   },
   "common": {
-    "home": "На главную"
+    "home": "На главную",
+    "appName": "Task Manager",
+    "appSubtitle": "Платформа авторизации Nuxt",
+    "success": "Успешно",
+    "tryAgain": "Пожалуйста, попробуйте снова."
+  },
+  "home": {
+    "badge": "Nuxt 4 + @nuxt/ui",
+    "title": "Чистая база auth и dashboard для Task Manager",
+    "description": "Страницы login, register, main и dashboard разделены по layout'ам. UI flow готов, следующий шаг — полностью подключить API/auth логику.",
+    "actions": {
+      "login": "Войти",
+      "register": "Регистрация",
+      "openDashboard": "Открыть дашборд"
+    },
+    "stats": {
+      "activeUsers": "Активные пользователи",
+      "tasksCompleted": "Выполненные задачи",
+      "systemStatus": "Статус системы",
+      "healthy": "Стабильно"
+    }
+  },
+  "dashboard": {
+    "overview": "Обзор",
+    "sidebarTitle": "Дашборд",
+    "title": "Добро пожаловать в ваш дашборд",
+    "subtitle": "Здесь отображаются текущее состояние, задачи и активность команды.",
+    "actions": {
+      "filter": "Фильтр",
+      "newTask": "Новая задача",
+      "logout": "Выйти"
+    },
+    "stats": {
+      "openTasks": "Открытые задачи",
+      "openTasksHint": "7 высокого приоритета",
+      "completedWeek": "Выполнено за неделю",
+      "completedWeekHint": "+18% к прошлой неделе",
+      "teamMembers": "Участники команды",
+      "teamMembersHint": "2 сейчас онлайн"
+    },
+    "todayTasks": "Задачи на сегодня",
+    "tasks": {
+      "roadmap": "Обновить product roadmap",
+      "otpResend": "Исправить flow resend OTP в auth",
+      "deployStaging": "Деплой staging-сборки"
+    },
+    "priority": {
+      "label": "Приоритет",
+      "high": "Высокий",
+      "medium": "Средний",
+      "low": "Низкий"
+    },
+    "status": {
+      "inProgress": "В процессе",
+      "planned": "Запланировано",
+      "done": "Готово"
+    },
+    "nav": {
+      "tasks": "Задачи",
+      "team": "Команда",
+      "settings": "Настройки"
+    },
+    "quickLinks": {
+      "title": "Быстрые ссылки",
+      "main": "Перейти на главную",
+      "login": "Перейти к входу",
+      "register": "Перейти к регистрации"
+    }
+  },
+  "errorPage": {
+    "title": "Что-то пошло не так",
+    "notFoundTitle": "Страница не найдена",
+    "notFoundMessage": "Запрошенная страница не существует.",
+    "defaultMessage": "Произошла непредвиденная ошибка.",
+    "backHome": "На главную",
+    "dismiss": "Закрыть"
+  },
+  "server": {
+    "fields": {
+      "field": "Поле",
+      "fullName": "Полное имя",
+      "email": "Email",
+      "password": "Пароль",
+      "confirmPassword": "Подтверждение пароля",
+      "language": "Язык",
+      "theme": "Тема",
+      "token": "Токен",
+      "otp": "OTP-код",
+      "refreshToken": "Refresh token"
+    },
+    "validation": {
+      "invalidBody": "Некорректное тело запроса.",
+      "required": "Поле {field} обязательно.",
+      "stringBase": "Поле {field} должно быть строкой.",
+      "stringEmail": "Поле {field} должно быть корректным email.",
+      "stringMin": "Поле {field} должно содержать минимум {limit} символов.",
+      "stringMax": "Поле {field} должно содержать максимум {limit} символов.",
+      "stringPatternBase": "Неверный формат поля {field}.",
+      "anyOnly": "Поле {field} содержит неподдерживаемое значение.",
+      "objectMissing": "Передайте хотя бы одно поле для обновления.",
+      "default": "Поле {field} заполнено неверно."
+    },
+    "errors": {
+      "userAlreadyExists": "Пользователь с таким email уже существует.",
+      "invalidCredentials": "Неверный email или пароль.",
+      "emailNotVerified": "Сначала подтвердите email.",
+      "otpInvalidOrExpired": "OTP-код неверный или истек.",
+      "resetTokenInvalidOrExpired": "Токен сброса неверный или истек.",
+      "verificationTokenRequired": "Требуется токен подтверждения.",
+      "verificationTokenInvalidOrExpired": "Токен подтверждения неверный или истек.",
+      "userNotFound": "Пользователь не найден.",
+      "refreshTokenRequired": "Требуется refresh token.",
+      "invalidRefreshToken": "Некорректный refresh token.",
+      "refreshTokenNotValidAnymore": "Refresh token больше не действителен.",
+      "authorizationTokenRequired": "Требуется токен авторизации.",
+      "invalidAccessToken": "Некорректный access token.",
+      "sessionInvalid": "Сессия недействительна.",
+      "tooManyRequests": "Слишком много запросов. Попробуйте позже.",
+      "mongodbUriNotConfigured": "MONGODB_URI не настроен.",
+      "jwtSecretsNotConfigured": "JWT-секреты не настроены.",
+      "endpointNotFound": "API endpoint не найден.",
+      "unexpectedError": "Непредвиденная ошибка сервера."
+    },
+    "success": {
+      "registerVerifyWithEmail": "Регистрация успешна. Подтвердите email по ссылке или через OTP-код.",
+      "registerVerifyResendNotConfigured": "Регистрация успешна. Настройте RESEND для отправки подтверждения email.",
+      "forgotPasswordSent": "Если email существует, ссылка и OTP-код для сброса уже отправлены.",
+      "passwordResetSuccess": "Пароль успешно обновлен. Войдите снова.",
+      "emailAlreadyVerified": "Email уже подтвержден.",
+      "emailVerifiedSuccess": "Email успешно подтвержден.",
+      "loggedOut": "Вы успешно вышли.",
+      "preferencesUpdated": "Настройки успешно обновлены."
+    }
   }
 }

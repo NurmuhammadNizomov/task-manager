@@ -18,7 +18,18 @@
     "goToSignup": "Go to sign up",
     "goToSignin": "Go to sign in",
     "language": "Language",
-    "theme": "Theme"
+    "theme": "Theme",
+    "loginSuccess": "You are signed in.",
+    "loginFailed": "Login failed",
+    "registerSuccess": "Account created successfully.",
+    "registerFailed": "Register failed",
+    "validationError": "Validation error",
+    "passwordsDoNotMatch": "Passwords do not match.",
+    "placeholders": {
+      "fullName": "John Doe",
+      "email": "you@example.com",
+      "password": "********"
+    }
   },
   "theme": {
     "system": "System",
@@ -26,6 +37,138 @@
     "dark": "Dark"
   },
   "common": {
-    "home": "Back to home"
+    "home": "Back to home",
+    "appName": "Task Manager",
+    "appSubtitle": "Nuxt Auth Platform",
+    "success": "Success",
+    "tryAgain": "Please try again."
+  },
+  "home": {
+    "badge": "Nuxt 4 + @nuxt/ui",
+    "title": "Clean auth and dashboard starter for Task Manager",
+    "description": "Login, register, main and dashboard pages are split into separate layouts. UI flow is ready, next step is connecting API/auth logic fully.",
+    "actions": {
+      "login": "Login",
+      "register": "Register",
+      "openDashboard": "Open dashboard"
+    },
+    "stats": {
+      "activeUsers": "Active users",
+      "tasksCompleted": "Tasks completed",
+      "systemStatus": "System status",
+      "healthy": "Healthy"
+    }
+  },
+  "dashboard": {
+    "overview": "Overview",
+    "sidebarTitle": "Dashboard",
+    "title": "Welcome to your dashboard",
+    "subtitle": "Current state, tasks, and team activity are shown here.",
+    "actions": {
+      "filter": "Filter",
+      "newTask": "New task",
+      "logout": "Log out"
+    },
+    "stats": {
+      "openTasks": "Open tasks",
+      "openTasksHint": "7 high priority",
+      "completedWeek": "Completed this week",
+      "completedWeekHint": "+18% vs last week",
+      "teamMembers": "Team members",
+      "teamMembersHint": "2 online now"
+    },
+    "todayTasks": "Today's tasks",
+    "tasks": {
+      "roadmap": "Product roadmap update",
+      "otpResend": "Fix auth OTP resend flow",
+      "deployStaging": "Deploy staging build"
+    },
+    "priority": {
+      "label": "Priority",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "status": {
+      "inProgress": "In progress",
+      "planned": "Planned",
+      "done": "Done"
+    },
+    "nav": {
+      "tasks": "Tasks",
+      "team": "Team",
+      "settings": "Settings"
+    },
+    "quickLinks": {
+      "title": "Quick links",
+      "main": "Go to main page",
+      "login": "Go to login",
+      "register": "Go to register"
+    }
+  },
+  "errorPage": {
+    "title": "Something went wrong",
+    "notFoundTitle": "Page not found",
+    "notFoundMessage": "The page you are looking for does not exist.",
+    "defaultMessage": "Unexpected error occurred.",
+    "backHome": "Back to home",
+    "dismiss": "Dismiss"
+  },
+  "server": {
+    "fields": {
+      "field": "Field",
+      "fullName": "Full name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "language": "Language",
+      "theme": "Theme",
+      "token": "Token",
+      "otp": "OTP code",
+      "refreshToken": "Refresh token"
+    },
+    "validation": {
+      "invalidBody": "Request body is invalid.",
+      "required": "{field} is required.",
+      "stringBase": "{field} must be a text value.",
+      "stringEmail": "{field} must be a valid email address.",
+      "stringMin": "{field} must be at least {limit} characters.",
+      "stringMax": "{field} must be at most {limit} characters.",
+      "stringPatternBase": "{field} format is invalid.",
+      "anyOnly": "{field} has an unsupported value.",
+      "objectMissing": "Provide at least one field to update.",
+      "default": "{field} is invalid."
+    },
+    "errors": {
+      "userAlreadyExists": "User with this email already exists.",
+      "invalidCredentials": "Invalid email or password.",
+      "emailNotVerified": "Please verify your email first.",
+      "otpInvalidOrExpired": "OTP code is invalid or expired.",
+      "resetTokenInvalidOrExpired": "Reset token is invalid or expired.",
+      "verificationTokenRequired": "Verification token is required.",
+      "verificationTokenInvalidOrExpired": "Verification token is invalid or expired.",
+      "userNotFound": "User not found.",
+      "refreshTokenRequired": "Refresh token is required.",
+      "invalidRefreshToken": "Invalid refresh token.",
+      "refreshTokenNotValidAnymore": "Refresh token is not valid anymore.",
+      "authorizationTokenRequired": "Authorization token is required.",
+      "invalidAccessToken": "Invalid access token.",
+      "sessionInvalid": "Session is invalid.",
+      "tooManyRequests": "Too many requests. Please try again later.",
+      "mongodbUriNotConfigured": "MONGODB_URI is not configured.",
+      "jwtSecretsNotConfigured": "JWT secrets are not configured.",
+      "endpointNotFound": "API endpoint not found.",
+      "unexpectedError": "Unexpected server error."
+    },
+    "success": {
+      "registerVerifyWithEmail": "Registration successful. Verify email via link or OTP code.",
+      "registerVerifyResendNotConfigured": "Registration successful. Configure RESEND to enable email verification.",
+      "forgotPasswordSent": "If that email exists, a reset link and OTP code have been sent.",
+      "passwordResetSuccess": "Password reset successful. Please login again.",
+      "emailAlreadyVerified": "Email is already verified.",
+      "emailVerifiedSuccess": "Email verified successfully.",
+      "loggedOut": "Logged out successfully.",
+      "preferencesUpdated": "Preferences updated successfully."
+    }
   }
 }

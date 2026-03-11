@@ -1,20 +1,22 @@
-import { createError, deleteCookie } from 'h3'
+import { deleteCookie } from 'h3'
 import { UserModel } from '../../modules/auth/models/User'
 import { AuthTokenModel } from '../../modules/auth/models/AuthToken'
 import { AuthSessionModel } from '../../modules/auth/models/AuthSession'
 import { connectDB } from '../../utils/db'
+import { tServer } from '../../utils/i18n'
 import { hashToken } from '../../modules/auth/utils/token'
 import { readValidatedBody, resetPasswordSchema } from '../../modules/auth/utils/validation'
+import { apiError, apiSuccess, defineApiHandler } from '../../utils/api-response'
 
-type ResetPasswordBody = {
+interface ResetPasswordBody {
   token: string
   password: string
 }
 
-export default defineEventHandler(async (event) => {
+export default defineApiHandler(async (event) => {
   const body = await readValidatedBody<ResetPasswordBody>(event, resetPasswordSchema)
 
-  await connectDB()
+  await connectDB(event)
 
   const tokenHash = hashToken(body.token)
 
@@ -24,19 +26,17 @@ export default defineEventHandler(async (event) => {
   })
 
   if (!securityToken) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Reset token is invalid or expired'
-    })
+    apiError(
+      400,
+      'AUTH_RESET_TOKEN_INVALID_OR_EXPIRED',
+      tServer(event, 'errors.resetTokenInvalidOrExpired')
+    )
   }
 
   const user = await UserModel.findById(securityToken.userId)
 
   if (!user) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'User not found'
-    })
+    apiError(404, 'USER_NOT_FOUND', tServer(event, 'errors.userNotFound'))
   }
 
   user.password = body.password
@@ -53,11 +53,7 @@ export default defineEventHandler(async (event) => {
 
   deleteCookie(event, 'refresh_token', { path: '/' })
 
-  return {
-    success: true,
-    message: 'Password reset successful. Please login again.'
-  }
+  return apiSuccess({
+    message: tServer(event, 'success.passwordResetSuccess')
+  })
 })
-
-
-

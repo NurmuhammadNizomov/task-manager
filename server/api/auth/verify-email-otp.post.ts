@@ -1,37 +1,34 @@
-import { createError } from 'h3'
 import { UserModel } from '../../modules/auth/models/User'
 import { AuthOtpModel } from '../../modules/auth/models/AuthOtp'
 import { AuthTokenModel } from '../../modules/auth/models/AuthToken'
 import { connectDB } from '../../utils/db'
+import { tServer } from '../../utils/i18n'
 import { hashOtpCode } from '../../modules/auth/utils/otp'
 import { readValidatedBody, verifyEmailOtpSchema } from '../../modules/auth/utils/validation'
+import { apiError, apiSuccess, defineApiHandler } from '../../utils/api-response'
 
-type VerifyEmailOtpBody = {
+interface VerifyEmailOtpBody {
   email: string
   otp: string
 }
 
 const MAX_OTP_ATTEMPTS = 5
 
-export default defineEventHandler(async (event) => {
+export default defineApiHandler(async (event) => {
   const body = await readValidatedBody<VerifyEmailOtpBody>(event, verifyEmailOtpSchema)
 
-  await connectDB()
+  await connectDB(event)
 
   const user = await UserModel.findOne({ email: body.email })
 
   if (!user) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'OTP code is invalid or expired'
-    })
+    apiError(400, 'AUTH_OTP_INVALID_OR_EXPIRED', tServer(event, 'errors.otpInvalidOrExpired'))
   }
 
   if (user.isEmailVerified) {
-    return {
-      success: true,
-      message: 'Email already verified.'
-    }
+    return apiSuccess({
+      message: tServer(event, 'success.emailAlreadyVerified')
+    })
   }
 
   const otpEntry = await AuthOtpModel.findOne({
@@ -42,10 +39,7 @@ export default defineEventHandler(async (event) => {
   })
 
   if (!otpEntry) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'OTP code is invalid or expired'
-    })
+    apiError(400, 'AUTH_OTP_INVALID_OR_EXPIRED', tServer(event, 'errors.otpInvalidOrExpired'))
   }
 
   const otpHash = hashOtpCode(body.otp)
@@ -59,14 +53,10 @@ export default defineEventHandler(async (event) => {
 
     await otpEntry.save()
 
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'OTP code is invalid or expired'
-    })
+    apiError(400, 'AUTH_OTP_INVALID_OR_EXPIRED', tServer(event, 'errors.otpInvalidOrExpired'))
   }
 
   user.isEmailVerified = true
-
   otpEntry.consumedAt = new Date()
 
   await Promise.all([
@@ -81,11 +71,7 @@ export default defineEventHandler(async (event) => {
     )
   ])
 
-  return {
-    success: true,
-    message: 'Email verified successfully.'
-  }
+  return apiSuccess({
+    message: tServer(event, 'success.emailVerifiedSuccess')
+  })
 })
-
-
-
