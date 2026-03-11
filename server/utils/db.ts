@@ -38,5 +38,6 @@ export const connectDB = async (event?: H3Event) => {
   }
 
   cached.conn = await cached.promise
+  console.log(`[MongoDB] Connected to database: ${config.mongodbDbName}`)
   return cached.conn
 }

@@ -1,11 +1,13 @@
 ﻿<script setup lang="ts">
 definePageMeta({
-  layout: 'auth'
+  layout: 'auth',
+  middleware: 'guest'
 })
 
 const { t, setLocale } = useI18n()
 const colorMode = useColorMode()
 const { login } = useAuthApi()
+const { setAuth } = useAuth()
 const toast = useToast()
 
 const form = reactive({
@@ -35,9 +37,7 @@ const submit = async () => {
       colorMode.preference = payload.user.theme
     }
 
-    if (import.meta.client) {
-      localStorage.setItem('access_token', payload.accessToken)
-    }
+    setAuth(payload.accessToken, payload.user)
 
     toast.add({
       title: t('common.success'),

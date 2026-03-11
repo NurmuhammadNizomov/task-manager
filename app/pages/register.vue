@@ -1,40 +1,27 @@
 ﻿<script setup lang="ts">
-import { DEFAULT_LANGUAGE, DEFAULT_THEME } from '~/composables/useUserSettings'
-import type { AppLanguage, AppTheme } from '~/composables/useUserSettings'
+import { DEFAULT_LANGUAGE } from '~/composables/useUserSettings'
+import type { AppLanguage } from '~/composables/useUserSettings'
 
 definePageMeta({
-  layout: 'auth'
+  layout: 'auth',
+  middleware: 'guest'
 })
 
 const { t, locale } = useI18n()
 const colorMode = useColorMode()
 const { register } = useAuthApi()
-const { themeItems } = useUserSettings()
 const toast = useToast()
 
 const form = reactive({
   fullName: '',
   email: '',
   password: '',
-  confirmPassword: '',
-  theme: DEFAULT_THEME as AppTheme
+  confirmPassword: ''
 })
 
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 const isSubmitting = ref(false)
-
-const normalizeSelectValue = <T extends string>(value: T | { value?: T } | null | undefined): T | null => {
-  if (typeof value === 'string') {
-    return value
-  }
-
-  if (value && typeof value === 'object' && typeof value.value === 'string') {
-    return value.value
-  }
-
-  return null
-}
 
 const normalizeLanguage = (value: string | null | undefined): AppLanguage => {
   if (!value) {
@@ -54,22 +41,7 @@ const normalizeLanguage = (value: string | null | undefined): AppLanguage => {
   return 'en'
 }
 
-watch(
-  () => form.theme,
-  (value) => {
-    const nextTheme = normalizeSelectValue(value)
 
-    if (!nextTheme) {
-      return
-    }
-
-    if (form.theme !== nextTheme) {
-      form.theme = nextTheme as AppTheme
-    }
-
-    colorMode.preference = nextTheme
-  }
-)
 
 const submit = async () => {
   isSubmitting.value = true
@@ -87,14 +59,12 @@ const submit = async () => {
     }
 
     const selectedLanguage = normalizeLanguage(locale.value as string)
-    const selectedTheme = normalizeSelectValue(form.theme) ?? DEFAULT_THEME
 
     await register({
       fullName: form.fullName,
       email: form.email,
       password: form.password,
-      language: selectedLanguage,
-      theme: selectedTheme
+      language: selectedLanguage
     })
 
     toast.add({
@@ -182,17 +152,6 @@ const submit = async () => {
             <Icon :name="showConfirmPassword ? 'lucide:eye-off' : 'lucide:eye'" />
           </button>
         </div>
-      </UFormField>
-
-      <UFormField :label="t('auth.theme')">
-        <USelect
-          v-model="form.theme"
-          :items="themeItems"
-          value-key="value"
-          label-key="label"
-          size="xl"
-          class="w-full"
-        />
       </UFormField>
 
       <UButton type="submit" class="w-full justify-center" size="xl" :loading="isSubmitting">

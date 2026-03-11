@@ -1,4 +1,4 @@
-﻿{
+{
   "auth": {
     "loginTitle": "Kirish",
     "loginSubtitle": "Davom etish uchun email va parolni kiriting.",
@@ -27,7 +27,7 @@
     "passwordsDoNotMatch": "Parollar mos kelmadi.",
     "placeholders": {
       "fullName": "John Doe",
-      "email": "you@example.com",
+      "email": "you{'@'}example.com",
       "password": "********"
     }
   },
@@ -44,7 +44,7 @@
     "tryAgain": "Iltimos, qayta urinib ko'ring."
   },
   "home": {
-    "badge": "Nuxt 4 + @nuxt/ui",
+    "badge": "Nuxt 4 + {'@'}nuxt/ui",
     "title": "Task Manager uchun toza auth va dashboard bazasi",
     "description": "Login, register, main va dashboard sahifalari alohida layoutlarda ishlaydi. UI flow tayyor, keyingi qadamda API/auth logikasini to'liq ulaymiz.",
     "actions": {
@@ -57,6 +57,23 @@
       "tasksCompleted": "Bajarilgan vazifalar",
       "systemStatus": "Tizim holati",
       "healthy": "Barqaror"
+    },
+    "features": {
+      "label": "Xususiyatlar",
+      "heading": "Zamonaviy Web uchun yaratilgan",
+      "subheading": "Keyingi katta g'oyangiz uchun tayyor, to'liq responsiv, dinamik va ajoyib dastur strukturasi.",
+      "speed": {
+        "title": "Chaqmoqdek tez",
+        "desc": "Nol yuklanish vaqti va tezkor o'zaro ta'sirni ta'minlaydigan optimallashtirilgan ishlash."
+      },
+      "secure": {
+        "title": "Sukut bo'yicha xavfsiz",
+        "desc": "Maxfiy ma'lumotlaringizni himoya qilish va ilovangizni xavfsiz saqlash uchun ilg'or xavfsizlik protokollari."
+      },
+      "design": {
+        "title": "Chiroyli UI",
+        "desc": "Zamonaviy dizayn estetikasi va foydalanuvchi tajribasiga kuchli e'tibor va tafsilotlarga e'tibor qaratilgan holda yaratilgan."
+      }
     }
   },
   "dashboard": {

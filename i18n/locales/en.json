@@ -1,4 +1,4 @@
-﻿{
+{
   "auth": {
     "loginTitle": "Sign in",
     "loginSubtitle": "Use your email and password to continue.",
@@ -27,7 +27,7 @@
     "passwordsDoNotMatch": "Passwords do not match.",
     "placeholders": {
       "fullName": "John Doe",
-      "email": "you@example.com",
+      "email": "you{'@'}example.com",
       "password": "********"
     }
   },
@@ -44,7 +44,7 @@
     "tryAgain": "Please try again."
   },
   "home": {
-    "badge": "Nuxt 4 + @nuxt/ui",
+    "badge": "Nuxt 4 + {'@'}nuxt/ui",
     "title": "Clean auth and dashboard starter for Task Manager",
     "description": "Login, register, main and dashboard pages are split into separate layouts. UI flow is ready, next step is connecting API/auth logic fully.",
     "actions": {
@@ -57,6 +57,23 @@
       "tasksCompleted": "Tasks completed",
       "systemStatus": "System status",
       "healthy": "Healthy"
+    },
+    "features": {
+      "label": "Features",
+      "heading": "Crafted for Modern Web",
+      "subheading": "A completely responsive, dynamic, and stunning application structure ready for your next big idea.",
+      "speed": {
+        "title": "Lightning Fast",
+        "desc": "Optimized performance resulting in zero load times and snappy interactions."
+      },
+      "secure": {
+        "title": "Secure by Default",
+        "desc": "Advanced security protocols out of the box to protect your sensitive data and keep your app safe."
+      },
+      "design": {
+        "title": "Beautiful UI",
+        "desc": "Crafted with attention to detail and a strong focus on modern design aesthetics and experience."
+      }
     }
   },
   "dashboard": {

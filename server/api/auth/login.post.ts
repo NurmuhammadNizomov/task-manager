@@ -41,7 +41,7 @@ export default defineApiHandler(async (event) => {
   await AuthSessionModel.findOneAndUpdate(
     { userId: user._id },
     { accessToken, refreshToken },
-    { upsert: true, new: true, setDefaultsOnInsert: true }
+    { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
   )
 
   setRefreshTokenCookie(event, refreshToken)

@@ -56,13 +56,12 @@ const userSchema = new Schema<IUser>(
   }
 )
 
-userSchema.pre('save', async function preSave(next) {
+userSchema.pre('save', async function preSave() {
   if (!this.isModified('password')) {
-    return next()
+    return
   }
 
   this.password = await hashPassword(this.password)
-  return next()
 })
 
 userSchema.methods.comparePassword = function compare(candidatePassword: string) {
