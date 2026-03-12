@@ -11,48 +11,23 @@ export interface AuthUser {
 
 export const useAuth = () => {
   const user = useState<AuthUser | null>('auth:user', () => null)
-  const accessToken = useState<string | null>('auth:token', () => null)
+  const isAuthenticated = useState<boolean>('auth:authenticated', () => false)
 
-  const isLoggedIn = computed(() => !!accessToken.value)
+  const isLoggedIn = computed(() => isAuthenticated.value)
 
-  const setAuth = (token: string, authUser: AuthUser) => {
-    accessToken.value = token
+  const setAuth = (authUser: AuthUser) => {
     user.value = authUser
-    if (import.meta.client) {
-      localStorage.setItem('access_token', token)
-    }
+    isAuthenticated.value = true
   }
 
   const clearAuth = () => {
-    accessToken.value = null
     user.value = null
-    if (import.meta.client) {
-      localStorage.removeItem('access_token')
-    }
+    isAuthenticated.value = false
   }
 
   const initFromStorage = () => {
-    if (!import.meta.client) return
-
-    // Email tasdiqlangandan keyin server tomonidan o'rnatilgan vaqtinchalik cookie
-    const verifiedToken = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('auth_verified_token='))
-      ?.split('=')[1]
-
-    if (verifiedToken) {
-      localStorage.setItem('access_token', verifiedToken)
-      document.cookie = 'auth_verified_token=; Max-Age=0; path=/'
-      accessToken.value = verifiedToken
-      return
-    }
-
-    if (!accessToken.value) {
-      const stored = localStorage.getItem('access_token')
-      if (stored) {
-        accessToken.value = stored
-      }
-    }
+    // With httpOnly cookies, we don't need client-side storage initialization
+    // Authentication state will be determined by server API calls
   }
 
   const logout = async () => {
@@ -65,7 +40,7 @@ export const useAuth = () => {
 
   return {
     user,
-    accessToken,
+    isAuthenticated,
     isLoggedIn,
     setAuth,
     clearAuth,

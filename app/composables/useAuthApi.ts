@@ -93,12 +93,10 @@ export const useAuthApi = () => {
     })
   }
 
-  const updatePreferences = (accessToken: string, payload: PreferencesPayload) => {
+  const updatePreferences = (payload: PreferencesPayload) => {
     return $fetch<ApiSuccessResponse<PreferencesData>>('/api/auth/preferences', {
       method: 'PATCH',
-      headers: withLocaleHeader({
-        Authorization: `Bearer ${accessToken}`
-      }),
+      headers: withLocaleHeader(),
       body: payload
     })
   }

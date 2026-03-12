@@ -2,42 +2,46 @@ import Joi, { type ObjectSchema, type ValidationErrorItem } from 'joi'
 import { readBody, type H3Event } from 'h3'
 import { tServer, tServerField } from '../../../utils/i18n'
 import { apiError } from '../../../utils/api-response'
+import { createSanitizedSchemas } from '../../../utils/sanitization'
+
+// Get sanitized schemas
+const sanitizedSchemas = createSanitizedSchemas()
 
 export const registerSchema = Joi.object({
-  fullName: Joi.string().trim().min(2).max(120).required(),
-  email: Joi.string().trim().lowercase().email().required(),
-  password: Joi.string().min(8).max(128).required(),
+  fullName: sanitizedSchemas.fullName,
+  email: sanitizedSchemas.email,
+  password: sanitizedSchemas.password,
   language: Joi.string().valid('en', 'ru', 'uz').optional(),
   theme: Joi.string().valid('light', 'dark', 'system').optional()
 })
 
 export const loginSchema = Joi.object({
-  email: Joi.string().trim().lowercase().email().required(),
-  password: Joi.string().min(8).max(128).required()
+  email: sanitizedSchemas.email,
+  password: sanitizedSchemas.password
 })
 
 export const forgotPasswordSchema = Joi.object({
-  email: Joi.string().trim().lowercase().email().required()
+  email: sanitizedSchemas.email
 })
 
 export const resetPasswordSchema = Joi.object({
-  token: Joi.string().required(),
-  password: Joi.string().min(8).max(128).required()
+  token: sanitizedSchemas.token,
+  password: sanitizedSchemas.password
 })
 
 export const verifyEmailOtpSchema = Joi.object({
-  email: Joi.string().trim().lowercase().email().required(),
-  otp: Joi.string().trim().pattern(/^\d{6}$/).required()
+  email: sanitizedSchemas.email,
+  otp: sanitizedSchemas.otp
 })
 
 export const resetPasswordOtpSchema = Joi.object({
-  email: Joi.string().trim().lowercase().email().required(),
-  otp: Joi.string().trim().pattern(/^\d{6}$/).required(),
-  password: Joi.string().min(8).max(128).required()
+  email: sanitizedSchemas.email,
+  otp: sanitizedSchemas.otp,
+  password: sanitizedSchemas.password
 })
 
 export const refreshSchema = Joi.object({
-  refreshToken: Joi.string().optional()
+  refreshToken: sanitizedSchemas.token.optional()
 }).default({})
 
 export const updatePreferencesSchema = Joi.object({

@@ -29,6 +29,12 @@ const authSessionSchema = new Schema<IAuthSession>(
   }
 )
 
+// Compound indexes for common query patterns
+authSessionSchema.index({ refreshToken: 1, userId: 1 }) // For refresh token validation
+authSessionSchema.index({ accessToken: 1, userId: 1 }) // For access token validation
+authSessionSchema.index({ updatedAt: 1 }) // For cleanup of old sessions
+authSessionSchema.index({ userId: 1, updatedAt: -1 }) // For finding user's recent sessions
+
 export const AuthSessionModel: Model<IAuthSession> =
   (mongoose.models.UserSession as Model<IAuthSession>) ||
   mongoose.model<IAuthSession>('UserSession', authSessionSchema)

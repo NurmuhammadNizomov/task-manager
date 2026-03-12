@@ -1,10 +1,9 @@
 export default defineNuxtRouteMiddleware(() => {
   if (import.meta.server) return
 
-  const { accessToken, initFromStorage } = useAuth()
-  initFromStorage()
+  const { isAuthenticated } = useAuth()
 
-  if (accessToken.value) {
+  if (isAuthenticated.value) {
     return navigateTo('/dashboard')
   }
 })

@@ -37,7 +37,7 @@ const submit = async () => {
       colorMode.preference = payload.user.theme
     }
 
-    setAuth(payload.accessToken, payload.user)
+    setAuth(payload.user)
 
     toast.add({
       title: t('common.success'),
@@ -47,10 +47,20 @@ const submit = async () => {
     })
 
     await navigateTo('/dashboard')
-  } catch (error: any) {
+  } catch (error: unknown) {
+    let errorMessage = t('common.tryAgain')
+    
+    if (error && typeof error === 'object' && error !== null) {
+      const errorObj = error as Record<string, unknown>
+      if (errorObj.data && typeof errorObj.data === 'object') {
+        const dataObj = errorObj.data as Record<string, unknown>
+        errorMessage = (dataObj.error?.message || dataObj.statusMessage) as string || errorMessage
+      }
+    }
+    
     toast.add({
       title: t('auth.loginFailed'),
-      description: error?.data?.error?.message || error?.data?.statusMessage || t('common.tryAgain'),
+      description: errorMessage,
       color: 'error',
       icon: 'lucide:circle-alert'
     })

@@ -130,7 +130,7 @@ export const apiError = (
 ): never => {
   throw createError({
     statusCode,
-    statusMessage: message,
+    message,
     data: {
       code,
       message,

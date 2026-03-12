@@ -56,6 +56,12 @@ const userSchema = new Schema<IUser>(
   }
 )
 
+// Compound indexes for common query patterns
+userSchema.index({ email: 1, isEmailVerified: 1 }) // For finding verified/unverified users by email
+userSchema.index({ isEmailVerified: 1, createdAt: -1 }) // For admin dashboards showing recent registrations
+userSchema.index({ language: 1, isEmailVerified: 1 }) // For localization analytics
+userSchema.index({ theme: 1, isEmailVerified: 1 }) // For theme usage analytics
+
 userSchema.pre('save', async function preSave() {
   if (!this.isModified('password')) {
     return

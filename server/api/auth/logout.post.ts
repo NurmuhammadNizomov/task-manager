@@ -1,8 +1,9 @@
 import { deleteCookie, getCookie } from 'h3'
-import { AuthSessionModel } from '../../modules/auth/models/AuthSession'
+import { SessionCacheService } from '../../modules/auth/utils/session-cache'
 import { connectDB } from '../../utils/db'
 import { tServer } from '../../utils/i18n'
 import { verifyRefreshToken } from '../../modules/auth/utils/jwt'
+import { clearAuthCookies } from '../../modules/auth/utils/cookies'
 import { apiSuccess, defineApiHandler } from '../../utils/api-response'
 
 export default defineApiHandler(async (event) => {
@@ -14,16 +15,16 @@ export default defineApiHandler(async (event) => {
     try {
       const payload = verifyRefreshToken(refreshToken, event)
 
-      await AuthSessionModel.findOneAndUpdate(
-        { userId: payload.sub, refreshToken },
-        { accessToken: null, refreshToken: null }
-      )
+      if (payload) {
+        // Delete session from MongoDB
+        await SessionCacheService.deleteSession(String(payload.sub))
+      }
     } catch {
       // Ignore token parsing errors during logout.
     }
   }
 
-  deleteCookie(event, 'refresh_token', { path: '/' })
+  clearAuthCookies(event)
 
   return apiSuccess({
     message: tServer(event, 'success.loggedOut')

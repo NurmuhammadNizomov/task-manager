@@ -1,4 +1,4 @@
-import { Resend } from 'resend'
+import nodemailer from 'nodemailer'
 
 type BaseMailPayload = {
   to: string
@@ -111,62 +111,83 @@ const resetPasswordBody = (fullName: string, resetUrl: string) => `
   </p>
 `
 
+const createTransporter = () => {
+  const config = useRuntimeConfig()
+  return nodemailer.createTransport({
+    host: config.smtpHost,
+    port: config.smtpPort,
+    secure: false,
+    auth: {
+      user: config.smtpUser,
+      pass: config.smtpPass
+    }
+  })
+}
+
 export const sendVerificationEmail = async (
-  payload: BaseMailPayload & { token: string; otpCode?: string }
+  payload: BaseMailPayload & { token: string }
 ) => {
   const config = useRuntimeConfig()
 
-  if (!config.resendApiKey || !config.resendFromEmail) {
-    return { sent: false, reason: 'resend_not_configured' as const }
+  if (!config.smtpUser || !config.smtpPass) {
+    console.warn('[Mailer] Not configured — skipping email send')
+    return { sent: false, reason: 'mailer_not_configured' as const }
   }
 
-  const resend = new Resend(config.resendApiKey)
-  const verifyUrl = `${config.public.appBaseUrl}/api/auth/verify-email?token=${payload.token}`
+  const verifyUrl = `${config.public.appBaseUrl}/verify-email?token=${payload.token}`
 
-  const result = await resend.emails.send({
-    from: `Task Manager <${config.resendFromEmail}>`,
-    to: [payload.to],
-    subject: 'Verify your email address',
-    html: emailWrapper(
-      'Verify your email address',
-      'Click the button to verify your Task Manager account.',
-      verifyEmailBody(payload.fullName, verifyUrl)
-    )
-  })
-
-  if (result.error) {
-    return { sent: false, reason: 'resend_error' as const }
+  try {
+    const transporter = createTransporter()
+    await transporter.sendMail({
+      from: config.smtpFrom || config.smtpUser,
+      to: payload.to,
+      subject: 'Verify your email address',
+      html: emailWrapper(
+        'Verify your email address',
+        'Click the button to verify your Task Manager account.',
+        verifyEmailBody(payload.fullName, verifyUrl)
+      )
+    })
+    return { sent: true as const }
+  } catch (error) {
+    console.error('[Mailer] Failed to send verification email:', error)
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[Mailer] DEV fallback — verify manually:', verifyUrl)
+    }
+    return { sent: false, reason: 'mailer_error' as const }
   }
-
-  return { sent: true as const }
 }
 
 export const sendPasswordResetEmail = async (
-  payload: BaseMailPayload & { token: string; otpCode?: string }
+  payload: BaseMailPayload & { token: string }
 ) => {
   const config = useRuntimeConfig()
 
-  if (!config.resendApiKey || !config.resendFromEmail) {
-    return { sent: false, reason: 'resend_not_configured' as const }
+  if (!config.smtpUser || !config.smtpPass) {
+    console.warn('[Mailer] Not configured — skipping email send')
+    return { sent: false, reason: 'mailer_not_configured' as const }
   }
 
-  const resend = new Resend(config.resendApiKey)
   const resetUrl = `${config.public.appBaseUrl}/reset-password?token=${payload.token}`
 
-  const result = await resend.emails.send({
-    from: `Task Manager <${config.resendFromEmail}>`,
-    to: [payload.to],
-    subject: 'Reset your password',
-    html: emailWrapper(
-      'Reset your password',
-      'Click the button to reset your Task Manager password.',
-      resetPasswordBody(payload.fullName, resetUrl)
-    )
-  })
-
-  if (result.error) {
-    return { sent: false, reason: 'resend_error' as const }
+  try {
+    const transporter = createTransporter()
+    await transporter.sendMail({
+      from: config.smtpFrom || config.smtpUser,
+      to: payload.to,
+      subject: 'Reset your password',
+      html: emailWrapper(
+        'Reset your password',
+        'Click the button to reset your Task Manager password.',
+        resetPasswordBody(payload.fullName, resetUrl)
+      )
+    })
+    return { sent: true as const }
+  } catch (error) {
+    console.error('[Mailer] Failed to send password reset email:', error)
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[Mailer] DEV fallback — reset manually:', resetUrl)
+    }
+    return { sent: false, reason: 'mailer_error' as const }
   }
-
-  return { sent: true as const }
 }

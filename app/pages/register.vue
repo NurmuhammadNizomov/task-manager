@@ -75,11 +75,20 @@ const submit = async () => {
     })
 
     await navigateTo('/login')
-  } catch (error: any) {
+  } catch (error: unknown) {
+    let errorMessage = t('common.tryAgain')
+    
+    if (error && typeof error === 'object' && error !== null) {
+      const errorObj = error as Record<string, unknown>
+      if (errorObj.data && typeof errorObj.data === 'object') {
+        const dataObj = errorObj.data as Record<string, unknown>
+        errorMessage = (dataObj.error?.message || dataObj.statusMessage || dataObj.message) as string || errorMessage
+      }
+    }
+    
     toast.add({
       title: t('auth.registerFailed'),
-      description:
-        error?.data?.error?.message || error?.data?.statusMessage || error?.message || t('common.tryAgain'),
+      description: errorMessage,
       color: 'error',
       icon: 'lucide:circle-alert'
     })

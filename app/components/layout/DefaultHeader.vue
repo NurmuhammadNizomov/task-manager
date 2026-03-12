@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import type { AppLanguage } from '~/composables/useUserSettings'
 
 const colorMode = useColorMode()
@@ -38,14 +38,8 @@ const savePreference = async (payload: { language?: AppLanguage; theme?: 'system
     return
   }
 
-  const accessToken = localStorage.getItem('access_token')
-
-  if (!accessToken) {
-    return
-  }
-
   try {
-    await updatePreferences(accessToken, payload)
+    await updatePreferences(payload)
   } catch {
     // Ignore preference sync errors in header-level UI.
   }
@@ -93,7 +87,6 @@ watch(
           </div>
           <div>
             <p class="text-xs uppercase tracking-widest text-gray-500">{{ t('common.appName') }}</p>
-            <p class="text-lg font-semibold">{{ t('common.appSubtitle') }}</p>
           </div>
         </NuxtLink>
 

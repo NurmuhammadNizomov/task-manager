@@ -39,6 +39,14 @@ const authTokenSchema = new Schema<IAuthToken>(
   }
 )
 
+// Compound indexes for common query patterns
+authTokenSchema.index({ emailVerificationToken: 1, emailVerificationExpires: 1 }) // For email verification validation
+authTokenSchema.index({ passwordResetToken: 1, passwordResetExpires: 1 }) // For password reset validation
+authTokenSchema.index({ emailVerificationExpires: 1 }) // For cleanup of expired email verification tokens
+authTokenSchema.index({ passwordResetExpires: 1 }) // For cleanup of expired password reset tokens
+authTokenSchema.index({ userId: 1, emailVerificationExpires: 1 }) // For user-specific email verification lookups
+authTokenSchema.index({ userId: 1, passwordResetExpires: 1 }) // For user-specific password reset lookups
+
 export const AuthTokenModel: Model<IAuthToken> =
   (mongoose.models.UserSecurityToken as Model<IAuthToken>) ||
   mongoose.model<IAuthToken>('UserSecurityToken', authTokenSchema)

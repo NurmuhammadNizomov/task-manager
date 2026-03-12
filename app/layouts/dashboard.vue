@@ -38,14 +38,8 @@ const savePreference = async (payload: { language?: AppLanguage; theme?: 'system
     return
   }
 
-  const accessToken = localStorage.getItem('access_token')
-
-  if (!accessToken) {
-    return
-  }
-
   try {
-    await updatePreferences(accessToken, payload)
+    await updatePreferences(payload)
   } catch {
     // Ignore preference sync errors in layout-level UI.
   }
