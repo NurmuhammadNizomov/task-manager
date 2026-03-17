@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AppLanguage } from '~/composables/useUserSettings'
+import type { AppLanguage } from '~/types/auth'
 
 const colorMode = useColorMode()
 const { t, locale, setLocale } = useI18n()
@@ -81,25 +81,26 @@ watch(
   <header class="sticky top-0 z-20 border-b border-gray-200/80 bg-white/80 backdrop-blur dark:border-gray-800/80 dark:bg-gray-950/80">
     <UContainer class="py-4">
       <div class="flex flex-wrap items-center justify-between gap-3">
-        <NuxtLink to="/" class="flex items-center gap-3">
-          <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary-100 dark:bg-primary-900/40">
-            <Icon name="lucide:shield-check" class="text-primary-700 dark:text-primary-300" />
+        <NuxtLink to="/" class="flex items-center gap-3 group">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-100 transition-all duration-200 group-hover:bg-primary-200 dark:bg-primary-900/40 dark:group-hover:bg-primary-900/60">
+            <Icon name="lucide:shield-check" class="size-6 text-primary-700 dark:text-primary-300" />
           </div>
-          <div>
-            <p class="text-xs uppercase tracking-widest text-gray-500">{{ t('common.appName') }}</p>
+          <div class="flex flex-col">
+            <h1 class="text-lg font-bold text-gray-900 dark:text-white leading-tight">{{ t('common.appName') }}</h1>
+            <p class="text-xs text-gray-500 dark:text-gray-400 leading-tight">{{ t('header.tagline') }}</p>
           </div>
         </NuxtLink>
 
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-2">
           <UDropdownMenu :items="languageMenuItems" :content="{ side: 'bottom', align: 'end' }">
             <UButton
               variant="ghost"
               color="neutral"
-              class="h-9 gap-1 px-2"
+              class="h-10 gap-2 px-3 font-medium text-sm"
               :aria-label="currentLanguage?.label || t('auth.language')"
             >
               <Icon name="lucide:languages" class="size-4" />
-              <span class="text-xs font-semibold uppercase">{{ currentLanguage?.value }}</span>
+              <span class="uppercase">{{ currentLanguage?.value }}</span>
             </UButton>
           </UDropdownMenu>
 
@@ -107,7 +108,7 @@ watch(
             <UButton
               variant="ghost"
               color="neutral"
-              class="h-9 w-9 flex items-center justify-center rounded-full"
+              class="h-10 w-10 flex items-center justify-center rounded-full"
               :aria-label="currentTheme?.label || t('auth.theme')"
             >
               <Icon :name="currentTheme?.icon || 'lucide:monitor'" class="size-5" />
@@ -116,7 +117,7 @@ watch(
             <template #item="{ item }">
               <div class="flex items-center gap-2 w-full">
                 <Icon :name="item.icon" class="size-4 shrink-0" />
-                <span class="truncate">{{ item.label }}</span>
+                <span class="text-sm font-medium">{{ item.label }}</span>
               </div>
             </template>
           </UDropdownMenu>

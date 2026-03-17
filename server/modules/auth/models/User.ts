@@ -1,22 +1,6 @@
 ﻿import mongoose, { Schema, type Document, type Model } from 'mongoose'
 import { comparePassword, hashPassword } from '../utils/password'
-
-export type UserLanguage = 'en' | 'ru' | 'uz'
-export type UserTheme = 'light' | 'dark' | 'system'
-
-export interface IUser extends Document {
-  fullName: string
-  email: string
-  password: string
-  isEmailVerified: boolean
-  avatar?: {
-    publicId: string
-    url: string
-  }
-  language: UserLanguage
-  theme: UserTheme
-  comparePassword(candidatePassword: string): Promise<boolean>
-}
+import type { IUser } from '../types'
 
 const userSchema = new Schema<IUser>(
   {
@@ -75,10 +59,13 @@ userSchema.pre('save', async function preSave() {
     return
   }
 
-  this.password = await hashPassword(this.password)
+  this.password = await hashPassword(this.password!)
 })
 
 userSchema.methods.comparePassword = function compare(candidatePassword: string) {
+  if (!this.password) {
+    return Promise.resolve(false)
+  }
   return comparePassword(candidatePassword, this.password)
 }
 

@@ -23,7 +23,6 @@ export default defineNuxtConfig({
       { code: 'ru', language: 'ru-RU', name: 'Russian', file: 'ru.json' },
       { code: 'uz', language: 'uz-UZ', name: 'Uzbek', file: 'uz.json' }
     ],
-    lazy: true,
     defaultLocale: 'en',
     strategy: 'no_prefix',
     detectBrowserLanguage: false
@@ -38,7 +37,7 @@ export default defineNuxtConfig({
   },
   vite: {
     optimizeDeps: {
-      include: ['v-calendar', 'dayjs', 'dayjs/plugin/relativeTime', 'zod', '@vue/devtools-core', '@vue/devtools-kit', 'ua-parser-js']
+      include: ['dayjs', 'dayjs/plugin/relativeTime', 'zod', '@vue/devtools-core', '@vue/devtools-kit', 'ua-parser-js']
     }
   },
   runtimeConfig: {
@@ -59,5 +58,15 @@ export default defineNuxtConfig({
     public: {
       appBaseUrl: process.env.APP_BASE_URL || 'http://localhost:3000'
     }
+  },
+  routeRules: {
+    '/**': {
+      headers: {
+        'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+        'Cross-Origin-Embedder-Policy': 'unsafe-none'
+      }
+    },
+    '/login': { ssr: false },
+    '/register': { ssr: false }
   }
 })

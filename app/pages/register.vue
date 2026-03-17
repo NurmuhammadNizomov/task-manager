@@ -3,6 +3,7 @@ import { z } from 'zod'
 import type { FormSubmitEvent } from '#ui/types'
 import { DEFAULT_LANGUAGE } from '~/composables/useUserSettings'
 import type { AppLanguage } from '~/composables/useUserSettings'
+import { useAuth } from '~/composables/useAuth'
 
 definePageMeta({
   layout: 'auth',
@@ -31,6 +32,7 @@ useSeoMeta({
 })
 const colorMode = useColorMode()
 const { register } = useAuthApi()
+const { setAuth } = useAuth()
 const toast = useToast()
 
 const form = reactive<Schema>({

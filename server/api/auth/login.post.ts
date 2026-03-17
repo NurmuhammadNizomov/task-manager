@@ -19,9 +19,25 @@ export default defineApiHandler(async (event) => {
     return apiError(401, 'AUTH_INVALID_CREDENTIALS', tServer(event, 'errors.invalidCredentials'))
   }
 
-  const isPasswordCorrect = await user.comparePassword(body.password)
+  // Check auth type and validate accordingly
+  let isPasswordCorrect = false
+  
+  if (user.authType === 'google' && !user.password) {
+    return apiError(401, 'AUTH_GOOGLE_USER_ONLY', tServer(event, 'errors.googleUserOnly') || 'Please use Google Sign-In to login')
+  }
 
-  if (!isPasswordCorrect) {
+  if (user.authType === 'email' || user.authType === 'linked') {
+    if (!user.password) {
+      return apiError(401, 'AUTH_NO_PASSWORD', tServer(event, 'errors.noPassword') || 'No password set for this account')
+    }
+
+    isPasswordCorrect = await user.comparePassword(body.password)
+    if (!isPasswordCorrect) {
+      return apiError(401, 'AUTH_INVALID_CREDENTIALS', tServer(event, 'errors.invalidCredentials'))
+    }
+  }
+
+  if (!user.password && user.authType !== 'google') {
     return apiError(401, 'AUTH_INVALID_CREDENTIALS', tServer(event, 'errors.invalidCredentials'))
   }
 

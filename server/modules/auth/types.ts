@@ -1,3 +1,26 @@
+import type { Document } from 'mongoose'
+
+export type UserLanguage = 'en' | 'ru' | 'uz'
+export type UserTheme = 'light' | 'dark' | 'system'
+
+export type AuthType = 'email'
+
+export interface IUser extends Document {
+  fullName: string
+  email: string
+  password: string // Required for email auth
+  authType: AuthType
+  isEmailVerified: boolean
+  
+  avatar?: {
+    publicId: string
+    url: string
+  }
+  language: UserLanguage
+  theme: UserTheme
+  comparePassword(candidatePassword: string): Promise<boolean>
+}
+
 export interface AuthUser {
   id: string
   fullName: string
@@ -45,8 +68,8 @@ export interface ResetPasswordTokenData {
 }
 
 export interface UpdatePreferencesData {
-  language?: 'en' | 'ru' | 'uz'
-  theme?: 'light' | 'dark' | 'system'
+  language?: UserLanguage
+  theme?: UserTheme
 }
 
 export interface AuthJwtPayload {

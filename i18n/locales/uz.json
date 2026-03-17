@@ -17,12 +17,17 @@
     "alreadyHave": "Akkauntingiz bormi?",
     "goToSignup": "Ro'yxatdan o'tishga o'tish",
     "goToSignin": "Kirishga o'tish",
+    "orContinueWith": "Yoki quyidagilar bilan davom eting",
     "language": "Til",
     "theme": "Mavzu",
     "loginSuccess": "Siz tizimga kirdingiz.",
     "loginFailed": "Kirishda xatolik",
     "registerSuccess": "Akkaunt muvaffaqiyatli yaratildi.",
     "registerFailed": "Ro'yxatdan o'tishda xatolik",
+    "googleAuthError": "Google autentifikatsiyasida xatolik",
+    "welcome": "Xush kelibsiz!",
+    "accountCreated": "Sizning akkauntingiz muvaffaqiyatli yaratildi.",
+    "googleUserOnly": "Iltimos, akkauntingizga kirish uchun Google kirishdan foydalaning.",
     "validationError": "Tekshiruv xatosi",
     "passwordsDoNotMatch": "Parollar mos kelmadi.",
     "verifyingEmail": "Emailni tekshirish",
@@ -90,6 +95,25 @@
     "success": "Muvaffaqiyat",
     "tryAgain": "Iltimos, qayta urinib ko'ring.",
     "contactSupport": "Qo'llab-quvvatlash bilan bog'lanish"
+  },
+  "header": {
+    "tagline": "Vazifalaringizni samarali boshqaring"
+  },
+  "footer": {
+    "about": "Biz haqimizda",
+    "aboutUs": "Kompaniya haqida",
+    "features": "Imkoniyatlar",
+    "pricing": "Narxlar",
+    "support": "Qo'llab",
+    "help": "Yordam",
+    "contact": "Aloqa",
+    "faq": "Ko'p so'ralan savollar",
+    "legal": "Huquqiy ma'lumot",
+    "privacy": "Maxfiylik siyosati",
+    "terms": "Foydalanish shartlari",
+    "cookies": "Cookie siyosati",
+    "description": "Task Manager sizga kunlik vazifalarni samarali tashkil qilish va kuzatishda yordam beradi.",
+    "allRightsReserved": "Barcha huquqlar himoyalangan."
   },
   "home": {
     "badge": "Nuxt 4 + {'@'}nuxt/ui",

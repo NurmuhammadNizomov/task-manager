@@ -17,6 +17,7 @@
     "alreadyHave": "Already have an account?",
     "goToSignup": "Go to sign up",
     "goToSignin": "Go to sign in",
+    "orContinueWith": "Or continue with",
     "language": "Language",
     "theme": "Theme",
     "loginSuccess": "You are signed in.",
@@ -94,6 +95,25 @@
     "cancel": "Cancel",
     "tryAgain": "Please try again.",
     "contactSupport": "Contact support"
+  },
+  "header": {
+    "tagline": "Manage your tasks efficiently"
+  },
+  "footer": {
+    "about": "About",
+    "aboutUs": "About Us",
+    "features": "Features",
+    "pricing": "Pricing",
+    "support": "Support",
+    "help": "Help",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "cookies": "Cookie Policy",
+    "description": "Task Manager helps you organize and track your daily tasks efficiently.",
+    "allRightsReserved": "All rights reserved."
   },
   "home": {
     "badge": "Nuxt 4 + {'@'}nuxt/ui",
