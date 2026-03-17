@@ -7,7 +7,11 @@ const limiters = {
   register: new RateLimiterMemory({ points: 5, duration: 60 }),
   login: new RateLimiterMemory({ points: 10, duration: 60 }),
   forgotPassword: new RateLimiterMemory({ points: 5, duration: 60 }),
-  refresh: new RateLimiterMemory({ points: 20, duration: 60 })
+  resetPassword: new RateLimiterMemory({ points: 5, duration: 60 }),
+  verifyEmail: new RateLimiterMemory({ points: 10, duration: 60 }),
+  refresh: new RateLimiterMemory({ points: 20, duration: 60 }),
+  updatePreferences: new RateLimiterMemory({ points: 30, duration: 60 }),
+  global: new RateLimiterMemory({ points: 100, duration: 60 })
 }
 
 export type LimiterKey = keyof typeof limiters

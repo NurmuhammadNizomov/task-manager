@@ -1,4 +1,6 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
+import { z } from 'zod'
+import type { FormSubmitEvent } from '#ui/types'
 import { DEFAULT_LANGUAGE } from '~/composables/useUserSettings'
 import type { AppLanguage } from '~/composables/useUserSettings'
 
@@ -8,11 +10,30 @@ definePageMeta({
 })
 
 const { t, locale } = useI18n()
+
+// Schema for frontend validation
+const schema = z.object({
+  fullName: z.string().min(2, t('auth.validation.fullNameMin')),
+  email: z.string().email(t('auth.validation.invalidEmail')),
+  password: z.string().min(8, t('auth.validation.passwordMin')),
+  confirmPassword: z.string().min(8, t('auth.validation.passwordMin'))
+}).refine((data) => data.password === data.confirmPassword, {
+  message: t('auth.validation.passwordsDoNotMatch'),
+  path: ['confirmPassword']
+})
+
+type Schema = z.infer<typeof schema>
+
+useSeoMeta({
+  title: () => t('auth.register'),
+  description: () => t('auth.registerDescription') || t('auth.register'),
+  ogTitle: () => t('auth.register'),
+})
 const colorMode = useColorMode()
 const { register } = useAuthApi()
 const toast = useToast()
 
-const form = reactive({
+const form = reactive<Schema>({
   fullName: '',
   email: '',
   password: '',
@@ -41,29 +62,14 @@ const normalizeLanguage = (value: string | null | undefined): AppLanguage => {
   return 'en'
 }
 
-
-
-const submit = async () => {
+const submit = async (event: FormSubmitEvent<Schema>) => {
   isSubmitting.value = true
 
   try {
-    if (form.password !== form.confirmPassword) {
-      toast.add({
-        title: t('auth.validationError'),
-        description: t('auth.passwordsDoNotMatch'),
-        color: 'error',
-        icon: 'lucide:circle-alert'
-      })
-      isSubmitting.value = false
-      return
-    }
-
     const selectedLanguage = normalizeLanguage(locale.value as string)
 
     await register({
-      fullName: form.fullName,
-      email: form.email,
-      password: form.password,
+      ...event.data,
       language: selectedLanguage
     })
 
@@ -107,12 +113,17 @@ const submit = async () => {
       </div>
     </template>
 
-    <form class="space-y-4" @submit.prevent="submit">
-      <UFormField :label="t('auth.fullName')">
-        <UInput v-model="form.fullName" size="xl" class="w-full" autocomplete="name" :placeholder="t('auth.placeholders.fullName')" />
+    <UForm :schema="schema" :state="form" class="space-y-4" @submit="submit">
+      <UFormField :label="t('auth.fullName')" name="fullName">
+        <UInput
+          v-model="form.fullName"
+          size="xl"
+          class="w-full"
+          :placeholder="t('auth.placeholders.fullName')"
+        />
       </UFormField>
 
-      <UFormField :label="t('auth.email')">
+      <UFormField :label="t('auth.email')" name="email">
         <UInput
           v-model="form.email"
           type="email"
@@ -123,50 +134,59 @@ const submit = async () => {
         />
       </UFormField>
 
-      <UFormField :label="t('auth.password')">
-        <div class="relative">
-          <UInput
-            v-model="form.password"
-            :type="showPassword ? 'text' : 'password'"
-            size="xl"
-            class="w-full pe-10"
-            autocomplete="new-password"
-            :placeholder="t('auth.placeholders.password')"
-          />
-          <button
-            type="button"
-            class="absolute inset-y-0 right-0 grid w-10 place-items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-            @click="showPassword = !showPassword"
-          >
-            <Icon :name="showPassword ? 'lucide:eye-off' : 'lucide:eye'" />
-          </button>
-        </div>
+      <UFormField :label="t('auth.password')" name="password">
+        <UInput
+          v-model="form.password"
+          :type="showPassword ? 'text' : 'password'"
+          size="xl"
+          class="w-full"
+          autocomplete="new-password"
+          :placeholder="t('auth.placeholders.password')"
+        >
+          <template #trailing>
+            <UButton
+              color="neutral"
+              variant="ghost"
+              :icon="showPassword ? 'lucide:eye-off' : 'lucide:eye'"
+              class="-mr-1.5"
+              @click="showPassword = !showPassword"
+            />
+          </template>
+        </UInput>
       </UFormField>
 
-      <UFormField :label="t('auth.confirmPassword')">
-        <div class="relative">
-          <UInput
-            v-model="form.confirmPassword"
-            :type="showConfirmPassword ? 'text' : 'password'"
-            size="xl"
-            class="w-full pe-10"
-            autocomplete="new-password"
-            :placeholder="t('auth.placeholders.password')"
-          />
-          <button
-            type="button"
-            class="absolute inset-y-0 right-0 grid w-10 place-items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-            @click="showConfirmPassword = !showConfirmPassword"
-          >
-            <Icon :name="showConfirmPassword ? 'lucide:eye-off' : 'lucide:eye'" />
-          </button>
-        </div>
+      <UFormField :label="t('auth.confirmPassword')" name="confirmPassword">
+        <UInput
+          v-model="form.confirmPassword"
+          :type="showConfirmPassword ? 'text' : 'password'"
+          size="xl"
+          class="w-full"
+          autocomplete="new-password"
+          :placeholder="t('auth.placeholders.password')"
+        >
+          <template #trailing>
+            <UButton
+              color="neutral"
+              variant="ghost"
+              :icon="showConfirmPassword ? 'lucide:eye-off' : 'lucide:eye'"
+              class="-mr-1.5"
+              @click="showConfirmPassword = !showConfirmPassword"
+            />
+          </template>
+        </UInput>
       </UFormField>
 
-      <UButton type="submit" class="w-full justify-center" size="xl" :loading="isSubmitting">
+      <UButton
+        type="submit"
+        size="xl"
+        block
+        color="primary"
+        class="rounded-xl font-semibold"
+        :loading="isSubmitting"
+      >
         {{ t('auth.createAccount') }}
       </UButton>
-    </form>
+    </UForm>
 
     <template #footer>
       <p class="text-center text-sm text-gray-600 dark:text-gray-300">

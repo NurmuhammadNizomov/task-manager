@@ -1,11 +1,7 @@
-import { AuthSessionModel } from '../models/AuthSession'
-import type { IAuthSession } from '../models/AuthSession'
+import { AuthSessionModel, type IAuthSession } from '../models/auth-session'
+import { hashToken } from './token'
 
 export class SessionCacheService {
-  static async getSession(userId: string): Promise<IAuthSession | null> {
-    return AuthSessionModel.findOne({ userId }).exec()
-  }
-
   static async createOrUpdateSession(
     userId: string,
     accessToken: string,
@@ -14,7 +10,7 @@ export class SessionCacheService {
     try {
       const session = await AuthSessionModel.findOneAndUpdate(
         { userId },
-        { $set: { accessToken, refreshToken } },
+        { $set: { accessToken, refreshTokenHash: hashToken(refreshToken) } },
         { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
       ).exec()
       return session
@@ -24,12 +20,19 @@ export class SessionCacheService {
     }
   }
 
-  static async deleteSession(userId: string): Promise<void> {
-    await AuthSessionModel.findOneAndDelete({ userId }).exec()
+  static async getSession(userId: string): Promise<IAuthSession | null> {
+    try {
+      return await AuthSessionModel.findOne({ userId }).exec()
+    } catch {
+      return null
+    }
   }
 
-  static async invalidateSessionCache(userId: string): Promise<void> {
-    // No-op: no cache layer
-    void userId
+  static async deleteSession(userId: string): Promise<void> {
+    try {
+      await AuthSessionModel.deleteMany({ userId }).exec()
+    } catch (err) {
+      console.error('[SessionCache] Failed to delete session:', err)
+    }
   }
 }

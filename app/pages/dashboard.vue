@@ -1,54 +1,47 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
+import dayjs from 'dayjs'
+import { useProjects } from '~/composables/useProjects'
+
 definePageMeta({
   layout: 'dashboard',
   middleware: 'auth'
 })
 
 const { t } = useI18n()
+const { projects, isLoading: projectsLoading, fetchProjects, createProject } = useProjects()
 
-type TaskStatus = 'inProgress' | 'planned' | 'done'
-type TaskPriority = 'high' | 'medium' | 'low'
+const stats = ref({
+  openTasks: 0,
+  highPriorityTasks: 0,
+  completedThisWeek: 0,
+  totalMembers: 0
+})
+const statsLoading = ref(false)
 
-const stats = computed(() => [
-  {
-    title: t('dashboard.stats.openTasks'),
-    value: '24',
-    icon: 'lucide:list-todo',
-    hint: t('dashboard.stats.openTasksHint')
-  },
-  {
-    title: t('dashboard.stats.completedWeek'),
-    value: '61',
-    icon: 'lucide:check-circle-2',
-    hint: t('dashboard.stats.completedWeekHint')
-  },
-  {
-    title: t('dashboard.stats.teamMembers'),
-    value: '8',
-    icon: 'lucide:users',
-    hint: t('dashboard.stats.teamMembersHint')
+const fetchStats = async () => {
+  statsLoading.value = true
+  try {
+    const response = await $fetch<any>('/api/dashboard/stats')
+    stats.value = response.data
+  } finally {
+    statsLoading.value = false
   }
-])
+}
 
-const todayTasks = computed(
-  () =>
-    [
-      { title: t('dashboard.tasks.roadmap'), status: 'inProgress', priority: 'high' },
-      { title: t('dashboard.tasks.otpResend'), status: 'planned', priority: 'medium' },
-      { title: t('dashboard.tasks.deployStaging'), status: 'done', priority: 'low' }
-    ] as Array<{ title: string; status: TaskStatus; priority: TaskPriority }>
-)
+const isCreateModalOpen = ref(false)
+const newProjectName = ref('')
 
-const resolveStatusColor = (status: TaskStatus) => {
-  if (status === 'done') {
-    return 'success'
-  }
+// Fetch projects and stats on component mount
+onMounted(() => {
+  fetchProjects()
+  fetchStats()
+})
 
-  if (status === 'inProgress') {
-    return 'primary'
-  }
-
-  return 'neutral'
+const handleCreateProject = async () => {
+  if (!newProjectName.value.trim()) return
+  await createProject(newProjectName.value)
+  isCreateModalOpen.value = false
+  newProjectName.value = ''
 }
 </script>
 
@@ -57,78 +50,120 @@ const resolveStatusColor = (status: TaskStatus) => {
     <section class="flex flex-wrap items-start justify-between gap-3">
       <div>
         <p class="text-sm text-gray-500">{{ t('dashboard.overview') }}</p>
-        <h1 class="text-3xl font-semibold tracking-tight">{{ t('dashboard.title') }}</h1>
-        <p class="mt-2 text-gray-600 dark:text-gray-300">{{ t('dashboard.subtitle') }}</p>
+        <h1 class="text-3xl font-semibold tracking-tight">{{ t('projects.title') }}</h1>
+        <p class="mt-2 text-gray-600 dark:text-gray-300">{{ t('projects.subtitle') }}</p>
       </div>
 
       <div class="flex gap-2">
-        <UButton variant="outline" color="neutral">
-          <template #leading>
-            <Icon name="lucide:filter" />
-          </template>
-          {{ t('dashboard.actions.filter') }}
-        </UButton>
-        <UButton>
+        <UButton @click="isCreateModalOpen = true">
           <template #leading>
             <Icon name="lucide:plus" />
           </template>
-          {{ t('dashboard.actions.newTask') }}
+          {{ t('projects.actions.newProject') }}
         </UButton>
       </div>
     </section>
 
     <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-      <UCard v-for="item in stats" :key="item.title" class="ring-1 ring-gray-200 dark:ring-gray-800">
+      <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
         <div class="flex items-start justify-between gap-3">
           <div>
-            <p class="text-sm text-gray-500">{{ item.title }}</p>
-            <p class="mt-2 text-3xl font-semibold">{{ item.value }}</p>
-            <p class="mt-1 text-xs text-gray-500">{{ item.hint }}</p>
+            <p class="text-sm text-gray-500">{{ t('dashboard.stats.openTasks') }}</p>
+            <p class="mt-2 text-3xl font-semibold">{{ stats.openTasks }}</p>
+            <p class="mt-1 text-xs text-gray-500">{{ stats.highPriorityTasks }} {{ t('dashboard.stats.openTasksHint') }}</p>
           </div>
           <div class="rounded-xl bg-primary-100 p-2.5 dark:bg-primary-900/40">
-            <Icon :name="item.icon" class="text-primary-700 dark:text-primary-300" />
+            <Icon name="lucide:list-todo" class="text-primary-700 dark:text-primary-300" />
+          </div>
+        </div>
+      </UCard>
+
+      <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p class="text-sm text-gray-500">{{ t('dashboard.stats.completedWeek') }}</p>
+            <p class="mt-2 text-3xl font-semibold">{{ stats.completedThisWeek }}</p>
+            <p class="mt-1 text-xs text-gray-500">{{ t('dashboard.stats.completedWeekHint') }}</p>
+          </div>
+          <div class="rounded-xl bg-primary-100 p-2.5 dark:bg-primary-900/40">
+            <Icon name="lucide:check-circle-2" class="text-primary-700 dark:text-primary-300" />
+          </div>
+        </div>
+      </UCard>
+
+      <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p class="text-sm text-gray-500">{{ t('dashboard.stats.teamMembers') }}</p>
+            <p class="mt-2 text-3xl font-semibold">{{ stats.totalMembers }}</p>
+            <p class="mt-1 text-xs text-gray-500">{{ t('dashboard.stats.teamMembersHint') }}</p>
+          </div>
+          <div class="rounded-xl bg-primary-100 p-2.5 dark:bg-primary-900/40">
+            <Icon name="lucide:users" class="text-primary-700 dark:text-primary-300" />
           </div>
         </div>
       </UCard>
     </section>
 
-    <section class="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-      <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
-        <template #header>
-          <h2 class="font-semibold">{{ t('dashboard.todayTasks') }}</h2>
-        </template>
+    <section v-if="projectsLoading" class="text-center">
+      <p>{{ t('common.loading') }}</p>
+    </section>
 
-        <div class="space-y-3">
-          <div
-            v-for="task in todayTasks"
-            :key="task.title"
-            class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gray-200 p-3 dark:border-gray-800"
-          >
+    <section v-else-if="projects.length === 0" class="text-center py-12">
+      <Icon name="lucide:folder-search" class="mx-auto h-12 w-12 text-gray-400" />
+      <h3 class="mt-2 text-sm font-semibold text-gray-900 dark:text-white">{{ t('projects.noProjects.title') }}</h3>
+      <p class="mt-1 text-sm text-gray-500">{{ t('projects.noProjects.description') }}</p>
+      <div class="mt-6">
+        <UButton @click="isCreateModalOpen = true">
+          <template #leading>
+            <Icon name="lucide:plus" />
+          </template>
+          {{ t('projects.actions.createFirstProject') }}
+        </UButton>
+      </div>
+    </section>
+
+    <section v-else class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <UCard v-for="project in projects" :key="project._id" class="ring-1 ring-gray-200 dark:ring-gray-800 hover:ring-primary-500 dark:hover:ring-primary-400 transition-all">
+        <NuxtLink :to="`/projects/${project._id}`" class="block">
+          <div class="flex items-start justify-between gap-3">
             <div>
-              <p class="font-medium">{{ task.title }}</p>
-              <p class="text-xs text-gray-500">{{ t('dashboard.priority.label') }}: {{ t(`dashboard.priority.${task.priority}`) }}</p>
+              <p class="text-lg font-semibold">{{ project.name }}</p>
+              <p class="mt-1 text-sm text-gray-500">{{ t('projects.owner') }}: {{ project.owner.fullName }}</p>
+              <p class="mt-2 text-xs text-gray-500">{{ dayjs(project.createdAt).format('MMM D, YYYY') }}</p>
             </div>
-            <UBadge
-              :color="resolveStatusColor(task.status)"
-              variant="soft"
-            >
-              {{ t(`dashboard.status.${task.status}`) }}
-            </UBadge>
+            <div class="flex items-center">
+              <UPopover mode="hover">
+                <UAvatarGroup :max="2">
+                  <UAvatar v-for="memberId in project.members" :key="memberId" :alt="memberId" size="sm" />
+                </UAvatarGroup>
+                <template #panel>
+                  <div class="p-2 text-xs">{{ project.members.length }} {{ t('projects.members') }}</div>
+                </template>
+              </UPopover>
+            </div>
           </div>
-        </div>
-      </UCard>
-
-      <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
-        <template #header>
-          <h2 class="font-semibold">{{ t('dashboard.quickLinks.title') }}</h2>
-        </template>
-
-        <div class="grid gap-2">
-          <UButton to="/" variant="ghost" color="neutral" class="justify-start">{{ t('dashboard.quickLinks.main') }}</UButton>
-          <UButton to="/login" variant="ghost" color="neutral" class="justify-start">{{ t('dashboard.quickLinks.login') }}</UButton>
-          <UButton to="/register" variant="ghost" color="neutral" class="justify-start">{{ t('dashboard.quickLinks.register') }}</UButton>
-        </div>
+        </NuxtLink>
       </UCard>
     </section>
+
+    <UModal v-model="isCreateModalOpen">
+      <UCard>
+        <template #header>
+          <h2 class="font-semibold">{{ t('projects.modals.create.title') }}</h2>
+        </template>
+
+        <UFormField :label="t('projects.modals.create.nameLabel')">
+          <UInput v-model="newProjectName" @keyup.enter="handleCreateProject" />
+        </UFormField>
+
+        <template #footer>
+          <div class="flex justify-end gap-2">
+            <UButton color="gray" variant="ghost" @click="isCreateModalOpen = false">{{ t('common.cancel') }}</UButton>
+            <UButton @click="handleCreateProject">{{ t('common.create') }}</UButton>
+          </div>
+        </template>
+      </UCard>
+    </UModal>
   </div>
 </template>

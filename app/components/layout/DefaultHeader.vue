@@ -107,11 +107,18 @@ watch(
             <UButton
               variant="ghost"
               color="neutral"
-              class="h-9 w-9 justify-center rounded-full"
+              class="h-9 w-9 flex items-center justify-center rounded-full"
               :aria-label="currentTheme?.label || t('auth.theme')"
             >
               <Icon :name="currentTheme?.icon || 'lucide:monitor'" class="size-5" />
             </UButton>
+
+            <template #item="{ item }">
+              <div class="flex items-center gap-2 w-full">
+                <Icon :name="item.icon" class="size-4 shrink-0" />
+                <span class="truncate">{{ item.label }}</span>
+              </div>
+            </template>
           </UDropdownMenu>
         </div>
       </div>

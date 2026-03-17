@@ -4,6 +4,14 @@ definePageMeta({
 })
 
 const { t } = useI18n()
+
+useSeoMeta({
+  title: () => t('home.title'),
+  description: () => t('home.description'),
+  ogTitle: () => t('home.title'),
+  ogDescription: () => t('home.description'),
+  twitterCard: 'summary_large_image'
+})
 </script>
 
 <template>

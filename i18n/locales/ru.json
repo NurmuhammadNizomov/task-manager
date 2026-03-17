@@ -59,8 +59,19 @@
     "somethingWentWrong": "Что-то пошло не так. Пожалуйста, попробуйте снова.",
     "verificationTokenRequired": "Требуется токен подтверждения",
     "invalidVerificationToken": "Недействительный или истекший токен подтверждения",
+    "login": "Войти в аккаунт",
+    "loginDescription": "С возвращением в Task Manager",
+    "register": "Создать аккаунт",
+    "registerDescription": "Зарегистрируйтесь, чтобы начать работу с Task Manager",
     "checkingEmail": "Проверяем ваш email",
     "welcomeAboard": "Добро пожаловать!",
+    "validation": {
+      "required": "Поле {field} обязательно",
+      "invalidEmail": "Некорректный email адрес",
+      "passwordMin": "Пароль должен содержать не менее 8 символов",
+      "passwordsDoNotMatch": "Пароли не совпадают",
+      "fullNameMin": "Имя должно содержать не менее 2 символов"
+    },
     "placeholders": {
       "fullName": "Иван Иванов",
       "email": "you{'@'}example.com",

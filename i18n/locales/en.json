@@ -59,8 +59,19 @@
     "somethingWentWrong": "Something went wrong. Please try again.",
     "verificationTokenRequired": "Verification token is required",
     "invalidVerificationToken": "Invalid or expired verification token",
+    "login": "Sign in to your account",
+    "loginDescription": "Welcome back to Task Manager",
+    "register": "Create your account",
+    "registerDescription": "Sign up to get started with Task Manager",
     "checkingEmail": "Checking your email address",
     "welcomeAboard": "Welcome aboard!",
+    "validation": {
+      "required": "{field} is required",
+      "invalidEmail": "Invalid email address",
+      "passwordMin": "Password must be at least 8 characters",
+      "passwordsDoNotMatch": "Passwords do not match",
+      "fullNameMin": "Full name must be at least 2 characters"
+    },
     "placeholders": {
       "fullName": "John Doe",
       "email": "you{'@'}example.com",
@@ -77,6 +88,10 @@
     "appName": "Task Manager",
     "appSubtitle": "Nuxt Auth Platform",
     "success": "Success",
+    "error": "Error",
+    "loading": "Loading...",
+    "create": "Create",
+    "cancel": "Cancel",
     "tryAgain": "Please try again.",
     "contactSupport": "Contact support"
   },
@@ -158,6 +173,50 @@
       "main": "Go to main page",
       "login": "Go to login",
       "register": "Go to register"
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "Manage your projects and tasks.",
+    "owner": "Owner",
+    "members": "members",
+    "fetchError": "Failed to fetch projects.",
+    "createSuccess": "Project created successfully.",
+    "createError": "Failed to create project.",
+    "actions": {
+      "newProject": "New Project",
+      "createFirstProject": "Create your first project"
+    },
+    "noProjects": {
+      "title": "No projects yet",
+      "description": "Get started by creating your first project."
+    },
+    "modals": {
+      "create": {
+        "title": "Create a new project",
+        "nameLabel": "Project name"
+      }
+    },
+    "backToProjects": "Back to Projects"
+  },
+  "tasks": {
+    "fetchError": "Failed to fetch tasks.",
+    "moveError": "Failed to move task.",
+    "createSuccess": "Task created successfully.",
+    "createError": "Failed to create task.",
+    "updateSuccess": "Task updated successfully.",
+    "updateError": "Failed to update task.",
+    "uploadSuccess": "File uploaded successfully.",
+    "uploadError": "Failed to upload file.",
+    "deleteSuccess": "Attachment deleted successfully.",
+    "deleteError": "Failed to delete attachment.",
+    "addTask": "Add task",
+    "newTaskPlaceholder": "Enter a title for this task...",
+    "status": {
+      "planned": "Planned",
+      "inProgress": "In Progress",
+      "inReview": "In Review",
+      "done": "Done"
     }
   },
   "errorPage": {

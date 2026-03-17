@@ -48,6 +48,6 @@ authTokenSchema.index({ userId: 1, emailVerificationExpires: 1 }) // For user-sp
 authTokenSchema.index({ userId: 1, passwordResetExpires: 1 }) // For user-specific password reset lookups
 
 export const AuthTokenModel: Model<IAuthToken> =
-  (mongoose.models.UserSecurityToken as Model<IAuthToken>) ||
-  mongoose.model<IAuthToken>('UserSecurityToken', authTokenSchema)
+  (mongoose.models.AuthToken as Model<IAuthToken>) ||
+  mongoose.model<IAuthToken>('AuthToken', authTokenSchema)
 

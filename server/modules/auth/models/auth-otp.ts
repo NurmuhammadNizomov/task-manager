@@ -51,6 +51,6 @@ const authOtpSchema = new Schema<IAuthOtp>(
 authOtpSchema.index({ userId: 1, purpose: 1 }, { unique: true })
 
 export const AuthOtpModel: Model<IAuthOtp> =
-  (mongoose.models.UserOtpCode as Model<IAuthOtp>) ||
-  mongoose.model<IAuthOtp>('UserOtpCode', authOtpSchema)
+  (mongoose.models.AuthOtp as Model<IAuthOtp>) ||
+  mongoose.model<IAuthOtp>('AuthOtp', authOtpSchema)
 

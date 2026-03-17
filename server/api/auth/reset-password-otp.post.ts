@@ -1,78 +1,18 @@
-import { deleteCookie } from 'h3'
-import { UserModel } from '../../modules/auth/models/User'
-import { AuthOtpModel } from '../../modules/auth/models/AuthOtp'
-import { AuthTokenModel } from '../../modules/auth/models/AuthToken'
-import { AuthSessionModel } from '../../modules/auth/models/AuthSession'
+import { AuthService } from '../../modules/auth/services/auth-service'
 import { connectDB } from '../../utils/db'
 import { tServer } from '../../utils/i18n'
-import { hashOtpCode } from '../../modules/auth/utils/otp'
 import { readValidatedBody, resetPasswordOtpSchema } from '../../modules/auth/utils/validation'
-import { apiError, apiSuccess, defineApiHandler } from '../../utils/api-response'
-
-interface ResetPasswordOtpBody {
-  email: string
-  otp: string
-  password: string
-}
-
-const MAX_OTP_ATTEMPTS = 5
+import { apiSuccess, defineApiHandler } from '../../utils/api-response'
+import { enforceRateLimit } from '../../modules/auth/utils/rate-limit'
+import type { ResetPasswordOtpData } from '../../modules/auth/types'
 
 export default defineApiHandler(async (event) => {
-  const body = await readValidatedBody<ResetPasswordOtpBody>(event, resetPasswordOtpSchema)
+  await enforceRateLimit(event, 'resetPassword')
+  const body = await readValidatedBody<ResetPasswordOtpData>(event, resetPasswordOtpSchema)
 
   await connectDB(event)
 
-  const user = await UserModel.findOne({ email: body.email })
-
-  if (!user) {
-    apiError(400, 'AUTH_OTP_INVALID_OR_EXPIRED', tServer(event, 'errors.otpInvalidOrExpired'))
-  }
-
-  const otpEntry = await AuthOtpModel.findOne({
-    userId: user._id,
-    purpose: 'password_reset',
-    consumedAt: null,
-    expiresAt: { $gt: new Date() }
-  })
-
-  if (!otpEntry) {
-    apiError(400, 'AUTH_OTP_INVALID_OR_EXPIRED', tServer(event, 'errors.otpInvalidOrExpired'))
-  }
-
-  const otpHash = hashOtpCode(body.otp)
-
-  if (otpEntry.codeHash !== otpHash) {
-    otpEntry.attempts += 1
-
-    if (otpEntry.attempts >= MAX_OTP_ATTEMPTS) {
-      otpEntry.expiresAt = new Date()
-    }
-
-    await otpEntry.save()
-
-    apiError(400, 'AUTH_OTP_INVALID_OR_EXPIRED', tServer(event, 'errors.otpInvalidOrExpired'))
-  }
-
-  user.password = body.password
-  otpEntry.consumedAt = new Date()
-
-  await Promise.all([
-    user.save(),
-    otpEntry.save(),
-    AuthTokenModel.findOneAndUpdate(
-      { userId: user._id },
-      {
-        passwordResetToken: null,
-        passwordResetExpires: null
-      }
-    ),
-    AuthSessionModel.findOneAndUpdate(
-      { userId: user._id },
-      { accessToken: null, refreshToken: null }
-    )
-  ])
-
-  deleteCookie(event, 'refresh_token', { path: '/' })
+  await AuthService.resetPasswordOtp(event, body)
 
   return apiSuccess({
     message: tServer(event, 'success.passwordResetSuccess')

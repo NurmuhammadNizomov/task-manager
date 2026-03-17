@@ -1,4 +1,4 @@
-import { getCookie, setHeader, getMethod, getHeader, createError, type H3Event } from 'h3'
+import { getCookie, setCookie, getMethod, getHeader, createError, type H3Event } from 'h3'
 
 const CSRF_COOKIE_NAME = 'csrf_token'
 const CSRF_HEADER_NAME = 'x-csrf-token'
@@ -7,10 +7,22 @@ export const generateCSRFToken = (): string => {
   return crypto.randomUUID().replace(/-/g, '').substring(0, 32)
 }
 
-export const setCSRFCookie = (event: H3Event): string => {
+export const setCSRFCookie = (event: H3Event): string | undefined => {
+  const existingToken = getCSRFCookie(event)
+  if (existingToken) {
+    return existingToken
+  }
+
   const token = generateCSRFToken()
   const isSecure = process.env.NODE_ENV === 'production'
-  setHeader(event, 'set-cookie', `${CSRF_COOKIE_NAME}=${token}; Path=/; HttpOnly; SameSite=Lax; ${isSecure ? 'Secure;' : ''}`)
+  
+  setCookie(event, CSRF_COOKIE_NAME, token, {
+    path: '/',
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: isSecure
+  })
+  
   return token
 }
 

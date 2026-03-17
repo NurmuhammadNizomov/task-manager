@@ -1,5 +1,4 @@
-export type AppLanguage = 'en' | 'ru' | 'uz'
-export type AppTheme = 'light' | 'dark' | 'system'
+import type { AppLanguage, AppTheme } from '~/types/auth'
 
 export const DEFAULT_LANGUAGE: AppLanguage = 'en'
 export const DEFAULT_THEME: AppTheme = 'light'

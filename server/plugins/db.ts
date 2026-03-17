@@ -1,7 +1,9 @@
 import { connectDB } from '../utils/db'
-import { UserModel } from '../modules/auth/models/User'
-import { AuthTokenModel } from '../modules/auth/models/AuthToken'
-import { AuthSessionModel } from '../modules/auth/models/AuthSession'
+import { UserModel } from '../modules/auth/models/user'
+import { AuthTokenModel } from '../modules/auth/models/auth-token'
+import { AuthSessionModel } from '../modules/auth/models/auth-session'
+import { ProjectModel } from '../modules/projects/models/project'
+import { TaskModel } from '../modules/tasks/models/task'
 
 export default defineNitroPlugin(async () => {
   try {
@@ -11,7 +13,9 @@ export default defineNitroPlugin(async () => {
     await Promise.all([
       UserModel.ensureIndexes(),
       AuthTokenModel.ensureIndexes(),
-      AuthSessionModel.ensureIndexes()
+      AuthSessionModel.ensureIndexes(),
+      ProjectModel.ensureIndexes(),
+      TaskModel.ensureIndexes()
     ])
     console.log('[DB] All model indexes ensured.')
   } catch (err) {

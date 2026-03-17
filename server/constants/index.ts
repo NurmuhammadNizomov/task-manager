@@ -34,7 +34,13 @@ export const SECURITY_CONFIG = {
   
   // CSRF Protection
   CSRF_TOKEN_LENGTH: 32,
-  CSRF_COOKIE_NAME: 'csrf_token'
+  CSRF_COOKIE_NAME: 'csrf_token',
+  
+  // Auth Token Lifetimes
+  EMAIL_VERIFY_TOKEN_LIFETIME_MS: 1000 * 60 * 60 * 24, // 24 hours
+  EMAIL_VERIFY_OTP_LIFETIME_MS: 1000 * 60 * 10, // 10 minutes
+  PASSWORD_RESET_TOKEN_LIFETIME_MS: 1000 * 60 * 60, // 1 hour
+  PASSWORD_RESET_OTP_LIFETIME_MS: 1000 * 60 * 10 // 10 minutes
 } as const
 
 // API Configuration Constants

@@ -1,13 +1,4 @@
-import type { AppLanguage, AppTheme } from './useUserSettings'
-
-export interface AuthUser {
-  id: string
-  fullName: string
-  email: string
-  isEmailVerified?: boolean
-  language?: AppLanguage
-  theme?: AppTheme
-}
+import type { AuthUser } from '~/types/auth'
 
 export const useAuth = () => {
   const user = useState<AuthUser | null>('auth:user', () => null)

@@ -1,7 +1,9 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import type { AppLanguage } from '~/composables/useUserSettings'
+import NotificationDropdown from '~/components/layout/NotificationDropdown.vue'
 
 const colorMode = useColorMode()
+
 const { t, locale, setLocale } = useI18n()
 const { languageItems, themeItems } = useUserSettings()
 const { updatePreferences } = useAuthApi()
@@ -79,7 +81,7 @@ watch(
 
 <template>
   <div class="min-h-screen bg-gray-100 dark:bg-gray-950">
-    <div class="mx-auto flex min-h-screen w-full max-w-[1400px] flex-col lg:flex-row">
+    <div class="flex min-h-screen w-full flex-col lg:flex-row">
       <aside class="w-full border-b border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900 lg:w-72 lg:border-b-0 lg:border-r">
         <div class="flex items-center gap-3">
           <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary-100 dark:bg-primary-900/40">
@@ -92,11 +94,17 @@ watch(
         </div>
 
         <nav class="mt-6 grid gap-2">
-          <UButton variant="soft" color="primary" class="justify-start">
+          <UButton to="/dashboard" variant="soft" color="primary" class="justify-start">
             <template #leading>
               <Icon name="lucide:home" />
             </template>
             {{ t('dashboard.overview') }}
+          </UButton>
+          <UButton to="/profile" variant="ghost" color="neutral" class="justify-start">
+            <template #leading>
+              <Icon name="lucide:user" />
+            </template>
+            Profile
           </UButton>
           <UButton variant="ghost" color="neutral" class="justify-start">
             <template #leading>
@@ -119,6 +127,8 @@ watch(
         </nav>
 
         <div class="mt-6 flex flex-wrap items-center gap-2 lg:mt-10">
+          <NotificationDropdown />
+          
           <UDropdownMenu :items="languageMenuItems" :content="{ side: 'bottom', align: 'start' }">
             <UButton
               variant="ghost"
@@ -135,20 +145,27 @@ watch(
             <UButton
               variant="ghost"
               color="neutral"
-              class="h-9 w-9 justify-center rounded-full"
+              class="h-9 w-9 flex items-center justify-center rounded-full"
               :aria-label="currentTheme?.label || t('auth.theme')"
             >
               <Icon :name="currentTheme?.icon || 'lucide:monitor'" class="size-5" />
             </UButton>
+
+            <template #item="{ item }">
+              <div class="flex items-center gap-2 w-full">
+                <Icon :name="item.icon" class="size-4 shrink-0" />
+                <span class="truncate">{{ item.label }}</span>
+              </div>
+            </template>
           </UDropdownMenu>
 
           <UButton to="/login" size="sm" variant="ghost" color="neutral">{{ t('dashboard.actions.logout') }}</UButton>
         </div>
       </aside>
 
-      <div class="flex-1 p-5 md:p-8">
+      <main class="flex-1 p-5 md:p-8">
         <slot />
-      </div>
+      </main>
     </div>
   </div>
 </template>

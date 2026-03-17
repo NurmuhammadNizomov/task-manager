@@ -1,57 +1,13 @@
-import type { AppLanguage, AppTheme } from './useUserSettings'
-
-interface ApiMeta {
-  [key: string]: unknown
-}
-
-interface ApiSuccessResponse<TData, TMeta extends ApiMeta = ApiMeta> {
-  status: 'success'
-  data: TData
-  meta: TMeta
-}
-
-interface AuthUser {
-  id: string
-  fullName: string
-  email: string
-  isEmailVerified?: boolean
-  language?: AppLanguage
-  theme?: AppTheme
-}
-
-interface LoginPayload {
-  email: string
-  password: string
-}
-
-interface LoginData {
-  accessToken: string
-  refreshToken: string
-  user: AuthUser
-}
-
-interface RegisterPayload {
-  fullName: string
-  email: string
-  password: string
-  language?: AppLanguage
-  theme?: AppTheme
-}
-
-interface RegisterData {
-  message: string
-  user: AuthUser
-}
-
-interface PreferencesPayload {
-  language?: AppLanguage
-  theme?: AppTheme
-}
-
-interface PreferencesData {
-  message: string
-  user: AuthUser
-}
+import type { 
+  AppLanguage, 
+  ApiSuccessResponse, 
+  LoginPayload, 
+  LoginData, 
+  RegisterPayload, 
+  RegisterData, 
+  PreferencesPayload, 
+  PreferencesData 
+} from '~/types/auth'
 
 export const useAuthApi = () => {
   const { locale } = useI18n()

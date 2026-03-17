@@ -1,57 +1,24 @@
-import { getHeader } from 'h3'
-import { UserModel } from '../../modules/auth/models/User'
-import { AuthSessionModel } from '../../modules/auth/models/AuthSession'
+import { UserService } from '../../modules/auth/services/user-service'
 import { connectDB } from '../../utils/db'
 import { tServer } from '../../utils/i18n'
-import { verifyAccessToken } from '../../modules/auth/utils/jwt'
+import { enforceRateLimit } from '../../modules/auth/utils/rate-limit'
 import { readValidatedBody, updatePreferencesSchema } from '../../modules/auth/utils/validation'
 import { apiError, apiSuccess, defineApiHandler } from '../../utils/api-response'
-
-interface PreferencesBody {
-  language?: 'en' | 'ru' | 'uz'
-  theme?: 'light' | 'dark' | 'system'
-}
+import type { UpdatePreferencesData } from '../../modules/auth/types'
 
 export default defineApiHandler(async (event) => {
-  const authHeader = getHeader(event, 'authorization') || ''
-  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : ''
+  await enforceRateLimit(event, 'updatePreferences')
+  const auth = event.context.auth
 
-  if (!token) {
+  if (!auth) {
     apiError(401, 'AUTH_ACCESS_TOKEN_REQUIRED', tServer(event, 'errors.authorizationTokenRequired'))
   }
 
-  const body = await readValidatedBody<PreferencesBody>(event, updatePreferencesSchema)
-
-  let payload
-  try {
-    payload = verifyAccessToken(token, event)
-  } catch {
-    apiError(401, 'AUTH_INVALID_ACCESS_TOKEN', tServer(event, 'errors.invalidAccessToken'))
-  }
+  const body = await readValidatedBody<UpdatePreferencesData>(event, updatePreferencesSchema)
 
   await connectDB(event)
 
-  const session = await AuthSessionModel.findOne({ userId: payload.sub, accessToken: token })
-
-  if (!session) {
-    apiError(401, 'AUTH_SESSION_INVALID', tServer(event, 'errors.sessionInvalid'))
-  }
-
-  const user = await UserModel.findById(payload.sub)
-
-  if (!user) {
-    apiError(404, 'USER_NOT_FOUND', tServer(event, 'errors.userNotFound'))
-  }
-
-  if (body.language) {
-    user.language = body.language
-  }
-
-  if (body.theme) {
-    user.theme = body.theme
-  }
-
-  await user.save()
+  const user = await UserService.updatePreferences(event, auth.userId, body)
 
   return apiSuccess({
     message: tServer(event, 'success.preferencesUpdated'),

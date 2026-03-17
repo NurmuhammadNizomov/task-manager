@@ -1,25 +1,16 @@
-import { JSDOM } from 'jsdom'
-import DOMPurify from 'dompurify'
-import Joi from 'joi'
-
-// Create a DOMPurify instance for server-side use
-const window = new JSDOM('').window
-const purify = DOMPurify(window)
+import { z } from 'zod'
 
 export interface SanitizeOptions {
   allowHTML?: boolean
-  allowedTags?: string[]
-  allowedAttributes?: Record<string, string[]>
 }
 
 const defaultOptions: SanitizeOptions = {
-  allowHTML: false,
-  allowedTags: [],
-  allowedAttributes: {}
+  allowHTML: false
 }
 
 /**
  * Sanitizes string input to prevent XSS attacks
+ * Nuxt/Vue already escapes output by default, so this is mainly for data cleanup
  */
 export const sanitizeString = (
   input: string | undefined | null,
@@ -32,19 +23,9 @@ export const sanitizeString = (
   // Trim whitespace
   let sanitized = input.trim()
 
-  if (options.allowHTML && options.allowedTags && options.allowedTags.length > 0) {
-    // Allow specific HTML tags with configured attributes
-    const allowedAttrs = options.allowedAttributes ? Object.values(options.allowedAttributes).flat() : []
-    sanitized = purify.sanitize(sanitized, {
-      ALLOWED_TAGS: options.allowedTags,
-      ALLOWED_ATTR: allowedAttrs
-    })
-  } else {
-    // Remove all HTML tags and attributes
-    sanitized = purify.sanitize(sanitized, {
-      ALLOWED_TAGS: [],
-      ALLOWED_ATTR: []
-    })
+  if (!options.allowHTML) {
+    // Simple tag stripping if HTML is not allowed
+    sanitized = sanitized.replace(/<[^>]*>?/gm, '')
   }
 
   // Additional security measures
@@ -140,54 +121,33 @@ export const sanitizeUrlParam = (param: string | undefined | null): string => {
 }
 
 /**
- * Enhanced validation schemas with sanitization
+ * Enhanced validation schemas with sanitization using Zod
  */
 export const createSanitizedSchemas = () => {
-  const baseString = Joi.string()
-  
   return {
     // Sanitized full name - removes HTML and special characters
-    fullName: baseString
-      .custom((value: string) => sanitizeName(value))
-      .min(2)
-      .max(120)
-      .required()
-      .messages({
-        'string.custom': 'Invalid characters in name'
-      }),
+    fullName: z.string()
+      .transform((val) => sanitizeName(val))
+      .pipe(z.string().min(2).max(120)),
     
     // Sanitized email - removes HTML and validates format
-    email: baseString
-      .custom((value: string) => sanitizeEmail(value))
-      .email()
-      .required()
-      .messages({
-        'string.custom': 'Invalid email format',
-        'string.email': 'Invalid email format'
-      }),
+    email: z.string()
+      .transform((val) => sanitizeEmail(val))
+      .pipe(z.string().email()),
     
     // Password - no sanitization (hashes handle security)
-    password: baseString
+    password: z.string()
       .min(8)
-      .max(128)
-      .required(),
+      .max(128),
     
     // Sanitized OTP/code
-    otp: baseString
-      .custom((value: string) => sanitizeCode(value))
-      .pattern(/^\d{6}$/)
-      .required()
-      .messages({
-        'string.custom': 'Invalid code format',
-        'string.pattern.base': 'Code must be 6 digits'
-      }),
+    otp: z.string()
+      .transform((val) => sanitizeCode(val))
+      .pipe(z.string().regex(/^\d{6}$/, 'Code must be 6 digits')),
     
     // Sanitized token
-    token: baseString
-      .custom((value: string) => sanitizeToken(value))
-      .required()
-      .messages({
-        'string.custom': 'Invalid token format'
-      })
+    token: z.string()
+      .transform((val) => sanitizeToken(val))
+      .pipe(z.string().min(1))
   }
 }

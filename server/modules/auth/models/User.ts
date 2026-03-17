@@ -9,6 +9,10 @@ export interface IUser extends Document {
   email: string
   password: string
   isEmailVerified: boolean
+  avatar?: {
+    publicId: string
+    url: string
+  }
   language: UserLanguage
   theme: UserTheme
   comparePassword(candidatePassword: string): Promise<boolean>
@@ -39,6 +43,10 @@ const userSchema = new Schema<IUser>(
     isEmailVerified: {
       type: Boolean,
       default: false
+    },
+    avatar: {
+      publicId: String,
+      url: String
     },
     language: {
       type: String,

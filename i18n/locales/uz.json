@@ -59,8 +59,19 @@
     "somethingWentWrong": "Biror nima xato ketdi. Iltimos, qayta urinib ko'ring.",
     "verificationTokenRequired": "Tasdiqlash tokeni talab qilinadi",
     "invalidVerificationToken": "Yaroqsiz yoki muddati o'tgan tasdiqlash tokeni",
+    "login": "Hisobingizga kiring",
+    "loginDescription": "Task Manager ga qaytib kelganingiz bilan",
+    "register": "Akkaunt yarating",
+    "registerDescription": "Task Manager ga qo'shilish uchun ro'yxatdan o'ting",
     "checkingEmail": "Emailingiz tekshirilmoqda",
     "welcomeAboard": "Xush kelibsiz!",
+    "validation": {
+      "required": "{field} kiritilishi shart",
+      "invalidEmail": "Noto'g'ri email manzili",
+      "passwordMin": "Parol kamida 8 ta belgidan iborat bo'lishi kerak",
+      "passwordsDoNotMatch": "Parollar mos kelmadi",
+      "fullNameMin": "To'liq ism kamida 2 ta belgidan iborat bo'lishi kerak"
+    },
     "placeholders": {
       "fullName": "John Doe",
       "email": "you{'@'}example.com",
