@@ -57,12 +57,12 @@ watch(() => route.path, () => {
       id="main-content"
       class="flex-1 relative z-10"
       :class="[
-        'transition-all duration-500 ease-in-out',
-        isTransitioning ? 'opacity-0 transform translate-y-4' : 'opacity-100 transform translate-y-0'
+        'transition-opacity duration-300 ease-in-out',
+        isTransitioning ? 'opacity-0' : 'opacity-100'
       ]"
     >
       <Transition name="slide-fade" mode="out-in" appear>
-        <div key="route.path" class="w-full h-full">
+        <div :key="route.path" class="w-full h-full">
           <slot />
         </div>
       </Transition>

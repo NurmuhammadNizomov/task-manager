@@ -35,6 +35,22 @@ export default defineNuxtConfig({
       }
     ]
   },
+  image: {
+    quality: 80,
+    format: ['webp', 'avif'],
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536
+    }
+  },
+  nitro: {
+    compressPublicAssets: true,
+    minify: true
+  },
   vite: {
     optimizeDeps: {
       include: ['dayjs', 'dayjs/plugin/relativeTime', 'zod', '@vue/devtools-core', '@vue/devtools-kit', 'ua-parser-js']
@@ -65,8 +81,11 @@ export default defineNuxtConfig({
   routeRules: {
     '/**': {
       headers: {
-        'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
-        'Cross-Origin-Embedder-Policy': 'unsafe-none'
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'SAMEORIGIN',
+        'X-XSS-Protection': '1; mode=block',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'Permissions-Policy': 'camera=(), microphone=(), geolocation=()'
       }
     },
     '/login': { ssr: false },

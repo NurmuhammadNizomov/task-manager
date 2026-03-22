@@ -5,12 +5,36 @@ definePageMeta({
 
 const { t } = useI18n()
 
+const { public: { appBaseUrl } } = useRuntimeConfig()
+
 useSeoMeta({
   title: () => t('home.title'),
   description: () => t('home.description'),
   ogTitle: () => t('home.title'),
   ogDescription: () => t('home.description'),
-  twitterCard: 'summary_large_image'
+  ogUrl: appBaseUrl,
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
+  robots: 'index, follow'
+})
+
+useHead({
+  link: [{ rel: 'canonical', href: appBaseUrl }],
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebApplication',
+        name: 'Task Manager',
+        description: t('home.description'),
+        url: appBaseUrl,
+        applicationCategory: 'ProductivityApplication',
+        operatingSystem: 'Web',
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }
+      })
+    }
+  ]
 })
 </script>
 

@@ -86,7 +86,7 @@ watch(
             <Icon name="lucide:shield-check" class="size-6 text-primary-700 dark:text-primary-300" />
           </div>
           <div class="flex flex-col">
-            <h1 class="text-lg font-bold text-gray-900 dark:text-white leading-tight">{{ t('common.appName') }}</h1>
+            <p class="text-lg font-bold text-gray-900 dark:text-white leading-tight">{{ t('common.appName') }}</p>
             <p class="text-xs text-gray-500 dark:text-gray-400 leading-tight">{{ t('header.tagline') }}</p>
           </div>
         </NuxtLink>
