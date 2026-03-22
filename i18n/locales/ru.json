@@ -24,6 +24,8 @@
     "loginFailed": "Ошибка входа",
     "registerSuccess": "Аккаунт успешно создан.",
     "registerFailed": "Ошибка регистрации",
+    "googleAuthError": "Ошибка аутентификации Google",
+    "continueWithGoogle": "Продолжить с Google",
     "validationError": "Ошибка валидации",
     "passwordsDoNotMatch": "Пароли не совпадают.",
     "verifyingEmail": "Проверка email",
@@ -243,7 +245,10 @@
       "mongodbUriNotConfigured": "MONGODB_URI не настроен.",
       "jwtSecretsNotConfigured": "JWT-секреты не настроены.",
       "endpointNotFound": "API endpoint не найден.",
-      "unexpectedError": "Непредвиденная ошибка сервера."
+      "unexpectedError": "Непредвиденная ошибка сервера.",
+      "googleInvalidToken": "Неверный токен Google. Попробуйте снова.",
+      "googleEmailNotVerified": "Email аккаунта Google не подтвержден.",
+      "googleUserOnly": "Пожалуйста, используйте Google для входа в этот аккаунт."
     },
     "success": {
       "registerVerifyWithEmail": "Регистрация успешна. Подтвердите email по ссылке или через OTP-код.",

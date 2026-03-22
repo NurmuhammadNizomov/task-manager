@@ -24,6 +24,8 @@
     "loginFailed": "Login failed",
     "registerSuccess": "Account created successfully.",
     "registerFailed": "Register failed",
+    "googleAuthError": "Google authentication error",
+    "continueWithGoogle": "Continue with Google",
     "validationError": "Validation error",
     "passwordsDoNotMatch": "Passwords do not match.",
     "verifyingEmail": "Verifying your email",
@@ -291,7 +293,10 @@
       "mongodbUriNotConfigured": "MONGODB_URI is not configured.",
       "jwtSecretsNotConfigured": "JWT secrets are not configured.",
       "endpointNotFound": "API endpoint not found.",
-      "unexpectedError": "Unexpected server error."
+      "unexpectedError": "Unexpected server error.",
+      "googleInvalidToken": "Invalid Google token. Please try again.",
+      "googleEmailNotVerified": "Google account email is not verified.",
+      "googleUserOnly": "Please use Google Sign-In to access this account."
     },
     "success": {
       "registerVerifyWithEmail": "Registration successful. Verify email via link or OTP code.",

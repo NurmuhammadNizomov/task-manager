@@ -1,16 +1,2 @@
 ﻿@import "tailwindcss";
 @import "@nuxt/ui";
-
-:root {
-  --app-font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
-}
-
-html,
-body,
-#__nuxt {
-  min-height: 100%;
-}
-
-body {
-  font-family: var(--app-font-family);
-}

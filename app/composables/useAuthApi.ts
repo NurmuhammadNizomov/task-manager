@@ -1,12 +1,12 @@
-import type { 
-  AppLanguage, 
-  ApiSuccessResponse, 
-  LoginPayload, 
-  LoginData, 
-  RegisterPayload, 
-  RegisterData, 
-  PreferencesPayload, 
-  PreferencesData 
+import type {
+  AppLanguage,
+  ApiSuccessResponse,
+  LoginPayload,
+  LoginData,
+  RegisterPayload,
+  RegisterData,
+  PreferencesPayload,
+  PreferencesData
 } from '~/types/auth'
 
 export const useAuthApi = () => {

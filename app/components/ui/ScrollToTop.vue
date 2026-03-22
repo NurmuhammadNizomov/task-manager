@@ -18,10 +18,17 @@ const scrollToTop = () => {
     <button
       v-if="visible"
       @click="scrollToTop"
-      class="fixed bottom-8 right-8 z-40 p-3 bg-primary-600 hover:bg-primary-700 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+      class="fixed z-40 p-3 text-white shadow-lg transition-all duration-300 hover:scale-110 focus:outline-none"
+      :style="{
+        bottom: '2rem',
+        right: '2rem',
+        backgroundColor: 'var(--color-primary-600)',
+        borderRadius: 'var(--radius-full)',
+        boxShadow: 'var(--shadow-lg)'
+      }"
       aria-label="Scroll to top"
     >
-      <Icon name="lucide:arrow-up" class="w-5 h-5" />
+      <Icon name="lucide:arrow-up" :style="{ fontSize: 'var(--font-size-lg)' }" />
     </button>
   </Transition>
 </template>
@@ -29,7 +36,7 @@ const scrollToTop = () => {
 <style scoped>
 .scroll-to-top-enter-active,
 .scroll-to-top-leave-active {
-  transition: all 0.3s ease;
+  transition: all var(--duration-300) ease;
 }
 
 .scroll-to-top-enter-from,

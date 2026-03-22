@@ -23,38 +23,6 @@ nuxtApp.hook('page:finish', () => {
 
 // Scroll behavior
 const { y } = useWindowScroll()
-const scrollProgress = computed(() => {
-  const maxScroll = document.documentElement.scrollHeight - window.innerHeight
-  return Math.min((y.value / maxScroll) * 100, 100)
-})
-
-// Meta tags and SEO
-useHead({
-  htmlAttrs: { lang: 'en' },
-  meta: [
-    { charset: 'utf-8' },
-    { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-    { name: 'format-detection', content: 'telephone=no' },
-    { name: 'theme-color', content: '#3b82f6' },
-    { name: 'description', content: 'Professional task management platform with modern UI/UX' }
-  ],
-  link: [
-    { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-    { rel: 'preconnect', href: 'https://fonts.googleapis.com' }
-  ]
-})
-
-// Theme and color scheme
-const colorMode = useColorMode()
-const isDark = computed(() => colorMode.value === 'dark')
-
-// Animated background gradient
-const bgGradient = computed(() => {
-  if (isDark.value) {
-    return 'from-slate-900 via-purple-900/20 to-slate-900'
-  }
-  return 'from-blue-50 via-indigo-50/30 to-purple-50'
-})
 
 // Page transition
 const route = useRoute()
@@ -67,49 +35,11 @@ watch(() => route.path, () => {
 </script>
 
 <template>
-  <div 
-    class="relative min-h-screen flex flex-col overflow-hidden"
-    :class="[
-      'transition-all duration-500 ease-in-out',
-      isDark ? 'dark' : 'light'
-    ]"
-  >
-    <!-- Animated Background -->
-    <div class="fixed inset-0 pointer-events-none">
-      <div 
-        class="absolute inset-0 opacity-30"
-        :class="[
-          'bg-gradient-to-br transition-all duration-1000',
-          bgGradient
-        ]"
-      />
-      
-      <!-- Animated particles -->
-      <div class="absolute inset-0">
-        <div 
-          v-for="i in 20" 
-          :key="i"
-          class="absolute w-1 h-1 bg-blue-400/20 rounded-full animate-pulse"
-          :style="{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 5}s`,
-            animationDuration: `${3 + Math.random() * 4}s`
-          }"
-        />
-      </div>
-    </div>
-
-    <!-- Progress Bar -->
-    <div 
-      class="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 z-50 transition-all duration-300"
-      :style="{ width: `${scrollProgress}%` }"
-    />
-
-    <!-- Skip to main content -->
+  <div class="min-h-screen flex flex-col">
+    <!-- Skip to main content for accessibility -->
     <a 
       href="#main-content" 
-      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl shadow-2xl z-50 transform transition-all duration-300 hover:scale-105"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary-600 text-white px-4 py-2 rounded-md z-50"
     >
       Skip to main content
     </a>
@@ -119,7 +49,6 @@ watch(() => route.path, () => {
 
     <!-- Header -->
     <header class="relative z-40">
-      <div class="absolute inset-0 bg-gradient-to-b from-white/80 to-transparent dark:from-slate-900/80 dark:to-transparent" />
       <DefaultHeader />
     </header>
 
@@ -141,7 +70,6 @@ watch(() => route.path, () => {
 
     <!-- Footer -->
     <footer class="relative z-20 mt-auto">
-      <div class="absolute inset-0 bg-gradient-to-t from-transparent to-white/60 dark:to-slate-900/60" />
       <DefaultFooter />
     </footer>
 
@@ -154,24 +82,6 @@ watch(() => route.path, () => {
     <ClientOnly>
       <NotificationToast />
     </ClientOnly>
-
-    <!-- Ambient Effects -->
-    <div class="fixed inset-0 pointer-events-none">
-      <div 
-        v-for="i in 3" 
-        :key="`orb-${i}`"
-        class="absolute w-96 h-96 rounded-full blur-3xl opacity-20 animate-pulse"
-        :class="[
-          i === 0 ? 'bg-blue-400' : i === 1 ? 'bg-purple-400' : 'bg-pink-400'
-        ]"
-        :style="{
-          left: `${-200 + i * 400}px`,
-          top: `${-200 + i * 300}px`,
-          animationDelay: `${i * 0.5}s`,
-          animationDuration: `${8 + i * 2}s`
-        }"
-      />
-    </div>
   </div>
 </template>
 
@@ -194,12 +104,4 @@ watch(() => route.path, () => {
 
 .bounce-enter-from,
 .bounce-leave-to { opacity: 0; transform: scale(0.3) translateY(20px); }
-
-::-webkit-scrollbar { width: 6px; }
-
-::-webkit-scrollbar-track { background: linear-gradient(to bottom, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1)); }
-
-::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, #3b82f6, #9333ea); border-radius: 10px; }
-
-*:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3), 0 0 0 6px rgba(59, 130, 246, 0.1); }
 </style>

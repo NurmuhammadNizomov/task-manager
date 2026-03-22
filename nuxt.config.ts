@@ -41,6 +41,7 @@ export default defineNuxtConfig({
     }
   },
   runtimeConfig: {
+    googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
     mongodbUri: process.env.MONGODB_URI,
     mongodbDbName: process.env.MONGODB_DB_NAME || 'task-manager',
     jwtAccessSecret: process.env.JWT_ACCESS_SECRET,
@@ -56,7 +57,9 @@ export default defineNuxtConfig({
     smtpPass: process.env.SMTP_PASS,
     smtpFrom: process.env.SMTP_FROM,
     public: {
-      appBaseUrl: process.env.APP_BASE_URL || 'http://localhost:3000'
+      appBaseUrl: process.env.APP_BASE_URL || 'http://localhost:3000',
+      googleClientId: process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID || '',
+      googleRedirectUri: process.env.GOOGLE_REDIRECT_URI || 'http://localhost:3000/google-redirect'
     }
   },
   routeRules: {
@@ -67,6 +70,10 @@ export default defineNuxtConfig({
       }
     },
     '/login': { ssr: false },
-    '/register': { ssr: false }
+    '/register': { ssr: false },
+    '/dashboard': { ssr: false },
+    '/profile': { ssr: false },
+    '/projects/**': { ssr: false },
+    '/google-redirect': { ssr: false }
   }
 })

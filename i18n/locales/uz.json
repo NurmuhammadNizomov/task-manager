@@ -25,6 +25,7 @@
     "registerSuccess": "Akkaunt muvaffaqiyatli yaratildi.",
     "registerFailed": "Ro'yxatdan o'tishda xatolik",
     "googleAuthError": "Google autentifikatsiyasida xatolik",
+    "continueWithGoogle": "Google orqali davom etish",
     "welcome": "Xush kelibsiz!",
     "accountCreated": "Sizning akkauntingiz muvaffaqiyatli yaratildi.",
     "googleUserOnly": "Iltimos, akkauntingizga kirish uchun Google kirishdan foydalaning.",
@@ -247,7 +248,10 @@
       "mongodbUriNotConfigured": "MONGODB_URI sozlanmagan.",
       "jwtSecretsNotConfigured": "JWT secretlar sozlanmagan.",
       "endpointNotFound": "API endpoint topilmadi.",
-      "unexpectedError": "Kutilmagan server xatosi."
+      "unexpectedError": "Kutilmagan server xatosi.",
+      "googleInvalidToken": "Google tokeni noto'g'ri. Qayta urinib ko'ring.",
+      "googleEmailNotVerified": "Google akkauntining emaili tasdiqlanmagan.",
+      "googleUserOnly": "Iltimos, ushbu akkauntga kirish uchun Google kirishdan foydalaning."
     },
     "success": {
       "registerVerifyWithEmail": "Ro'yxatdan o'tish muvaffaqiyatli. Emailni link yoki OTP kod orqali tasdiqlang.",

@@ -42,12 +42,22 @@ provide('toast', { addToast, removeToast })
       <div
         v-for="toast in toasts"
         :key="toast.id"
-        class="max-w-sm rounded-lg shadow-lg p-4 backdrop-blur-sm border transition-all duration-300"
-        :class="{
-          'bg-green-50 border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200': toast.type === 'success',
-          'bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200': toast.type === 'error',
-          'bg-yellow-50 border-yellow-200 text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-800 dark:text-yellow-200': toast.type === 'warning',
-          'bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-200': toast.type === 'info'
+        class="max-w-sm shadow-lg p-4 backdrop-blur-sm border transition-all duration-300"
+        :style="{
+          borderRadius: 'var(--radius-lg)',
+          boxShadow: 'var(--shadow-lg)',
+          backgroundColor: toast.type === 'success' ? 'var(--color-accent-50)' : 
+                         toast.type === 'error' ? 'var(--color-error)' : 
+                         toast.type === 'warning' ? 'var(--color-warning)' : 
+                         'var(--color-primary-50)',
+          borderColor: toast.type === 'success' ? 'var(--color-accent-200)' : 
+                       toast.type === 'error' ? '#dc2626' : 
+                       toast.type === 'warning' ? '#f59e0b' : 
+                       'var(--color-primary-200)',
+          color: toast.type === 'success' ? 'var(--color-accent-800)' : 
+                 toast.type === 'error' ? 'white' : 
+                 toast.type === 'warning' ? 'var(--color-gray-900)' : 
+                 'var(--color-primary-800)'
         }"
       >
         <div class="flex items-start gap-3">
@@ -58,17 +68,19 @@ provide('toast', { addToast, removeToast })
               warning: 'lucide:alert-triangle',
               info: 'lucide:info'
             }[toast.type]"
-            class="w-5 h-5 flex-shrink-0 mt-0.5"
+            class="flex-shrink-0 mt-0.5"
+            :style="{ fontSize: 'var(--font-size-lg)' }"
           />
           <div class="flex-1 min-w-0">
-            <h4 class="font-semibold text-sm">{{ toast.title }}</h4>
-            <p v-if="toast.message" class="text-sm mt-1 opacity-90">{{ toast.message }}</p>
+            <h4 :style="{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)' }">{{ toast.title }}</h4>
+            <p v-if="toast.message" class="mt-1 opacity-90" :style="{ fontSize: 'var(--font-size-sm)' }">{{ toast.message }}</p>
           </div>
           <button
             @click="removeToast(toast.id)"
-            class="flex-shrink-0 p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+            class="flex-shrink-0 p-1 rounded-md hover:opacity-80 transition-opacity"
+            :style="{ borderRadius: 'var(--radius-md)' }"
           >
-            <Icon name="lucide:x" class="w-4 h-4" />
+            <Icon name="lucide:x" :style="{ fontSize: 'var(--font-size-sm)' }" />
           </button>
         </div>
       </div>
@@ -79,7 +91,7 @@ provide('toast', { addToast, removeToast })
 <style scoped>
 .toast-enter-active,
 .toast-leave-active {
-  transition: all 0.3s ease;
+  transition: all var(--duration-300) ease;
 }
 
 .toast-enter-from {
@@ -93,6 +105,6 @@ provide('toast', { addToast, removeToast })
 }
 
 .toast-move {
-  transition: transform 0.3s ease;
+  transition: transform var(--duration-300) ease;
 }
 </style>

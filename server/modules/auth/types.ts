@@ -3,15 +3,16 @@ import type { Document } from 'mongoose'
 export type UserLanguage = 'en' | 'ru' | 'uz'
 export type UserTheme = 'light' | 'dark' | 'system'
 
-export type AuthType = 'email'
+export type AuthType = 'email' | 'google' | 'linked'
 
 export interface IUser extends Document {
   fullName: string
   email: string
-  password: string // Required for email auth
+  password?: string
+  googleId?: string
   authType: AuthType
   isEmailVerified: boolean
-  
+
   avatar?: {
     publicId: string
     url: string

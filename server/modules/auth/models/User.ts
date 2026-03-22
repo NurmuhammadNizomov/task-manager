@@ -21,8 +21,18 @@ const userSchema = new Schema<IUser>(
     },
     password: {
       type: String,
-      required: true,
+      required: false,
       minlength: 8
+    },
+    googleId: {
+      type: String,
+      sparse: true,
+      index: true
+    },
+    authType: {
+      type: String,
+      enum: ['email', 'google', 'linked'],
+      default: 'email'
     },
     isEmailVerified: {
       type: Boolean,
@@ -55,11 +65,11 @@ userSchema.index({ language: 1, isEmailVerified: 1 }) // For localization analyt
 userSchema.index({ theme: 1, isEmailVerified: 1 }) // For theme usage analytics
 
 userSchema.pre('save', async function preSave() {
-  if (!this.isModified('password')) {
+  if (!this.isModified('password') || !this.password) {
     return
   }
 
-  this.password = await hashPassword(this.password!)
+  this.password = await hashPassword(this.password)
 })
 
 userSchema.methods.comparePassword = function compare(candidatePassword: string) {

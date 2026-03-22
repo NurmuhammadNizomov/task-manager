@@ -75,37 +75,41 @@ const socialLinks = [
           :key="section.title"
           class="space-y-4"
         >
-          <h4 class="text-sm font-semibold text-gray-900 dark:text-white">
+          <h4 class="text-base font-semibold text-gray-900 dark:text-white">
             {{ section.title }}
           </h4>
           <ul class="space-y-2">
-            <li v-for="link in section.links" :key="link?.name">
-              <NuxtLink
+            <li v-for="link in section.links" :key="link.name">
+              <UButton
                 :to="link?.href"
-                class="text-sm text-gray-600 transition-colors hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400"
+                variant="link"
+                color="neutral"
+                class="p-0 h-auto text-left text-sm text-gray-600 dark:text-gray-400"
               >
                 {{ link?.name }}
-              </NuxtLink>
+              </UButton>
             </li>
           </ul>
         </div>
       </div>
 
       <!-- Bottom Section -->
-      <div class="mt-12 border-t border-gray-200 pt-8 dark:border-gray-800">
-        <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
+      <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
+        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <p class="text-sm text-gray-600 dark:text-gray-400">
             © {{ currentYear }} {{ t('common.appName') }}. {{ t('footer.allRightsReserved') }}
           </p>
           <div class="flex gap-6">
-            <NuxtLink
+            <UButton
               v-for="link in footerLinks[2]?.links"
-              :key="link?.name"
+              :key="link.name"
               :to="link?.href"
-              class="text-sm text-gray-600 transition-colors hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400"
+              variant="link"
+              color="neutral"
+              class="p-0 h-auto text-left text-sm text-gray-600 dark:text-gray-400"
             >
               {{ link?.name }}
-            </NuxtLink>
+            </UButton>
           </div>
         </div>
       </div>
