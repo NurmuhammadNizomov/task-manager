@@ -1,7 +1,7 @@
 ﻿import { Schema } from 'mongoose'
 import { comparePassword, hashPassword } from '../utils/password'
 import type { IUser } from '../types'
-import { getModel } from '~/server/utils/model'
+import { getModel } from '../../../utils/model'
 
 const userSchema = new Schema<IUser>(
   {

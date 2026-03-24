@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose'
 import type { IAuthSession } from '../types'
-import { getModel } from '~/server/utils/model'
+import { getModel } from '../../../utils/model'
 
 const authSessionSchema = new Schema<IAuthSession>(
   {

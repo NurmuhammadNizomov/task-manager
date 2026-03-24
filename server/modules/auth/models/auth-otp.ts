@@ -1,5 +1,5 @@
 import { Schema, type Types } from 'mongoose'
-import { getModel } from '~/server/utils/model'
+import { getModel } from '../../../utils/model'
 
 export type AuthOtpPurpose = 'email_verification' | 'password_reset'
 
