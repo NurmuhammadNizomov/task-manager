@@ -5,7 +5,6 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/i18n',
     '@nuxt/icon',
-    '@pinia/nuxt',
     '@vueuse/nuxt',
     '@nuxt/ui',
     '@nuxt/image',
@@ -15,7 +14,9 @@ export default defineNuxtConfig({
   colorMode: {
     preference: 'system',
     fallback: 'light',
-    classSuffix: ''
+    classSuffix: '',
+    storageKey: 'nuxt-color-mode',
+    storage: 'cookie'
   },
   i18n: {
     locales: [
@@ -93,6 +94,8 @@ export default defineNuxtConfig({
     '/dashboard': { ssr: false },
     '/profile': { ssr: false },
     '/projects/**': { ssr: false },
+    '/tasks': { ssr: false },
+    '/team': { ssr: false },
     '/google-redirect': { ssr: false }
   }
 })

@@ -1,14 +1,8 @@
 <script setup lang="ts">
-import dayjs from 'dayjs'
 import { z } from 'zod'
 import type { FormSubmitEvent } from '#ui/types'
 
-import SessionManager from '~/components/profile/SessionManager.vue'
-
-definePageMeta({
-  layout: 'dashboard',
-  middleware: 'auth'
-})
+definePageMeta({ layout: 'dashboard', middleware: 'auth' })
 
 const { user, fetchUser, updateUser } = useAuth()
 const toast = useToast()
@@ -18,16 +12,18 @@ const isUploading = ref(false)
 const fileInput = ref<HTMLInputElement | null>(null)
 
 const personalInfoSchema = z.object({
-  fullName: z.string().min(2, 'Must be at least 2 characters')
+  fullName: z.string().min(2, t('auth.validation.fullNameMin')),
+  bio: z.string().max(500).optional()
 })
 
 const passwordSchema = z.object({
-  currentPassword: z.string().min(1, 'Current password is required'),
-  newPassword: z.string().min(8, 'Must be at least 8 characters')
+  currentPassword: z.string().min(1, t('server.validation.required', { field: t('server.fields.password') })),
+  newPassword: z.string().min(8, t('auth.validation.passwordMin'))
 })
 
 const personalInfoState = ref({
-  fullName: user.value?.fullName || ''
+  fullName: user.value?.fullName || '',
+  bio: user.value?.bio || ''
 })
 
 const passwordState = ref({
@@ -38,31 +34,26 @@ const passwordState = ref({
 watch(user, (newUser) => {
   if (newUser) {
     personalInfoState.value.fullName = newUser.fullName
+    personalInfoState.value.bio = newUser.bio || ''
   }
 })
 
-const onAvatarClick = () => {
-  fileInput.value?.click()
-}
+const onAvatarClick = () => fileInput.value?.click()
 
 const onFileChange = async (event: Event) => {
   const input = event.target as HTMLInputElement
   if (!input.files?.length) return
 
-  const file = input.files[0]
   const formData = new FormData()
-  formData.append('file', file)
+  formData.append('file', input.files[0])
 
   isUploading.value = true
   try {
-    await $fetch('/api/user/avatar', {
-      method: 'POST',
-      body: formData
-    })
-    await fetchUser() // Refresh user data
-    toast.add({ title: 'Avatar updated successfully', color: 'green' })
-  } catch (error) {
-    toast.add({ title: 'Failed to update avatar', color: 'red' })
+    await $fetch('/api/user/avatar', { method: 'POST', body: formData })
+    await fetchUser()
+    toast.add({ title: t('common.success'), description: t('profile.avatarSuccess'), color: 'success' })
+  } catch {
+    toast.add({ title: t('common.error'), description: t('profile.avatarError'), color: 'error' })
   } finally {
     isUploading.value = false
   }
@@ -70,23 +61,22 @@ const onFileChange = async (event: Event) => {
 
 const handlePersonalInfoSubmit = async (event: FormSubmitEvent<z.infer<typeof personalInfoSchema>>) => {
   try {
-    await updateUser({ fullName: event.data.fullName })
-    toast.add({ title: 'Profile updated successfully', color: 'green' })
-  } catch (error: any) {
-    toast.add({ title: error.data?.message || 'Failed to update profile', color: 'red' })
+    await updateUser({ fullName: event.data.fullName, bio: event.data.bio || '' })
+    toast.add({ title: t('common.success'), description: t('profile.updateSuccess'), color: 'success' })
+  } catch (error) {
+    const msg = (error as { data?: { message?: string } })?.data?.message
+    toast.add({ title: t('common.error'), description: msg || t('profile.updateError'), color: 'error' })
   }
 }
 
 const handlePasswordSubmit = async (event: FormSubmitEvent<z.infer<typeof passwordSchema>>) => {
   try {
-    await updateUser({
-      currentPassword: event.data.currentPassword,
-      newPassword: event.data.newPassword
-    })
-    toast.add({ title: 'Password changed successfully', color: 'green' })
-    passwordState.value = { currentPassword: '', newPassword: '' } // Clear fields
-  } catch (error: any) {
-    toast.add({ title: error.data?.message || 'Failed to change password', color: 'red' })
+    await updateUser({ currentPassword: event.data.currentPassword, newPassword: event.data.newPassword })
+    toast.add({ title: t('common.success'), description: t('profile.passwordSuccess'), color: 'success' })
+    passwordState.value = { currentPassword: '', newPassword: '' }
+  } catch (error) {
+    const msg = (error as { data?: { message?: string } })?.data?.message
+    toast.add({ title: t('common.error'), description: msg || t('profile.passwordError'), color: 'error' })
   }
 }
 </script>
@@ -94,66 +84,81 @@ const handlePasswordSubmit = async (event: FormSubmitEvent<z.infer<typeof passwo
 <template>
   <div class="space-y-8">
     <section>
-      <h1 class="text-3xl font-semibold tracking-tight">Profile Settings</h1>
-      <p class="mt-2 text-gray-600 dark:text-gray-300">Manage your account information and preferences.</p>
+      <h1 class="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">{{ t('profile.title') }}</h1>
+      <p class="mt-1 text-sm text-gray-500">{{ t('profile.subtitle') }}</p>
     </section>
 
-    <div class="grid gap-8 lg:grid-cols-[1fr_2fr]">
+    <div class="space-y-6">
+      <!-- Personal Info -->
       <UCard>
-        <div class="flex flex-col items-center text-center">
-          <div class="relative group">
-            <UAvatar :src="user?.avatar?.url" :alt="user?.fullName" size="xl" class="mb-4" />
-            <div 
-              class="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-              @click="onAvatarClick"
-            >
-              <Icon v-if="!isUploading" name="lucide:camera" class="text-white size-8" />
-              <Icon v-else name="svg-spinners:ring-resize" class="text-white size-8" />
+        <template #header>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <Icon name="lucide:user" class="size-4 text-gray-500" />
+              <h3 class="font-semibold text-gray-900 dark:text-white">{{ t('profile.personalInfo') }}</h3>
             </div>
+            <!-- Avatar -->
+            <div class="relative group cursor-pointer shrink-0" @click="onAvatarClick">
+              <UAvatar
+                :src="user?.avatar?.url"
+                :alt="user?.fullName"
+                size="xl"
+                class="ring-2 ring-white dark:ring-gray-900"
+              />
+              <div class="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
+                <Icon v-if="!isUploading" name="lucide:camera" class="size-4 text-white" />
+                <Icon v-else name="lucide:loader" class="size-4 text-white animate-spin" />
+              </div>
+            </div>
+            <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="onFileChange" />
           </div>
-          <input type="file" ref="fileInput" class="hidden" accept="image/*" @change="onFileChange" />
+        </template>
 
-          <h2 class="text-xl font-bold">{{ user?.fullName }}</h2>
-          <p class="text-sm text-gray-500">{{ user?.email }}</p>
-          <p class="mt-4 text-xs text-gray-400">Member since {{ dayjs(user?.createdAt).format('MMMM YYYY') }}</p>
-        </div>
+        <UForm :schema="personalInfoSchema" :state="personalInfoState" class="space-y-4" @submit="handlePersonalInfoSubmit">
+          <div class="grid gap-4 sm:grid-cols-2">
+            <UFormField :label="t('profile.form.fullName')" name="fullName" class="w-full">
+              <UInput v-model="personalInfoState.fullName" class="w-full" />
+            </UFormField>
+            <UFormField :label="t('profile.form.email')" class="w-full">
+              <UInput :model-value="user?.email" disabled class="w-full" />
+            </UFormField>
+          </div>
+          <UFormField :label="t('profile.form.bio')" name="bio" class="w-full">
+            <UTextarea
+              v-model="personalInfoState.bio"
+              :placeholder="t('profile.form.bioPlaceholder')"
+              :rows="3"
+              class="w-full"
+            />
+            <template #hint>
+              <span :class="(personalInfoState.bio?.length || 0) > 450 ? 'text-orange-500' : 'text-gray-400'">
+                {{ personalInfoState.bio?.length || 0 }}/500
+              </span>
+            </template>
+          </UFormField>
+          <UButton type="submit">{{ t('profile.saveChanges') }}</UButton>
+        </UForm>
       </UCard>
 
-      <div class="space-y-8">
-        <UCard>
-          <template #header>
-            <h3 class="font-semibold">Personal Information</h3>
-          </template>
-          
-          <UForm :schema="personalInfoSchema" :state="personalInfoState" class="space-y-4" @submit="handlePersonalInfoSubmit">
-            <UFormField label="Full Name" name="fullName">
-              <UInput v-model="personalInfoState.fullName" />
-            </UFormField>
-            <UFormField label="Email Address">
-              <UInput :model-value="user?.email" disabled />
-            </UFormField>
-            <UButton type="submit">Save Changes</UButton>
-          </UForm>
-        </UCard>
+      <!-- Password -->
+      <UCard>
+        <template #header>
+          <div class="flex items-center gap-2">
+            <Icon name="lucide:lock" class="size-4 text-gray-500" />
+            <h3 class="font-semibold text-gray-900 dark:text-white">{{ t('profile.security') }}</h3>
+          </div>
+        </template>
 
-        <UCard>
-          <template #header>
-            <h3 class="font-semibold">Account Security</h3>
-          </template>
-          
-          <UForm :schema="passwordSchema" :state="passwordState" class="space-y-4" @submit="handlePasswordSubmit">
-            <UFormField label="Current Password" name="currentPassword">
-              <UInput v-model="passwordState.currentPassword" type="password" />
-            </UFormField>
-            <UFormField label="New Password" name="newPassword">
-              <UInput v-model="passwordState.newPassword" type="password" />
-            </UFormField>
-            <UButton type="submit" color="neutral" variant="outline">Change Password</UButton>
-          </UForm>
-        </UCard>
-
-        <SessionManager />
-      </div>
+        <UForm :schema="passwordSchema" :state="passwordState" class="space-y-4 max-w-md" @submit="handlePasswordSubmit">
+          <UFormField :label="t('profile.form.currentPassword')" name="currentPassword" class="w-full">
+            <UInput v-model="passwordState.currentPassword" type="password" class="w-full" />
+          </UFormField>
+          <UFormField :label="t('profile.form.newPassword')" name="newPassword" class="w-full">
+            <UInput v-model="passwordState.newPassword" type="password" class="w-full" />
+          </UFormField>
+          <UButton type="submit" color="neutral" variant="outline">{{ t('profile.changePassword') }}</UButton>
+        </UForm>
+      </UCard>
     </div>
   </div>
 </template>

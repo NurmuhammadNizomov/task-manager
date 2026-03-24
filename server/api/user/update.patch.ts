@@ -8,6 +8,7 @@ const sanitizedSchemas = createSanitizedSchemas()
 
 const updateUserSchema = z.object({
   fullName: sanitizedSchemas.fullName.optional(),
+  bio: z.string().max(500).optional(),
   currentPassword: z.string().optional(),
   newPassword: z.string().min(8).max(128).optional()
 }).refine(data => {
@@ -29,9 +30,13 @@ export default defineApiHandler(async (event) => {
 
   let updated = false
 
-  // Update full name if provided
   if (body.fullName && body.fullName !== user.fullName) {
     user.fullName = body.fullName
+    updated = true
+  }
+
+  if (typeof body.bio !== 'undefined' && body.bio !== user.bio) {
+    user.bio = body.bio
     updated = true
   }
 

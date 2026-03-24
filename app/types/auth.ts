@@ -6,8 +6,14 @@ export interface AuthUser {
   fullName: string
   email: string
   isEmailVerified?: boolean
+  bio?: string
   language?: AppLanguage
   theme?: AppTheme
+  avatar?: {
+    publicId: string
+    url: string
+  }
+  createdAt?: string
 }
 
 export interface ApiMeta {

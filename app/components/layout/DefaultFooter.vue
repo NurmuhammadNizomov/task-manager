@@ -29,7 +29,9 @@ const footerLinks = [
   }
 ]
 
-const socialLinks = [
+interface SocialLink { name: string; href: string; icon: string }
+
+const socialLinks: SocialLink[] = [
   { name: 'Twitter', href: '#', icon: 'lucide:twitter' },
   { name: 'GitHub', href: '#', icon: 'lucide:github' },
   { name: 'LinkedIn', href: '#', icon: 'lucide:linkedin' }
@@ -57,14 +59,14 @@ const socialLinks = [
             <UButton
               v-for="social in socialLinks"
               :key="social.name"
-              :to="social?.href"
+              :to="social.href"
               variant="ghost"
               color="neutral"
               size="sm"
               class="h-8 w-8 rounded-full p-0"
-              :aria-label="social?.name"
+              :aria-label="social.name"
             >
-              <Icon :name="social?.icon || 'lucide:link'" class="size-4" />
+              <Icon :name="social.icon" class="size-4" />
             </UButton>
           </div>
         </div>

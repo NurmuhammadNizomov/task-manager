@@ -18,7 +18,7 @@ type Schema = z.infer<typeof schema>
 
 useSeoMeta({
   title: () => t('auth.login'),
-  description: () => t('auth.loginDescription') || t('auth.login'),
+  description: () => t('auth.loginDescription'),
   ogTitle: () => t('auth.login'),
 })
 
@@ -169,7 +169,8 @@ const submit = async (event: FormSubmitEvent<Schema>) => {
     </UButton>
 
     <template #footer>
-      <p class="text-center"
+      <p
+class="text-center"
         :style="{
           fontSize: 'var(--font-size-sm)',
           color: 'var(--color-gray-600)'

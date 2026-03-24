@@ -94,6 +94,11 @@
     "appName": "Vazifalar menejeri",
     "appSubtitle": "Nuxt autentifikatsiya platformasi",
     "success": "Muvaffaqiyat",
+    "error": "Xatolik",
+    "loading": "Yuklanmoqda...",
+    "create": "Yaratish",
+    "add": "Qo'shish",
+    "cancel": "Bekor qilish",
     "tryAgain": "Iltimos, qayta urinib ko'ring.",
     "contactSupport": "Qo'llab-quvvatlash bilan bog'lanish"
   },
@@ -117,7 +122,6 @@
     "allRightsReserved": "Barcha huquqlar himoyalangan."
   },
   "home": {
-    "badge": "Nuxt 4 + {'@'}nuxt/ui",
     "title": "Task Manager uchun toza auth va dashboard bazasi",
     "description": "Login, register, main va dashboard sahifalari alohida layoutlarda ishlaydi. UI flow tayyor, keyingi qadamda API/auth logikasini to'liq ulaymiz.",
     "actions": {
@@ -125,11 +129,38 @@
       "register": "Ro'yxatdan o'tish",
       "openDashboard": "Dashboardni ochish"
     },
+    "highlights": {
+      "tasks": "Vazifalarni muhimlik va muddatiga qarab boshqaring",
+      "team": "Jamoa bilan real vaqtda hamkorlik qiling",
+      "secure": "Tayyor xavfsiz autentifikatsiya tizimi"
+    },
     "stats": {
       "activeUsers": "Faol foydalanuvchilar",
       "tasksCompleted": "Bajarilgan vazifalar",
       "systemStatus": "Tizim holati",
       "healthy": "Barqaror"
+    },
+    "trustStats": {
+      "users": "Faol foydalanuvchilar",
+      "tasks": "Bajarilgan vazifalar",
+      "uptime": "Ishlash vaqti"
+    },
+    "howItWorks": {
+      "label": "Qanday ishlaydi",
+      "heading": "Sodda va kuchli ish jarayoni",
+      "subheading": "Bir necha daqiqada boshlang va ishingizni to'liq nazorat qiling.",
+      "step1": {
+        "title": "Akkaunt yarating",
+        "desc": "Email yoki Google orqali bir necha soniyada ro'yxatdan o'ting."
+      },
+      "step2": {
+        "title": "Vazifalarni tartibga soling",
+        "desc": "Loyihalar yarating, muhimlik darajasi va muddatlarini belgilang."
+      },
+      "step3": {
+        "title": "Jarayonni kuzating",
+        "desc": "Bajarilish darajasini nazorat qiling va jamoangizni muvofiqlashtiring."
+      }
     },
     "features": {
       "label": "Xususiyatlar",
@@ -145,8 +176,25 @@
       },
       "design": {
         "title": "Chiroyli UI",
-        "desc": "Zamonaviy dizayn estetikasi va foydalanuvchi tajribasiga kuchli e'tibor va tafsilotlarga e'tibor qaratilgan holda yaratilgan."
+        "desc": "Zamonaviy dizayn estetikasi va foydalanuvchi tajribasiga kuchli e'tibor qaratilgan holda yaratilgan."
+      },
+      "team": {
+        "title": "Jamoa hamkorligi",
+        "desc": "Jamoangizni taklif qiling va real vaqtda birgalikda ishlang."
+      },
+      "notifications": {
+        "title": "Aqlli bildirishnomalar",
+        "desc": "Muddatlarni o'tkazib yubormang — o'z vaqtida va aqlli bildirishnomalar bilan."
+      },
+      "analytics": {
+        "title": "Analitika va hisobotlar",
+        "desc": "Grafiklar va hisobotlar orqali mahsuldorlik tendentsiyalarini ko'ring."
       }
+    },
+    "cta": {
+      "heading": "Boshlashga tayyormisiz?",
+      "subheading": "Minglab jamoalar bilan qo'shiling va ishni aqlli boshqaring.",
+      "button": "Bepul boshlash"
     }
   },
   "dashboard": {
@@ -187,13 +235,144 @@
     "nav": {
       "tasks": "Vazifalar",
       "team": "Jamoa",
-      "settings": "Sozlamalar"
+      "profile": "Profil"
     },
     "quickLinks": {
       "title": "Tezkor havolalar",
       "main": "Asosiy sahifaga o'tish",
       "login": "Kirish sahifasiga o'tish",
       "register": "Ro'yxatdan o'tish sahifasiga o'tish"
+    }
+  },
+  "profile": {
+    "title": "Profil sozlamalari",
+    "subtitle": "Akkaunt ma'lumotlari va sozlamalarini boshqaring.",
+    "verified": "Tasdiqlangan",
+    "memberSince": "A'zo bo'lgan sana",
+    "personalInfo": "Shaxsiy ma'lumotlar",
+    "security": "Akkaunt xavfsizligi",
+    "saveChanges": "O'zgarishlarni saqlash",
+    "changePassword": "Parolni o'zgartirish",
+    "avatarSuccess": "Avatar muvaffaqiyatli yangilandi.",
+    "avatarError": "Avatarni yangilashda xatolik.",
+    "updateSuccess": "Profil muvaffaqiyatli yangilandi.",
+    "updateError": "Profilni yangilashda xatolik.",
+    "passwordSuccess": "Parol muvaffaqiyatli o'zgartirildi.",
+    "passwordError": "Parolni o'zgartirishda xatolik.",
+    "form": {
+      "fullName": "To'liq ism",
+      "email": "Elektron pochta manzili",
+      "bio": "O'zingiz haqida",
+      "bioPlaceholder": "Hamkasblaringizga o'zingiz haqida bir oz ma'lumot bering...",
+      "currentPassword": "Joriy parol",
+      "newPassword": "Yangi parol"
+    }
+  },
+  "projects": {
+    "owner": "Egasi",
+    "membersLabel": "a'zo",
+    "fetchError": "Loyihalarni yuklashda xatolik.",
+    "fetchOneError": "Loyihani yuklashda xatolik.",
+    "createSuccess": "Loyiha muvaffaqiyatli yaratildi.",
+    "createError": "Loyihani yaratishda xatolik.",
+    "backToProjects": "Loyihalarga qaytish",
+    "tabs": {
+      "board": "Kengash",
+      "settings": "Sozlamalar"
+    },
+    "settings": {
+      "title": "Loyiha a'zolari",
+      "subtitle": "Loyihada hamkorlik qilish uchun jamoangizni taklif qiling.",
+      "emailPlaceholder": "Email manzilni kiriting...",
+      "invite": "Taklif qilish",
+      "noMembers": "Hali a'zolar yo'q"
+    },
+    "modals": {
+      "create": {
+        "title": "Yangi loyiha yaratish",
+        "nameLabel": "Loyiha nomi",
+        "namePlaceholder": "Mening loyiham..."
+      }
+    },
+    "members": {
+      "addSuccess": "A'zo muvaffaqiyatli qo'shildi.",
+      "addError": "A'zo qo'shishda xatolik.",
+      "removeSuccess": "A'zo muvaffaqiyatli o'chirildi.",
+      "removeError": "A'zoni o'chirishda xatolik."
+    }
+  },
+  "tasks": {
+    "fetchError": "Vazifalarni yuklashda xatolik.",
+    "moveError": "Vazifani ko'chirishda xatolik.",
+    "createSuccess": "Vazifa muvaffaqiyatli yaratildi.",
+    "createError": "Vazifani yaratishda xatolik.",
+    "updateSuccess": "Vazifa muvaffaqiyatli yangilandi.",
+    "updateError": "Vazifani yangilashda xatolik.",
+    "uploadSuccess": "Fayl muvaffaqiyatli yuklandi.",
+    "uploadError": "Faylni yuklashda xatolik.",
+    "deleteSuccess": "Ilova muvaffaqiyatli o'chirildi.",
+    "deleteError": "Ilovani o'chirishda xatolik.",
+    "addTask": "Vazifa qo'shish",
+    "newTaskPlaceholder": "Vazifa nomini kiriting...",
+    "status": {
+      "planned": "Rejalashtirilgan",
+      "inProgress": "Jarayonda",
+      "inReview": "Ko'rib chiqilmoqda",
+      "done": "Bajarildi"
+    }
+  },
+  "taskPage": {
+    "title": "Mening vazifalarim",
+    "subtitle": "Barcha loyihalardagi vazifalaringiz.",
+    "newTask": "Yangi vazifa",
+    "searchPlaceholder": "Vazifalarni qidirish...",
+    "allStatuses": "Barcha statuslar",
+    "allPriorities": "Barcha prioritetlar",
+    "allProjects": "Barcha loyihalar",
+    "assignedToMe": "Menga tayinlangan",
+    "clearFilters": "Filtrlarni tozalash",
+    "noTasks": "Vazifalar topilmadi",
+    "noTasksFiltered": "Filtrga mos vazifalar yo'q.",
+    "noTasksEmpty": "Boshlash uchun birinchi vazifani yarating.",
+    "tasksCount": "ta vazifa",
+    "overdue": "Muddati o'tgan",
+    "createTitle": "Yangi vazifa yaratish",
+    "editTitle": "Vazifani tahrirlash",
+    "save": "Saqlash",
+    "priority": {
+      "low": "Past",
+      "medium": "O'rta",
+      "high": "Yuqori",
+      "urgent": "Shoshilinch"
+    },
+    "form": {
+      "title": "Nomi",
+      "description": "Tavsif",
+      "project": "Loyiha",
+      "status": "Status",
+      "priority": "Prioritet",
+      "dueDate": "Muddat",
+      "selectProject": "Loyihani tanlang..."
+    }
+  },
+  "teamPage": {
+    "title": "Jamoa",
+    "subtitle": "Barcha loyihalardagi a'zolar.",
+    "inviteMember": "A'zo taklif qilish",
+    "fetchError": "Jamoa a'zolarini yuklashda xatolik.",
+    "noMembers": "Jamoa a'zolari yo'q",
+    "noMembersHint": "Loyiha yarating va jamoangizni taklif qiling.",
+    "you": "Siz",
+    "projects": "Loyihalar",
+    "removeFromProject": "Loyihadan chiqarish",
+    "inviteTitle": "Jamoa a'zosini taklif qilish",
+    "inviteHint": "Foydalanuvchi qo'shilishi uchun akkauntga ega bo'lishi kerak.",
+    "invite": "Taklif yuborish",
+    "form": {
+      "email": "Email manzil",
+      "emailPlaceholder": "colleague{'@'}example.com",
+      "project": "Loyihaga qo'shish",
+      "selectProject": "Loyihani tanlang..."
     }
   },
   "errorPage": {

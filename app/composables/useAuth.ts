@@ -21,10 +21,30 @@ export const useAuth = () => {
     // Authentication state will be determined by server API calls
   }
 
+  const fetchUser = async () => {
+    try {
+      const response = await $fetch<{ status: string; data: { user: AuthUser } }>('/api/auth/me')
+      if (response.status === 'success') {
+        setAuth(response.data.user)
+      }
+    } catch (_) { /* ignore */ }
+  }
+
+  const updateUser = async (payload: { fullName?: string; bio?: string; currentPassword?: string; newPassword?: string }) => {
+    const response = await $fetch<{ status: string; data: { user: AuthUser } }>('/api/user/update', {
+      method: 'PATCH',
+      body: payload
+    })
+    if (response.status === 'success') {
+      setAuth(response.data.user)
+    }
+    return response
+  }
+
   const logout = async () => {
     try {
       await $fetch('/api/auth/logout', { method: 'POST' })
-    } catch {}
+    } catch (_) { /* ignore */ }
     clearAuth()
     await navigateTo('/login')
   }
@@ -36,6 +56,8 @@ export const useAuth = () => {
     setAuth,
     clearAuth,
     initFromStorage,
+    fetchUser,
+    updateUser,
     logout
   }
 }

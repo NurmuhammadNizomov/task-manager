@@ -92,15 +92,24 @@ watch(
         </NuxtLink>
 
         <div class="flex items-center gap-2">
+          <div class="hidden sm:flex items-center gap-2 mr-1">
+            <UButton to="/login" variant="ghost" color="neutral" size="sm">
+              {{ t('home.actions.login') }}
+            </UButton>
+            <UButton to="/register" size="sm">
+              {{ t('home.actions.register') }}
+            </UButton>
+          </div>
+
           <UDropdownMenu :items="languageMenuItems" :content="{ side: 'bottom', align: 'end' }">
             <UButton
               variant="ghost"
               color="neutral"
               class="h-10 gap-2 px-3 font-medium text-sm"
-              :aria-label="currentLanguage?.label || t('auth.language')"
+              :aria-label="currentLanguage.label"
             >
               <Icon name="lucide:languages" class="size-4" />
-              <span class="uppercase">{{ currentLanguage?.value }}</span>
+              <span class="uppercase">{{ currentLanguage.value }}</span>
             </UButton>
           </UDropdownMenu>
 
@@ -109,9 +118,9 @@ watch(
               variant="ghost"
               color="neutral"
               class="h-10 w-10 flex items-center justify-center rounded-full"
-              :aria-label="currentTheme?.label || t('auth.theme')"
+              :aria-label="currentTheme.label"
             >
-              <Icon :name="currentTheme?.icon || 'lucide:monitor'" class="size-5" />
+              <Icon :name="currentTheme.icon" class="size-5" />
             </UButton>
 
             <template #item="{ item }">

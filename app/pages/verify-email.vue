@@ -25,7 +25,7 @@ onMounted(async () => {
     if (res.status === 'success') {
       setAuth(res.data.user)
       status.value = 'success'
-      setTimeout(() => navigateTo('/dashboard'), 2000)
+      setTimeout(() => { void navigateTo('/dashboard') }, 2000)
     } else {
       status.value = 'error'
       errorMessage.value = t('auth.verificationFailed')

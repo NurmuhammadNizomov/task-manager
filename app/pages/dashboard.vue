@@ -21,7 +21,7 @@ const statsLoading = ref(false)
 const fetchStats = async () => {
   statsLoading.value = true
   try {
-    const response = await $fetch<any>('/api/dashboard/stats')
+    const response = await $fetch<{ data: typeof stats.value }>('/api/dashboard/stats')
     stats.value = response.data
   } finally {
     statsLoading.value = false
@@ -138,7 +138,7 @@ const handleCreateProject = async () => {
                   <UAvatar v-for="memberId in project.members" :key="memberId" :alt="memberId" size="sm" />
                 </UAvatarGroup>
                 <template #panel>
-                  <div class="p-2 text-xs">{{ project.members.length }} {{ t('projects.members') }}</div>
+                  <div class="p-2 text-xs">{{ project.members.length }} {{ t('projects.membersLabel') }}</div>
                 </template>
               </UPopover>
             </div>
@@ -147,23 +147,24 @@ const handleCreateProject = async () => {
       </UCard>
     </section>
 
-    <UModal v-model="isCreateModalOpen">
-      <UCard>
-        <template #header>
-          <h2 class="font-semibold">{{ t('projects.modals.create.title') }}</h2>
-        </template>
-
+    <UModal v-model:open="isCreateModalOpen" :title="t('projects.modals.create.title')">
+      <template #body>
         <UFormField :label="t('projects.modals.create.nameLabel')">
-          <UInput v-model="newProjectName" @keyup.enter="handleCreateProject" />
+          <UInput
+            v-model="newProjectName"
+            :placeholder="t('projects.modals.create.namePlaceholder')"
+            autofocus
+            @keyup.enter="handleCreateProject"
+          />
         </UFormField>
+      </template>
 
-        <template #footer>
-          <div class="flex justify-end gap-2">
-            <UButton color="gray" variant="ghost" @click="isCreateModalOpen = false">{{ t('common.cancel') }}</UButton>
-            <UButton @click="handleCreateProject">{{ t('common.create') }}</UButton>
-          </div>
-        </template>
-      </UCard>
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <UButton color="neutral" variant="ghost" @click="isCreateModalOpen = false">{{ t('common.cancel') }}</UButton>
+          <UButton @click="handleCreateProject">{{ t('common.create') }}</UButton>
+        </div>
+      </template>
     </UModal>
   </div>
 </template>

@@ -94,6 +94,7 @@
     "error": "Error",
     "loading": "Loading...",
     "create": "Create",
+    "add": "Add",
     "cancel": "Cancel",
     "tryAgain": "Please try again.",
     "contactSupport": "Contact support"
@@ -118,7 +119,6 @@
     "allRightsReserved": "All rights reserved."
   },
   "home": {
-    "badge": "Nuxt 4 + {'@'}nuxt/ui",
     "title": "Clean auth and dashboard starter for Task Manager",
     "description": "Login, register, main and dashboard pages are split into separate layouts. UI flow is ready, next step is connecting API/auth logic fully.",
     "actions": {
@@ -126,11 +126,38 @@
       "register": "Register",
       "openDashboard": "Open dashboard"
     },
+    "highlights": {
+      "tasks": "Manage tasks by priority and deadline",
+      "team": "Team collaboration in real time",
+      "secure": "Secure authentication out of the box"
+    },
     "stats": {
       "activeUsers": "Active users",
       "tasksCompleted": "Tasks completed",
       "systemStatus": "System status",
       "healthy": "Healthy"
+    },
+    "trustStats": {
+      "users": "Active Users",
+      "tasks": "Tasks Managed",
+      "uptime": "Uptime"
+    },
+    "howItWorks": {
+      "label": "How It Works",
+      "heading": "Simple, Powerful Workflow",
+      "subheading": "Get up and running in minutes and take full control of your work.",
+      "step1": {
+        "title": "Create Account",
+        "desc": "Sign up in seconds with your email or continue with Google."
+      },
+      "step2": {
+        "title": "Organize Tasks",
+        "desc": "Create projects, assign priorities, and set deadlines for your team."
+      },
+      "step3": {
+        "title": "Track Progress",
+        "desc": "Monitor completion rates and keep your entire team aligned."
+      }
     },
     "features": {
       "label": "Features",
@@ -147,7 +174,24 @@
       "design": {
         "title": "Beautiful UI",
         "desc": "Crafted with attention to detail and a strong focus on modern design aesthetics and experience."
+      },
+      "team": {
+        "title": "Team Collaboration",
+        "desc": "Invite your team and collaborate on tasks and projects in real time."
+      },
+      "notifications": {
+        "title": "Smart Notifications",
+        "desc": "Stay on top of deadlines and updates with timely, smart notifications."
+      },
+      "analytics": {
+        "title": "Analytics & Reports",
+        "desc": "Get insights into productivity trends with visual charts and reports."
       }
+    },
+    "cta": {
+      "heading": "Ready to get started?",
+      "subheading": "Join thousands of teams managing their work smarter with Task Manager.",
+      "button": "Get started free"
     }
   },
   "dashboard": {
@@ -188,7 +232,7 @@
     "nav": {
       "tasks": "Tasks",
       "team": "Team",
-      "settings": "Settings"
+      "profile": "Profile"
     },
     "quickLinks": {
       "title": "Quick links",
@@ -201,8 +245,9 @@
     "title": "Projects",
     "subtitle": "Manage your projects and tasks.",
     "owner": "Owner",
-    "members": "members",
+    "membersLabel": "members",
     "fetchError": "Failed to fetch projects.",
+    "fetchOneError": "Failed to fetch project.",
     "createSuccess": "Project created successfully.",
     "createError": "Failed to create project.",
     "actions": {
@@ -216,10 +261,106 @@
     "modals": {
       "create": {
         "title": "Create a new project",
-        "nameLabel": "Project name"
+        "nameLabel": "Project name",
+        "namePlaceholder": "My project..."
       }
     },
-    "backToProjects": "Back to Projects"
+    "backToProjects": "Back to Projects",
+    "tabs": {
+      "board": "Board",
+      "settings": "Settings"
+    },
+    "settings": {
+      "title": "Project Members",
+      "subtitle": "Invite teammates to collaborate on this project.",
+      "emailPlaceholder": "Enter email address...",
+      "invite": "Invite",
+      "noMembers": "No members added yet"
+    },
+    "members": {
+      "addSuccess": "Member added successfully.",
+      "addError": "Failed to add member.",
+      "removeSuccess": "Member removed successfully.",
+      "removeError": "Failed to remove member."
+    }
+  },
+  "profile": {
+    "title": "Profile Settings",
+    "subtitle": "Manage your account information and preferences.",
+    "verified": "Verified",
+    "memberSince": "Member since",
+    "personalInfo": "Personal Information",
+    "security": "Account Security",
+    "saveChanges": "Save Changes",
+    "changePassword": "Change Password",
+    "avatarSuccess": "Avatar updated successfully.",
+    "avatarError": "Failed to update avatar.",
+    "updateSuccess": "Profile updated successfully.",
+    "updateError": "Failed to update profile.",
+    "passwordSuccess": "Password changed successfully.",
+    "passwordError": "Failed to change password.",
+    "form": {
+      "fullName": "Full Name",
+      "email": "Email Address",
+      "bio": "Bio",
+      "bioPlaceholder": "Tell your teammates a bit about yourself...",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password"
+    }
+  },
+  "taskPage": {
+    "title": "My Tasks",
+    "subtitle": "All tasks across your projects.",
+    "newTask": "New Task",
+    "searchPlaceholder": "Search tasks...",
+    "allStatuses": "All statuses",
+    "allPriorities": "All priorities",
+    "allProjects": "All projects",
+    "assignedToMe": "Assigned to me",
+    "clearFilters": "Clear filters",
+    "noTasks": "No tasks found",
+    "noTasksFiltered": "No tasks match your filters.",
+    "noTasksEmpty": "Create your first task to get started.",
+    "tasksCount": "tasks",
+    "overdue": "Overdue",
+    "createTitle": "Create New Task",
+    "editTitle": "Edit Task",
+    "save": "Save Changes",
+    "priority": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "form": {
+      "title": "Title",
+      "description": "Description",
+      "project": "Project",
+      "status": "Status",
+      "priority": "Priority",
+      "dueDate": "Due Date",
+      "selectProject": "Select a project..."
+    }
+  },
+  "teamPage": {
+    "title": "Team",
+    "subtitle": "All members across your projects.",
+    "inviteMember": "Invite Member",
+    "fetchError": "Failed to fetch team members.",
+    "noMembers": "No team members yet",
+    "noMembersHint": "Create a project and invite your teammates.",
+    "you": "You",
+    "projects": "Projects",
+    "removeFromProject": "Remove from project",
+    "inviteTitle": "Invite Team Member",
+    "inviteHint": "The user must already have an account to be added.",
+    "invite": "Send Invite",
+    "form": {
+      "email": "Email address",
+      "emailPlaceholder": "colleague{'@'}example.com",
+      "project": "Add to project",
+      "selectProject": "Select a project..."
+    }
   },
   "tasks": {
     "fetchError": "Failed to fetch tasks.",

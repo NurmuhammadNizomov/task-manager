@@ -1,4 +1,4 @@
-import type { Document } from 'mongoose'
+import type { Document, Types } from 'mongoose'
 
 export type UserLanguage = 'en' | 'ru' | 'uz'
 export type UserTheme = 'light' | 'dark' | 'system'
@@ -13,6 +13,7 @@ export interface IUser extends Document {
   authType: AuthType
   isEmailVerified: boolean
 
+  bio?: string
   avatar?: {
     publicId: string
     url: string
@@ -77,4 +78,13 @@ export interface AuthJwtPayload {
   sub: string
   email: string
   type: 'access' | 'refresh'
+}
+
+export interface IAuthSession extends Document {
+  userId: Types.ObjectId
+  accessToken: string
+  refreshTokenHash: string
+  lastUsedAt: Date
+  createdAt: Date
+  updatedAt: Date
 }

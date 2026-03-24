@@ -1,32 +1,32 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import type { Notification } from '~/composables/useNotifications'
 import { useNotifications } from '~/composables/useNotifications'
 
 dayjs.extend(relativeTime)
 
-const { 
-  notifications, 
-  unreadCount, 
+const {
+  notifications,
+  unreadCount,
   isLoading,
-  fetchNotifications, 
-  fetchUnreadCount, 
-  markAsRead, 
+  fetchNotifications,
+  fetchUnreadCount,
+  markAsRead,
   markAllAsRead,
   clearAll
 } = useNotifications()
 
+const isOpen = ref(false)
 const offset = ref(0)
 const limit = 10
 const hasMore = ref(true)
 
 const loadMore = async () => {
   if (isLoading.value || !hasMore.value) return
-  
-  const currentLength = notifications.value.length
+  const prev = notifications.value.length
   await fetchNotifications(limit, offset.value)
-  
-  if (notifications.value.length === currentLength) {
+  if (notifications.value.length === prev) {
     hasMore.value = false
   } else {
     offset.value += limit
@@ -37,94 +37,102 @@ onMounted(() => {
   fetchNotifications(limit, 0)
   offset.value = limit
   fetchUnreadCount()
-  
-  // Refresh unread count every minute
   const interval = setInterval(fetchUnreadCount, 60000)
   onUnmounted(() => clearInterval(interval))
 })
 
-const handleNotificationClick = async (notification: any) => {
-  if (!notification.isRead) {
-    await markAsRead(notification._id)
-  }
+const handleClick = async (notification: Notification) => {
+  if (!notification.isRead) await markAsRead(notification._id)
 }
-
-const items = computed(() => [
-  notifications.value.map(n => ({
-    label: n.title,
-    description: n.message,
-    icon: n.isRead ? 'i-heroicons-bell' : 'i-heroicons-bell-alert',
-    slot: 'notification',
-    ...n
-  }))
-])
 </script>
 
 <template>
-  <UDropdownMenu :items="items" :content="{ side: 'bottom', align: 'end' }" class="w-80">
-    <UButton
-      variant="ghost"
-      color="neutral"
-      class="relative"
-      icon="i-heroicons-bell"
-    >
-      <UBadge
+  <UPopover v-model:open="isOpen" :content="{ side: 'bottom', align: 'end' }">
+    <!-- Trigger -->
+    <UButton variant="ghost" color="neutral" class="relative" aria-label="Notifications">
+      <Icon name="lucide:bell" class="size-4" />
+      <span
         v-if="unreadCount > 0"
-        color="error"
-        size="xs"
-        class="absolute -top-1 -right-1 px-1 min-w-[1.25rem]"
+        class="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white"
       >
         {{ unreadCount > 9 ? '9+' : unreadCount }}
-      </UBadge>
+      </span>
     </UButton>
 
-    <template #notification-trailing="{ item }">
-      <div class="flex flex-col items-end gap-1">
-        <span class="text-[10px] text-gray-500">{{ dayjs(item.createdAt).fromNow() }}</span>
-        <div v-if="!item.isRead" class="size-2 rounded-full bg-primary-500"></div>
-      </div>
-    </template>
+    <!-- Panel -->
+    <template #content>
+      <div class="w-80 overflow-hidden rounded-xl">
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-gray-700">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-semibold text-gray-900 dark:text-white">Notifications</span>
+            <UBadge v-if="unreadCount > 0" color="error" variant="solid" size="xs">
+              {{ unreadCount }}
+            </UBadge>
+          </div>
+          <div class="flex gap-1">
+            <UButton
+              v-if="unreadCount > 0"
+              variant="ghost"
+              color="neutral"
+              size="xs"
+              @click="markAllAsRead"
+            >
+              Mark all read
+            </UButton>
+            <UButton
+              v-if="notifications.length > 0"
+              variant="ghost"
+              color="error"
+              size="xs"
+              @click="clearAll"
+            >
+              Clear
+            </UButton>
+          </div>
+        </div>
 
-    <template #content-header>
-      <div class="flex items-center justify-between px-3 py-2 border-b border-gray-200 dark:border-gray-800">
-        <span class="font-semibold text-sm">Notifications</span>
-        <div class="flex gap-2">
-          <UButton 
-            v-if="unreadCount > 0" 
-            variant="ghost" 
-            size="xs" 
-            @click="markAllAsRead"
+        <!-- List -->
+        <div class="max-h-80 overflow-y-auto">
+          <div v-if="isLoading && notifications.length === 0" class="flex items-center justify-center py-8">
+            <Icon name="lucide:loader" class="size-5 animate-spin text-gray-400" />
+          </div>
+
+          <div v-else-if="notifications.length === 0" class="flex flex-col items-center justify-center gap-2 py-10 text-center">
+            <Icon name="lucide:bell-off" class="size-8 text-gray-300" />
+            <p class="text-sm text-gray-400">No notifications yet</p>
+          </div>
+
+          <button
+            v-for="n in notifications"
+            :key="n._id"
+            class="flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800"
+            :class="!n.isRead ? 'bg-primary-50/50 dark:bg-primary-900/10' : ''"
+            @click="handleClick(n)"
           >
-            Mark all read
-          </UButton>
-          <UButton 
-            v-if="notifications.length > 0" 
-            variant="ghost" 
-            size="xs" 
-            color="error"
-            @click="clearAll"
-          >
-            Clear
+            <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
+              <Icon
+                :name="n.isRead ? 'lucide:bell' : 'lucide:bell-ring'"
+                class="size-4"
+                :class="n.isRead ? 'text-gray-400' : 'text-primary-500'"
+              />
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="text-sm font-medium text-gray-900 dark:text-white">{{ n.title }}</p>
+              <p class="mt-0.5 text-xs text-gray-500 line-clamp-2">{{ n.message }}</p>
+              <p class="mt-1 text-[11px] text-gray-400">{{ dayjs(n.createdAt).fromNow() }}</p>
+            </div>
+            <div v-if="!n.isRead" class="mt-1.5 size-2 shrink-0 rounded-full bg-primary-500" />
+          </button>
+        </div>
+
+        <!-- Footer -->
+        <div v-if="notifications.length > 0 && hasMore" class="border-t border-gray-200 p-2 dark:border-gray-700">
+          <UButton variant="ghost" color="neutral" size="xs" block :loading="isLoading" @click.stop="loadMore">
+            Load more
           </UButton>
         </div>
       </div>
     </template>
-
-    <template #content-footer>
-      <div v-if="notifications.length === 0" class="p-8 text-center text-gray-500 text-sm">
-        No notifications yet.
-      </div>
-      <div v-else-if="hasMore" class="p-2 border-t border-gray-200 dark:border-gray-800">
-        <UButton 
-          variant="ghost" 
-          size="xs" 
-          block 
-          :loading="isLoading" 
-          @click.stop="loadMore"
-        >
-          Load more
-        </UButton>
-      </div>
-    </template>
-  </UDropdownMenu>
+  </UPopover>
 </template>

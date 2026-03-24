@@ -1,4 +1,4 @@
-import { readMultipartFormData, createError } from 'h3'
+import { readMultipartFormData } from 'h3'
 import { apiSuccess, apiError, defineApiHandler } from '../../utils/api-response'
 import { UserModel } from '../../modules/auth/models/user'
 import { uploadToCloudinary, deleteFromCloudinary } from '../../utils/cloudinary'
@@ -17,25 +17,22 @@ export default defineApiHandler(async (event) => {
     return apiError(404, 'USER_NOT_FOUND', 'User not found.')
   }
 
-  // Delete old avatar if it exists
   if (user.avatar?.publicId) {
     try {
       await deleteFromCloudinary(user.avatar.publicId)
     } catch (e) {
       console.error('Failed to delete old avatar:', e)
-      // Continue even if deletion fails
     }
   }
 
-  // Upload new avatar
   try {
-    const uploadResult = await uploadToCloudinary(event, file, 'user-avatars')
-    
+    const uploadResult = await uploadToCloudinary(file.data, 'user-avatars') as { public_id: string; secure_url: string }
+
     user.avatar = {
       publicId: uploadResult.public_id,
       url: uploadResult.secure_url
     }
-    
+
     await user.save()
 
     return apiSuccess({

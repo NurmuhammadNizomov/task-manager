@@ -1,15 +1,5 @@
-import mongoose, { Schema, type Document, type Model, type Types } from 'mongoose'
-
-export interface IAuthSession extends Document {
-  userId: Types.ObjectId
-  accessToken: string
-  refreshTokenHash: string
-  ipAddress?: string
-  userAgent?: string
-  lastUsedAt: Date
-  createdAt: Date
-  updatedAt: Date
-}
+import mongoose, { Schema, type Model } from 'mongoose'
+import type { IAuthSession } from '../types'
 
 const authSessionSchema = new Schema<IAuthSession>(
   {
@@ -27,12 +17,6 @@ const authSessionSchema = new Schema<IAuthSession>(
       type: String,
       default: null
     },
-    ipAddress: {
-      type: String
-    },
-    userAgent: {
-      type: String
-    },
     lastUsedAt: {
       type: Date,
       default: Date.now
@@ -43,13 +27,9 @@ const authSessionSchema = new Schema<IAuthSession>(
   }
 )
 
-// Indexes for common query patterns
-// For finding all sessions for a user, sorted by most recently used
 authSessionSchema.index({ userId: 1, lastUsedAt: -1 })
-// For cleaning up old sessions based on their last activity
 authSessionSchema.index({ lastUsedAt: 1 })
 
 export const AuthSessionModel: Model<IAuthSession> =
   (mongoose.models.AuthSession as Model<IAuthSession>) ||
   mongoose.model<IAuthSession>('AuthSession', authSessionSchema)
-

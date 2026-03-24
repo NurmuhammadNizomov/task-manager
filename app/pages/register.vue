@@ -4,14 +4,13 @@ import type { FormSubmitEvent } from '#ui/types'
 
 import { DEFAULT_LANGUAGE } from '~/composables/useUserSettings'
 import type { AppLanguage } from '~/composables/useUserSettings'
-import { useAuth } from '~/composables/useAuth'
 
 definePageMeta({
   layout: 'auth',
   middleware: 'guest'
 })
 
-const { t, locale, setLocale } = useI18n()
+const { t, locale } = useI18n()
 
 const schema = z.object({
   fullName: z.string().min(2, t('auth.validation.fullNameMin')),
@@ -27,13 +26,11 @@ type Schema = z.infer<typeof schema>
 
 useSeoMeta({
   title: () => t('auth.register'),
-  description: () => t('auth.registerDescription') || t('auth.register'),
+  description: () => t('auth.registerDescription'),
   ogTitle: () => t('auth.register'),
 })
 
-const colorMode = useColorMode()
 const { register } = useAuthApi()
-const { setAuth } = useAuth()
 const toast = useToast()
 const config = useRuntimeConfig()
 
@@ -215,7 +212,8 @@ const submit = async (event: FormSubmitEvent<Schema>) => {
     </UButton>
 
     <template #footer>
-      <p class="text-center"
+      <p
+class="text-center"
         :style="{
           fontSize: 'var(--font-size-sm)',
           color: 'var(--color-gray-600)'

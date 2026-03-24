@@ -1,4 +1,4 @@
-﻿import mongoose, { Schema, type Document, type Model } from 'mongoose'
+﻿import mongoose, { Schema, type Model } from 'mongoose'
 import { comparePassword, hashPassword } from '../utils/password'
 import type { IUser } from '../types'
 
@@ -37,6 +37,11 @@ const userSchema = new Schema<IUser>(
     isEmailVerified: {
       type: Boolean,
       default: false
+    },
+    bio: {
+      type: String,
+      maxlength: 500,
+      trim: true
     },
     avatar: {
       publicId: String,

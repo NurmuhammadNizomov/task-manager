@@ -5,12 +5,9 @@ import LoadingBar from '~/components/ui/LoadingBar.vue'
 import ScrollToTop from '~/components/ui/ScrollToTop.vue'
 import NotificationToast from '~/components/ui/NotificationToast.vue'
 
-// Page loading state
 const nuxtApp = useNuxtApp()
 const isLoading = ref(false)
-const isTransitioning = ref(false)
 
-// Handle page loading states
 nuxtApp.hook('page:start', () => {
   isLoading.value = true
 })
@@ -21,46 +18,26 @@ nuxtApp.hook('page:finish', () => {
   }, 300)
 })
 
-// Scroll behavior
 const { y } = useWindowScroll()
-
-// Page transition
 const route = useRoute()
-watch(() => route.path, () => {
-  isTransitioning.value = true
-  setTimeout(() => {
-    isTransitioning.value = false
-  }, 300)
-})
 </script>
 
 <template>
   <div class="min-h-screen flex flex-col">
-    <!-- Skip to main content for accessibility -->
-    <a 
-      href="#main-content" 
+    <a
+      href="#main-content"
       class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary-600 text-white px-4 py-2 rounded-md z-50"
     >
       Skip to main content
     </a>
 
-    <!-- Loading Bar -->
     <LoadingBar :is-loading="isLoading" />
 
-    <!-- Header -->
     <header class="relative z-40">
       <DefaultHeader />
     </header>
 
-    <!-- Main Content -->
-    <main 
-      id="main-content"
-      class="flex-1 relative z-10"
-      :class="[
-        'transition-opacity duration-300 ease-in-out',
-        isTransitioning ? 'opacity-0' : 'opacity-100'
-      ]"
-    >
+    <main id="main-content" class="flex-1 relative z-10">
       <Transition name="slide-fade" mode="out-in" appear>
         <div :key="route.path" class="w-full h-full">
           <slot />
