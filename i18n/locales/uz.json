@@ -253,6 +253,7 @@
     "security": "Akkaunt xavfsizligi",
     "saveChanges": "O'zgarishlarni saqlash",
     "changePassword": "Parolni o'zgartirish",
+    "clickToChange": "Rasmni o'zgartirish uchun bosing",
     "avatarSuccess": "Avatar muvaffaqiyatli yangilandi.",
     "avatarError": "Avatarni yangilashda xatolik.",
     "updateSuccess": "Profil muvaffaqiyatli yangilandi.",

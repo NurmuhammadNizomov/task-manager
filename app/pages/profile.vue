@@ -92,29 +92,34 @@ const handlePasswordSubmit = async (event: FormSubmitEvent<z.infer<typeof passwo
       <!-- Personal Info -->
       <UCard>
         <template #header>
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <Icon name="lucide:user" class="size-4 text-gray-500" />
-              <h3 class="font-semibold text-gray-900 dark:text-white">{{ t('profile.personalInfo') }}</h3>
-            </div>
-            <!-- Avatar -->
-            <div class="relative group cursor-pointer shrink-0" @click="onAvatarClick">
-              <UAvatar
-                :src="user?.avatar?.url"
-                :alt="user?.fullName"
-                size="xl"
-                class="ring-2 ring-white dark:ring-gray-900"
-              />
-              <div class="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
-                <Icon v-if="!isUploading" name="lucide:camera" class="size-4 text-white" />
-                <Icon v-else name="lucide:loader" class="size-4 text-white animate-spin" />
-              </div>
-            </div>
-            <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="onFileChange" />
+          <div class="flex items-center gap-2">
+            <Icon name="lucide:user" class="size-4 text-gray-500" />
+            <h3 class="font-semibold text-gray-900 dark:text-white">{{ t('profile.personalInfo') }}</h3>
           </div>
         </template>
 
         <UForm :schema="personalInfoSchema" :state="personalInfoState" class="space-y-4" @submit="handlePersonalInfoSubmit">
+          <!-- Avatar row -->
+          <div class="flex items-center gap-4 pb-2 border-b border-gray-100 dark:border-gray-800">
+            <div class="relative group cursor-pointer shrink-0" @click="onAvatarClick">
+              <UAvatar
+                :src="user?.avatar?.url"
+                :alt="user?.fullName"
+                size="2xl"
+                class="ring-4 ring-white dark:ring-gray-900"
+              />
+              <div class="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
+                <Icon v-if="!isUploading" name="lucide:camera" class="size-5 text-white" />
+                <Icon v-else name="lucide:loader" class="size-5 text-white animate-spin" />
+              </div>
+            </div>
+            <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="onFileChange" />
+            <div>
+              <p class="font-semibold text-gray-900 dark:text-white">{{ user?.fullName }}</p>
+              <p class="text-sm text-gray-500">{{ user?.email }}</p>
+              <p class="text-xs text-gray-400 mt-0.5">{{ t('profile.clickToChange') }}</p>
+            </div>
+          </div>
           <div class="grid gap-4 sm:grid-cols-2">
             <UFormField :label="t('profile.form.fullName')" name="fullName" class="w-full">
               <UInput v-model="personalInfoState.fullName" class="w-full" />

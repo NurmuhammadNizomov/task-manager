@@ -293,6 +293,7 @@
     "security": "Account Security",
     "saveChanges": "Save Changes",
     "changePassword": "Change Password",
+    "clickToChange": "Click to change photo",
     "avatarSuccess": "Avatar updated successfully.",
     "avatarError": "Failed to update avatar.",
     "updateSuccess": "Profile updated successfully.",
