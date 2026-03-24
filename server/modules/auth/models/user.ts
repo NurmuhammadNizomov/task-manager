@@ -1,6 +1,7 @@
-﻿import mongoose, { Schema, type Model } from 'mongoose'
+﻿import { Schema } from 'mongoose'
 import { comparePassword, hashPassword } from '../utils/password'
 import type { IUser } from '../types'
+import { getModel } from '~/server/utils/model'
 
 const userSchema = new Schema<IUser>(
   {
@@ -84,6 +85,5 @@ userSchema.methods.comparePassword = function compare(candidatePassword: string)
   return comparePassword(candidatePassword, this.password)
 }
 
-export const UserModel: Model<IUser> =
-  (mongoose.models.User as Model<IUser>) || mongoose.model<IUser>('User', userSchema)
+export const UserModel = getModel<IUser>('User', userSchema)
 

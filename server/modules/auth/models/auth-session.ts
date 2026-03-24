@@ -1,5 +1,6 @@
-import mongoose, { Schema, type Model } from 'mongoose'
+import { Schema } from 'mongoose'
 import type { IAuthSession } from '../types'
+import { getModel } from '~/server/utils/model'
 
 const authSessionSchema = new Schema<IAuthSession>(
   {
@@ -30,6 +31,4 @@ const authSessionSchema = new Schema<IAuthSession>(
 authSessionSchema.index({ userId: 1, lastUsedAt: -1 })
 authSessionSchema.index({ lastUsedAt: 1 })
 
-export const AuthSessionModel: Model<IAuthSession> =
-  (mongoose.models.AuthSession as Model<IAuthSession>) ||
-  mongoose.model<IAuthSession>('AuthSession', authSessionSchema)
+export const AuthSessionModel = getModel<IAuthSession>('AuthSession', authSessionSchema)

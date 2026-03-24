@@ -1,8 +1,9 @@
-import mongoose, { Schema, type Document, type Model, type Types } from 'mongoose'
+import { Schema, type Types } from 'mongoose'
+import { getModel } from '~/server/utils/model'
 
 export type AuthOtpPurpose = 'email_verification' | 'password_reset'
 
-export interface IAuthOtp extends Document {
+export interface IAuthOtp {
   userId: Types.ObjectId
   purpose: AuthOtpPurpose
   codeHash: string
@@ -50,7 +51,4 @@ const authOtpSchema = new Schema<IAuthOtp>(
 
 authOtpSchema.index({ userId: 1, purpose: 1 }, { unique: true })
 
-export const AuthOtpModel: Model<IAuthOtp> =
-  (mongoose.models.AuthOtp as Model<IAuthOtp>) ||
-  mongoose.model<IAuthOtp>('AuthOtp', authOtpSchema)
-
+export const AuthOtpModel = getModel<IAuthOtp>('AuthOtp', authOtpSchema)

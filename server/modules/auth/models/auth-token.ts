@@ -1,6 +1,7 @@
-import mongoose, { Schema, type Document, type Model, type Types } from 'mongoose'
+import { Schema, type Types } from 'mongoose'
+import { getModel } from '~/server/utils/model'
 
-export interface IAuthToken extends Document {
+export interface IAuthToken {
   userId: Types.ObjectId
   emailVerificationToken: string | null
   emailVerificationExpires: Date | null
@@ -39,15 +40,11 @@ const authTokenSchema = new Schema<IAuthToken>(
   }
 )
 
-// Compound indexes for common query patterns
-authTokenSchema.index({ emailVerificationToken: 1, emailVerificationExpires: 1 }) // For email verification validation
-authTokenSchema.index({ passwordResetToken: 1, passwordResetExpires: 1 }) // For password reset validation
-authTokenSchema.index({ emailVerificationExpires: 1 }) // For cleanup of expired email verification tokens
-authTokenSchema.index({ passwordResetExpires: 1 }) // For cleanup of expired password reset tokens
-authTokenSchema.index({ userId: 1, emailVerificationExpires: 1 }) // For user-specific email verification lookups
-authTokenSchema.index({ userId: 1, passwordResetExpires: 1 }) // For user-specific password reset lookups
+authTokenSchema.index({ emailVerificationToken: 1, emailVerificationExpires: 1 })
+authTokenSchema.index({ passwordResetToken: 1, passwordResetExpires: 1 })
+authTokenSchema.index({ emailVerificationExpires: 1 })
+authTokenSchema.index({ passwordResetExpires: 1 })
+authTokenSchema.index({ userId: 1, emailVerificationExpires: 1 })
+authTokenSchema.index({ userId: 1, passwordResetExpires: 1 })
 
-export const AuthTokenModel: Model<IAuthToken> =
-  (mongoose.models.AuthToken as Model<IAuthToken>) ||
-  mongoose.model<IAuthToken>('AuthToken', authTokenSchema)
-
+export const AuthTokenModel = getModel<IAuthToken>('AuthToken', authTokenSchema)
