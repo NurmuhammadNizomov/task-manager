@@ -3,7 +3,6 @@ import { useKanban } from '~/composables/useKanban'
 import { useProjects } from '~/composables/useProjects'
 import type { Task, TaskStatus, TaskPriority } from '~/composables/useKanban'
 import TaskDetails from '~/components/kanban/TaskDetails.vue'
-import MemberManagement from '~/components/projects/MemberManagement.vue'
 import dayjs from 'dayjs'
 
 definePageMeta({ layout: 'dashboard', middleware: 'auth' })
@@ -16,20 +15,15 @@ const { currentProject, fetchProjectById } = useProjects()
 const {
   allTasks, columns, isLoading,
   searchQuery, filterPriority, filterStatus,
-  dragOverStatus,
+  dragOverStatus, dragOverTaskId, draggingTaskId,
   fetchTasks, createTask, updateTask,
-  onDragStart, onDragOver, onDragEnd, onDrop
+  onDragStart, onDragOver, onDragOverTask, onDragEnd, onDrop
 } = useKanban(projectId.value)
 
 const newTaskTitle = ref('')
 const columnForNewTask = ref<TaskStatus | null>(null)
 const selectedTask = ref<Task | null>(null)
 const isDetailsOpen = ref(false)
-
-const tabs = computed(() => [
-  { label: t('projects.tabs.board'), slot: 'board' as const },
-  { label: t('projects.tabs.settings'), slot: 'settings' as const }
-])
 
 // Stats
 const totalTasks = computed(() => allTasks.value.length)
@@ -139,10 +133,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <UTabs :items="tabs" class="flex flex-col flex-1">
-      <!-- Board Tab -->
-      <template #board>
-        <div class="flex flex-col flex-1 gap-4 pt-2">
+    <div class="flex flex-col flex-1 gap-4 pt-2">
 
           <!-- Filter Bar -->
           <div class="flex flex-wrap items-center gap-2">
@@ -219,12 +210,18 @@ onMounted(() => {
                   v-for="task in columns[status]"
                   :key="task._id"
                   class="group cursor-grab rounded-lg bg-white p-3 shadow-sm ring-1 transition-all duration-150 hover:shadow-md active:cursor-grabbing dark:bg-gray-900"
-                  :class="isOverdue(task)
-                    ? 'ring-red-300 dark:ring-red-800 hover:ring-red-400'
-                    : 'ring-gray-200/80 dark:ring-gray-700 hover:ring-primary-300'"
+                  :class="[
+                    isOverdue(task)
+                      ? 'ring-red-300 dark:ring-red-800 hover:ring-red-400'
+                      : 'ring-gray-200/80 dark:ring-gray-700 hover:ring-primary-300',
+                    dragOverTaskId === task._id && draggingTaskId !== task._id
+                      ? 'border-t-2 border-primary-400'
+                      : ''
+                  ]"
                   draggable="true"
                   @dragstart="onDragStart(task._id, task.status)"
                   @dragend="onDragEnd"
+                  @dragover.prevent.stop="onDragOverTask(task._id)"
                   @click="openDetails(task)"
                 >
                   <div class="flex items-start justify-between gap-2">
@@ -301,16 +298,7 @@ onMounted(() => {
               </UButton>
             </div>
           </div>
-        </div>
-      </template>
-
-      <!-- Settings Tab -->
-      <template #settings>
-        <div class="pt-4">
-          <MemberManagement :project-id="projectId" />
-        </div>
-      </template>
-    </UTabs>
+    </div>
 
     <!-- Task Details Modal -->
     <TaskDetails

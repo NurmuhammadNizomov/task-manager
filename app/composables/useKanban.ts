@@ -40,6 +40,7 @@ export const useKanban = (projectId: string) => {
   const draggingTaskId = ref<string | null>(null)
   const draggingFromStatus = ref<TaskStatus | null>(null)
   const dragOverStatus = ref<TaskStatus | null>(null)
+  const dragOverTaskId = ref<string | null>(null)
 
   const STATUS_ORDER: TaskStatus[] = ['planned', 'inProgress', 'inReview', 'done']
 
@@ -71,7 +72,6 @@ export const useKanban = (projectId: string) => {
       }
     }
 
-    // Sort by position in each column
     for (const status of STATUS_ORDER) {
       cols[status].sort((a, b) => a.position - b.position)
     }
@@ -121,22 +121,35 @@ export const useKanban = (projectId: string) => {
     }
   }
 
-  const handleTaskMove = async (taskId: string, toStatus: TaskStatus) => {
-    const task = allTasks.value.find((t) => t._id === taskId)
-    if (!task || task.status === toStatus) return
+  const deleteTask = async (taskId: string) => {
+    try {
+      await $fetch(`/api/tasks/${taskId}`, { method: 'DELETE' })
+      allTasks.value = allTasks.value.filter((t) => t._id !== taskId)
+      toast.add({ title: t('common.success'), description: t('tasks.deleteTaskSuccess'), color: 'success' })
+    } catch {
+      toast.add({ title: t('common.error'), description: t('tasks.deleteTaskError'), color: 'error' })
+    }
+  }
 
-    // Optimistic update
+  const handleTaskMove = async (taskId: string, toStatus: TaskStatus, newPosition?: number) => {
+    const task = allTasks.value.find((t) => t._id === taskId)
+    if (!task) return
+
     const originalStatus = task.status
+    const originalPosition = task.position
+    // Optimistic: update status immediately
     task.status = toStatus
 
     try {
       await $fetch(`/api/tasks/${taskId}/move`, {
         method: 'PATCH',
-        body: { status: toStatus }
+        body: { status: toStatus, newPosition }
       })
+      // Refresh to get accurate positions after reorder
+      await fetchTasks()
     } catch {
-      // Revert on failure
       task.status = originalStatus
+      task.position = originalPosition
       toast.add({ title: t('common.error'), description: t('tasks.moveError'), color: 'error' })
     }
   }
@@ -151,18 +164,40 @@ export const useKanban = (projectId: string) => {
     dragOverStatus.value = status
   }
 
+  const onDragOverTask = (taskId: string) => {
+    dragOverTaskId.value = taskId
+  }
+
   const onDragEnd = () => {
     draggingTaskId.value = null
     draggingFromStatus.value = null
     dragOverStatus.value = null
+    dragOverTaskId.value = null
   }
 
   const onDrop = async (toStatus: TaskStatus) => {
-    if (!draggingTaskId.value || draggingFromStatus.value === toStatus) {
+    if (!draggingTaskId.value) {
       onDragEnd()
       return
     }
-    await handleTaskMove(draggingTaskId.value, toStatus)
+
+    let newPosition: number | undefined
+
+    // If hovering over a specific task, insert before it
+    if (dragOverTaskId.value && dragOverTaskId.value !== draggingTaskId.value) {
+      const targetTask = allTasks.value.find((t) => t._id === dragOverTaskId.value)
+      if (targetTask && targetTask.status === toStatus) {
+        newPosition = targetTask.position
+      }
+    }
+
+    // Same column, no target task hovered → no-op
+    if (draggingFromStatus.value === toStatus && newPosition === undefined) {
+      onDragEnd()
+      return
+    }
+
+    await handleTaskMove(draggingTaskId.value, toStatus, newPosition)
     onDragEnd()
   }
 
@@ -175,12 +210,15 @@ export const useKanban = (projectId: string) => {
     filterStatus,
     draggingTaskId,
     dragOverStatus,
+    dragOverTaskId,
     fetchTasks,
     createTask,
     updateTask,
+    deleteTask,
     handleTaskMove,
     onDragStart,
     onDragOver,
+    onDragOverTask,
     onDragEnd,
     onDrop
   }

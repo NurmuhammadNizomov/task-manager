@@ -96,6 +96,8 @@
     "create": "Create",
     "add": "Add",
     "cancel": "Cancel",
+    "yes": "Yes",
+    "no": "No",
     "tryAgain": "Please try again.",
     "contactSupport": "Contact support"
   },
@@ -378,6 +380,10 @@
     "deleteError": "Failed to delete attachment.",
     "addTask": "Add task",
     "newTaskPlaceholder": "Enter a title for this task...",
+    "deleteTask": "Delete task",
+    "confirmDelete": "Are you sure?",
+    "deleteTaskSuccess": "Task deleted successfully.",
+    "deleteTaskError": "Failed to delete task.",
     "status": {
       "planned": "Planned",
       "inProgress": "In Progress",

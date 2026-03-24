@@ -20,8 +20,10 @@ const isOpen = computed({
 })
 
 const isSaving = ref(false)
+const isDeleting = ref(false)
 const isUploading = ref(false)
 const fileInput = ref<HTMLInputElement | null>(null)
+const confirmDelete = ref(false)
 
 const form = ref({
   title: '',
@@ -66,18 +68,17 @@ const save = async () => {
       method: 'PATCH',
       body: {
         title: form.value.title,
-        description: form.value.description || undefined,
+        ...(form.value.description ? { description: form.value.description } : {}),
         priority: form.value.priority,
         status: form.value.status,
-        dueDate: form.value.dueDate || undefined
+        ...(form.value.dueDate ? { dueDate: form.value.dueDate } : { dueDate: null })
       }
     })
     toast.add({ title: t('common.success'), description: t('tasks.updateSuccess'), color: 'success' })
     emit('updated')
     isOpen.value = false
-  } catch (err) {
-    const msg = (err as { data?: { message?: string } })?.data?.message
-    toast.add({ title: t('common.error'), description: msg || t('tasks.updateError'), color: 'error' })
+  } catch {
+    toast.add({ title: t('common.error'), description: t('tasks.updateError'), color: 'error' })
   } finally {
     isSaving.value = false
   }
@@ -120,6 +121,26 @@ const deleteAttachment = async (publicId: string) => {
     emit('updated')
   } catch {
     toast.add({ title: t('common.error'), description: t('tasks.deleteError'), color: 'error' })
+  }
+}
+
+const handleDelete = async () => {
+  if (!props.task) return
+  if (!confirmDelete.value) {
+    confirmDelete.value = true
+    return
+  }
+  isDeleting.value = true
+  try {
+    await $fetch(`/api/tasks/${props.task._id}`, { method: 'DELETE' })
+    toast.add({ title: t('common.success'), description: t('tasks.deleteTaskSuccess'), color: 'success' })
+    emit('updated')
+    isOpen.value = false
+  } catch {
+    toast.add({ title: t('common.error'), description: t('tasks.deleteTaskError'), color: 'error' })
+  } finally {
+    isDeleting.value = false
+    confirmDelete.value = false
   }
 }
 
@@ -196,9 +217,28 @@ const formatBytes = (bytes: number) => {
     </template>
 
     <template #footer>
-      <div class="flex justify-end gap-2">
-        <UButton variant="ghost" color="neutral" @click="isOpen = false">{{ t('common.cancel') }}</UButton>
-        <UButton :loading="isSaving" @click="save">{{ t('tasks.details.saveChanges') }}</UButton>
+      <div class="flex items-center justify-between gap-2">
+        <div>
+          <UButton
+            v-if="!confirmDelete"
+            variant="ghost"
+            color="error"
+            size="sm"
+            @click="handleDelete"
+          >
+            <Icon name="lucide:trash-2" class="size-3.5 mr-1" />
+            {{ t('tasks.deleteTask') }}
+          </UButton>
+          <div v-else class="flex items-center gap-2">
+            <span class="text-sm text-red-500">{{ t('tasks.confirmDelete') }}</span>
+            <UButton size="xs" color="error" :loading="isDeleting" @click="handleDelete">{{ t('common.yes') }}</UButton>
+            <UButton size="xs" color="neutral" variant="ghost" @click="confirmDelete = false">{{ t('common.no') }}</UButton>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <UButton variant="ghost" color="neutral" @click="isOpen = false">{{ t('common.cancel') }}</UButton>
+          <UButton :loading="isSaving" @click="save">{{ t('tasks.details.saveChanges') }}</UButton>
+        </div>
       </div>
     </template>
   </UModal>

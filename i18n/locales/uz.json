@@ -99,6 +99,8 @@
     "create": "Yaratish",
     "add": "Qo'shish",
     "cancel": "Bekor qilish",
+    "yes": "Ha",
+    "no": "Yo'q",
     "tryAgain": "Iltimos, qayta urinib ko'ring.",
     "contactSupport": "Qo'llab-quvvatlash bilan bog'lanish"
   },
@@ -317,6 +319,10 @@
     "deleteError": "Ilovani o'chirishda xatolik.",
     "addTask": "Vazifa qo'shish",
     "newTaskPlaceholder": "Vazifa nomini kiriting...",
+    "deleteTask": "Vazifani o'chirish",
+    "confirmDelete": "Ishonchingiz komilmi?",
+    "deleteTaskSuccess": "Vazifa muvaffaqiyatli o'chirildi.",
+    "deleteTaskError": "Vazifani o'chirishda xatolik.",
     "status": {
       "planned": "Rejalashtirilgan",
       "inProgress": "Jarayonda",
