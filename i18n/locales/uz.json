@@ -292,7 +292,9 @@
       "create": {
         "title": "Yangi loyiha yaratish",
         "nameLabel": "Loyiha nomi",
-        "namePlaceholder": "Mening loyiham..."
+        "namePlaceholder": "Mening ajoyib loyiham...",
+        "descriptionLabel": "Tavsif",
+        "descriptionPlaceholder": "Bu loyiha haqida? (ixtiyoriy)"
       }
     },
     "members": {
@@ -320,6 +322,18 @@
       "inProgress": "Jarayonda",
       "inReview": "Ko'rib chiqilmoqda",
       "done": "Bajarildi"
+    },
+    "details": {
+      "titleLabel": "Sarlavha",
+      "descriptionLabel": "Tavsif",
+      "descriptionPlaceholder": "Tavsif qo'shing...",
+      "statusLabel": "Holat",
+      "priorityLabel": "Muhimlik",
+      "dueDateLabel": "Muddati",
+      "attachmentsLabel": "Ilovalar",
+      "upload": "Yuklash",
+      "noAttachments": "Hali ilovalar yo'q",
+      "saveChanges": "O'zgarishlarni saqlash"
     }
   },
   "taskPage": {

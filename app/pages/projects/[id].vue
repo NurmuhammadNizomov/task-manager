@@ -4,6 +4,7 @@ import { useProjects } from '~/composables/useProjects'
 import type { Task, TaskStatus, TaskPriority } from '~/composables/useKanban'
 import TaskDetails from '~/components/kanban/TaskDetails.vue'
 import MemberManagement from '~/components/projects/MemberManagement.vue'
+import dayjs from 'dayjs'
 
 definePageMeta({ layout: 'dashboard', middleware: 'auth' })
 
@@ -13,7 +14,7 @@ const projectId = computed(() => route.params.id as string)
 
 const { currentProject, fetchProjectById } = useProjects()
 const {
-  columns, isLoading,
+  allTasks, columns, isLoading,
   searchQuery, filterPriority, filterStatus,
   dragOverStatus,
   fetchTasks, createTask, updateTask,
@@ -26,16 +27,36 @@ const selectedTask = ref<Task | null>(null)
 const isDetailsOpen = ref(false)
 
 const tabs = computed(() => [
-  { key: 'board', label: t('projects.tabs.board') },
-  { key: 'settings', label: t('projects.tabs.settings') }
+  { label: t('projects.tabs.board'), slot: 'board' as const },
+  { label: t('projects.tabs.settings'), slot: 'settings' as const }
 ])
 
-const priorityOptions = [
+// Stats
+const totalTasks = computed(() => allTasks.value.length)
+const doneTasks = computed(() => allTasks.value.filter(t => t.status === 'done').length)
+const overdueTasks = computed(() =>
+  allTasks.value.filter(t => t.dueDate && t.status !== 'done' && dayjs(t.dueDate).isBefore(dayjs(), 'day')).length
+)
+const progressPercent = computed(() =>
+  totalTasks.value === 0 ? 0 : Math.round((doneTasks.value / totalTasks.value) * 100)
+)
+
+const isOverdue = (task: Task) =>
+  !!task.dueDate && task.status !== 'done' && dayjs(task.dueDate).isBefore(dayjs(), 'day')
+
+const statusOptions = computed(() => [
+  { label: t('tasks.status.planned'), value: 'planned' },
+  { label: t('tasks.status.inProgress'), value: 'inProgress' },
+  { label: t('tasks.status.inReview'), value: 'inReview' },
+  { label: t('tasks.status.done'), value: 'done' }
+])
+
+const priorityOptions = computed(() => [
   { label: t('dashboard.priority.low'), value: 'low' },
   { label: t('dashboard.priority.medium'), value: 'medium' },
   { label: t('dashboard.priority.high'), value: 'high' },
   { label: t('taskPage.priority.urgent'), value: 'urgent' }
-]
+])
 
 const columnMeta: Record<TaskStatus, { label: string; color: string; headerClass: string }> = {
   planned: { label: t('tasks.status.planned'), color: 'gray', headerClass: 'text-gray-600 dark:text-gray-400' },
@@ -88,7 +109,7 @@ onMounted(() => {
   <div class="flex flex-col h-full gap-4">
     <!-- Header -->
     <div class="flex flex-wrap items-start justify-between gap-3">
-      <div>
+      <div class="flex-1 min-w-0">
         <NuxtLink to="/dashboard" class="flex items-center gap-1 text-sm text-gray-500 hover:text-primary-500 transition-colors">
           <Icon name="lucide:arrow-left" class="size-3.5" />
           {{ t('projects.backToProjects') }}
@@ -96,13 +117,32 @@ onMounted(() => {
         <h1 class="mt-1 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
           {{ currentProject?.name || '...' }}
         </h1>
+
+        <!-- Stats row -->
+        <div v-if="!isLoading && totalTasks > 0" class="mt-2 flex flex-wrap items-center gap-4">
+          <!-- Progress bar -->
+          <div class="flex items-center gap-2">
+            <div class="w-24 h-1.5 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
+              <div
+                class="h-full rounded-full bg-green-500 transition-all duration-500"
+                :style="{ width: `${progressPercent}%` }"
+              />
+            </div>
+            <span class="text-xs text-gray-500">{{ doneTasks }}/{{ totalTasks }}</span>
+          </div>
+          <!-- Overdue badge -->
+          <span v-if="overdueTasks > 0" class="flex items-center gap-1 text-xs font-medium text-red-500">
+            <Icon name="lucide:clock" class="size-3.5" />
+            {{ overdueTasks }} {{ t('taskPage.overdue') }}
+          </span>
+        </div>
       </div>
     </div>
 
     <UTabs :items="tabs" class="flex flex-col flex-1">
-      <template #item="{ item }">
-        <!-- Board Tab -->
-        <div v-if="item.key === 'board'" class="flex flex-col flex-1 gap-4 pt-2">
+      <!-- Board Tab -->
+      <template #board>
+        <div class="flex flex-col flex-1 gap-4 pt-2">
 
           <!-- Filter Bar -->
           <div class="flex flex-wrap items-center gap-2">
@@ -116,12 +156,21 @@ onMounted(() => {
             </div>
 
             <USelect
+              v-model="filterStatus"
+              :items="statusOptions"
+              value-key="value"
+              label-key="label"
+              :placeholder="t('taskPage.allStatuses')"
+              class="w-36"
+            />
+
+            <USelect
               v-model="filterPriority"
               :items="priorityOptions"
               value-key="value"
               label-key="label"
               :placeholder="t('taskPage.allPriorities')"
-              class="w-44"
+              class="w-36"
             />
 
             <UButton
@@ -138,7 +187,7 @@ onMounted(() => {
 
           <!-- Loading -->
           <div v-if="isLoading" class="flex items-center justify-center py-16">
-            <UIcon name="lucide:loader" class="size-6 animate-spin text-gray-400" />
+            <Icon name="lucide:loader" class="size-6 animate-spin text-gray-400" />
           </div>
 
           <!-- Kanban Board -->
@@ -169,7 +218,10 @@ onMounted(() => {
                 <div
                   v-for="task in columns[status]"
                   :key="task._id"
-                  class="group cursor-grab rounded-lg bg-white p-3 shadow-sm ring-1 ring-gray-200/80 transition-all duration-150 hover:shadow-md hover:ring-primary-300 active:cursor-grabbing dark:bg-gray-900 dark:ring-gray-700"
+                  class="group cursor-grab rounded-lg bg-white p-3 shadow-sm ring-1 transition-all duration-150 hover:shadow-md active:cursor-grabbing dark:bg-gray-900"
+                  :class="isOverdue(task)
+                    ? 'ring-red-300 dark:ring-red-800 hover:ring-red-400'
+                    : 'ring-gray-200/80 dark:ring-gray-700 hover:ring-primary-300'"
                   draggable="true"
                   @dragstart="onDragStart(task._id, task.status)"
                   @dragend="onDragEnd"
@@ -196,18 +248,20 @@ onMounted(() => {
                   <!-- Task Meta -->
                   <div class="mt-2 flex items-center justify-between gap-2">
                     <div class="flex items-center gap-2">
-                      <!-- Priority -->
                       <span class="text-[11px] font-medium" :class="priorityMeta[task.priority]?.class">
                         {{ priorityMeta[task.priority]?.label }}
                       </span>
-                      <!-- Attachments -->
                       <span v-if="task.attachments?.length" class="flex items-center gap-0.5 text-[11px] text-gray-400">
                         <Icon name="lucide:paperclip" class="size-3" />
                         {{ task.attachments.length }}
                       </span>
-                      <!-- Due date -->
-                      <span v-if="task.dueDate" class="text-[11px] text-gray-400">
-                        {{ new Date(task.dueDate).toLocaleDateString() }}
+                      <span
+                        v-if="task.dueDate"
+                        class="flex items-center gap-0.5 text-[11px]"
+                        :class="isOverdue(task) ? 'text-red-500 font-medium' : 'text-gray-400'"
+                      >
+                        <Icon name="lucide:calendar" class="size-3" />
+                        {{ dayjs(task.dueDate).format('MMM D') }}
                       </span>
                     </div>
                     <UAvatar v-if="task.assignee" :alt="String(task.assignee)" size="xs" />
@@ -248,9 +302,11 @@ onMounted(() => {
             </div>
           </div>
         </div>
+      </template>
 
-        <!-- Settings Tab -->
-        <div v-if="item.key === 'settings'" class="pt-4">
+      <!-- Settings Tab -->
+      <template #settings>
+        <div class="pt-4">
           <MemberManagement :project-id="projectId" />
         </div>
       </template>

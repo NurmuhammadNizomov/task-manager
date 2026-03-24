@@ -50,12 +50,12 @@ const statusOptions = [
   { label: t('tasks.status.done'), value: 'done' }
 ]
 
-const priorityOptions = [
-  { label: 'Low', value: 'low' },
-  { label: 'Medium', value: 'medium' },
-  { label: 'High', value: 'high' },
-  { label: 'Urgent', value: 'urgent' }
-]
+const priorityOptions = computed(() => [
+  { label: t('taskPage.priority.low'), value: 'low' },
+  { label: t('taskPage.priority.medium'), value: 'medium' },
+  { label: t('taskPage.priority.high'), value: 'high' },
+  { label: t('taskPage.priority.urgent'), value: 'urgent' }
+])
 
 
 const save = async () => {
@@ -134,24 +134,24 @@ const formatBytes = (bytes: number) => {
   <UModal v-model:open="isOpen" :title="task?.title" :ui="{ content: 'max-w-2xl' }">
     <template v-if="task" #body>
       <div class="space-y-5">
-        <UFormField label="Title">
-          <UInput v-model="form.title" />
+        <UFormField :label="t('tasks.details.titleLabel')">
+          <UInput v-model="form.title" class="w-full" />
         </UFormField>
 
-        <UFormField label="Description">
-          <UTextarea v-model="form.description" :rows="3" placeholder="Add a description..." />
+        <UFormField :label="t('tasks.details.descriptionLabel')">
+          <UTextarea v-model="form.description" :rows="3" :placeholder="t('tasks.details.descriptionPlaceholder')" class="w-full" />
         </UFormField>
 
         <div class="grid gap-4 sm:grid-cols-3">
-          <UFormField label="Status">
+          <UFormField :label="t('tasks.details.statusLabel')">
             <USelect v-model="form.status" :items="statusOptions" value-key="value" label-key="label" />
           </UFormField>
 
-          <UFormField label="Priority">
+          <UFormField :label="t('tasks.details.priorityLabel')">
             <USelect v-model="form.priority" :items="priorityOptions" value-key="value" label-key="label" />
           </UFormField>
 
-          <UFormField label="Due date">
+          <UFormField :label="t('tasks.details.dueDateLabel')">
             <UInput v-model="form.dueDate" type="date" />
           </UFormField>
         </div>
@@ -160,12 +160,12 @@ const formatBytes = (bytes: number) => {
         <div>
           <div class="flex items-center justify-between mb-2">
             <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Attachments
+              {{ t('tasks.details.attachmentsLabel') }}
               <span class="ml-1 text-gray-400">({{ task.attachments?.length || 0 }})</span>
             </p>
             <UButton size="xs" variant="outline" :loading="isUploading" @click="fileInput?.click()">
               <Icon name="lucide:upload" class="size-3.5 mr-1" />
-              Upload
+              {{ t('tasks.details.upload') }}
             </UButton>
             <input ref="fileInput" type="file" multiple class="hidden" @change="onFileChange" />
           </div>
@@ -189,7 +189,7 @@ const formatBytes = (bytes: number) => {
             </div>
           </div>
           <p v-else class="text-sm text-gray-400 text-center py-3 border border-dashed border-gray-200 rounded-lg dark:border-gray-700">
-            No attachments yet
+            {{ t('tasks.details.noAttachments') }}
           </p>
         </div>
       </div>
@@ -198,7 +198,7 @@ const formatBytes = (bytes: number) => {
     <template #footer>
       <div class="flex justify-end gap-2">
         <UButton variant="ghost" color="neutral" @click="isOpen = false">{{ t('common.cancel') }}</UButton>
-        <UButton :loading="isSaving" @click="save">Save changes</UButton>
+        <UButton :loading="isSaving" @click="save">{{ t('tasks.details.saveChanges') }}</UButton>
       </div>
     </template>
   </UModal>

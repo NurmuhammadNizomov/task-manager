@@ -4,7 +4,8 @@ import { ProjectModel } from '../../modules/projects/models/project'
 import { readValidatedBody } from '../../modules/auth/utils/validation'
 
 const projectCreateSchema = z.object({
-  name: z.string().min(2).max(100)
+  name: z.string().min(2).max(100),
+  description: z.string().max(500).optional()
 })
 
 export default defineApiHandler(async (event) => {
@@ -13,6 +14,7 @@ export default defineApiHandler(async (event) => {
 
   const project = await ProjectModel.create({
     name: body.name,
+    description: body.description,
     owner: auth.userId,
     members: [auth.userId] // The owner is also a member
   })

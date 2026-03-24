@@ -444,14 +444,14 @@ const isOverdue = (task: Task) =>
     </UModal>
 
     <!-- Edit Task Modal -->
-    <UModal v-model:open="isEditOpen" :title="t('taskPage.editTitle')">
+    <UModal v-model:open="isEditOpen" :title="t('taskPage.editTitle')" size="lg">
       <template #body>
-        <div v-if="editingTask" class="space-y-4">
-          <UFormField :label="t('taskPage.form.title')">
-            <UInput v-model="editingTask.title" />
+        <div v-if="editingTask" class="flex flex-col gap-4">
+          <UFormField :label="t('taskPage.form.title')" required>
+            <UInput v-model="editingTask.title" class="w-full" autofocus />
           </UFormField>
           <UFormField :label="t('taskPage.form.description')">
-            <UTextarea v-model="editingTask.description" :rows="3" />
+            <UTextarea v-model="editingTask.description" :rows="3" class="w-full" :placeholder="t('tasks.details.descriptionPlaceholder')" />
           </UFormField>
           <div class="grid grid-cols-2 gap-4">
             <UFormField :label="t('taskPage.form.priority')">
@@ -460,10 +460,11 @@ const isOverdue = (task: Task) =>
                 :items="taskPriorityOptions"
                 value-key="value"
                 label-key="label"
+                class="w-full"
               />
             </UFormField>
             <UFormField :label="t('taskPage.form.dueDate')">
-              <UInput v-model="editingTask.dueDate" type="date" />
+              <UInput v-model="editingTask.dueDate" type="date" class="w-full" />
             </UFormField>
           </div>
         </div>
@@ -472,7 +473,7 @@ const isOverdue = (task: Task) =>
       <template #footer>
         <div class="flex justify-end gap-2">
           <UButton color="neutral" variant="ghost" @click="isEditOpen = false">{{ t('common.cancel') }}</UButton>
-          <UButton @click="handleEditSave">{{ t('taskPage.save') }}</UButton>
+          <UButton :disabled="!editingTask?.title?.trim()" @click="handleEditSave">{{ t('tasks.details.saveChanges') }}</UButton>
         </div>
       </template>
     </UModal>

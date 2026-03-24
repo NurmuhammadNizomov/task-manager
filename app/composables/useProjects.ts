@@ -28,7 +28,7 @@ export const useProjects = () => {
     try {
       const response = await $fetch<ApiSuccessResponse<Project[]>>('/api/projects')
       projects.value = response.data
-    } catch (error) {
+    } catch (_) {
       toast.add({
         title: t('common.error'),
         description: t('projects.fetchError'),
@@ -44,7 +44,7 @@ export const useProjects = () => {
     try {
       const response = await $fetch<ApiSuccessResponse<Project>>(`/api/projects/${id}`)
       currentProject.value = response.data
-    } catch (error) {
+    } catch (_) {
       toast.add({
         title: t('common.error'),
         description: t('projects.fetchOneError'),
@@ -56,11 +56,11 @@ export const useProjects = () => {
     }
   }
 
-  const createProject = async (name: string) => {
+  const createProject = async (name: string, description?: string) => {
     try {
       const response = await $fetch<ApiSuccessResponse<Project>>('/api/projects', {
         method: 'POST',
-        body: { name }
+        body: { name, description }
       })
       projects.value.unshift(response.data)
       toast.add({
@@ -69,7 +69,7 @@ export const useProjects = () => {
         color: 'success'
       })
       return response.data
-    } catch (error) {
+    } catch (_) {
       toast.add({
         title: t('common.error'),
         description: t('projects.createError'),
@@ -87,7 +87,7 @@ export const useProjects = () => {
       })
       toast.add({ title: t('common.success'), description: t('projects.members.addSuccess'), color: 'success' })
       await fetchProjectById(projectId) // Refresh project data
-    } catch (error) {
+    } catch (_) {
       toast.add({ title: t('common.error'), description: t('projects.members.addError'), color: 'error' })
     }
   }
@@ -100,7 +100,7 @@ export const useProjects = () => {
       })
       toast.add({ title: t('common.success'), description: t('projects.members.removeSuccess'), color: 'success' })
       await fetchProjectById(projectId) // Refresh project data
-    } catch (error) {
+    } catch (_) {
       toast.add({ title: t('common.error'), description: t('projects.members.removeError'), color: 'error' })
     }
   }

@@ -30,6 +30,7 @@ const fetchStats = async () => {
 
 const isCreateModalOpen = ref(false)
 const newProjectName = ref('')
+const newProjectDescription = ref('')
 
 // Fetch projects and stats on component mount
 onMounted(() => {
@@ -39,9 +40,10 @@ onMounted(() => {
 
 const handleCreateProject = async () => {
   if (!newProjectName.value.trim()) return
-  await createProject(newProjectName.value)
+  await createProject(newProjectName.value, newProjectDescription.value.trim() || undefined)
   isCreateModalOpen.value = false
   newProjectName.value = ''
+  newProjectDescription.value = ''
 }
 </script>
 
@@ -127,10 +129,10 @@ const handleCreateProject = async () => {
       <UCard v-for="project in projects" :key="project._id" class="ring-1 ring-gray-200 dark:ring-gray-800 hover:ring-primary-500 dark:hover:ring-primary-400 transition-all">
         <NuxtLink :to="`/projects/${project._id}`" class="block">
           <div class="flex items-start justify-between gap-3">
-            <div>
-              <p class="text-lg font-semibold">{{ project.name }}</p>
-              <p class="mt-1 text-sm text-gray-500">{{ t('projects.owner') }}: {{ project.owner.fullName }}</p>
-              <p class="mt-2 text-xs text-gray-500">{{ dayjs(project.createdAt).format('MMM D, YYYY') }}</p>
+            <div class="min-w-0 flex-1">
+              <p class="text-lg font-semibold truncate">{{ project.name }}</p>
+              <p v-if="project.description" class="mt-1 text-sm text-gray-500 line-clamp-2">{{ project.description }}</p>
+              <p class="mt-1 text-xs text-gray-400">{{ t('projects.owner') }}: {{ project.owner.fullName }} · {{ dayjs(project.createdAt).format('MMM D, YYYY') }}</p>
             </div>
             <div class="flex items-center">
               <UPopover mode="hover">
@@ -147,22 +149,33 @@ const handleCreateProject = async () => {
       </UCard>
     </section>
 
-    <UModal v-model:open="isCreateModalOpen" :title="t('projects.modals.create.title')">
+    <UModal v-model:open="isCreateModalOpen" :title="t('projects.modals.create.title')" size="lg">
       <template #body>
-        <UFormField :label="t('projects.modals.create.nameLabel')">
-          <UInput
-            v-model="newProjectName"
-            :placeholder="t('projects.modals.create.namePlaceholder')"
-            autofocus
-            @keyup.enter="handleCreateProject"
-          />
-        </UFormField>
+        <div class="flex flex-col gap-4">
+          <UFormField :label="t('projects.modals.create.nameLabel')" required>
+            <UInput
+              v-model="newProjectName"
+              :placeholder="t('projects.modals.create.namePlaceholder')"
+              class="w-full"
+              autofocus
+              @keyup.enter="handleCreateProject"
+            />
+          </UFormField>
+          <UFormField :label="t('projects.modals.create.descriptionLabel')">
+            <UTextarea
+              v-model="newProjectDescription"
+              :placeholder="t('projects.modals.create.descriptionPlaceholder')"
+              :rows="3"
+              class="w-full"
+            />
+          </UFormField>
+        </div>
       </template>
 
       <template #footer>
         <div class="flex justify-end gap-2">
           <UButton color="neutral" variant="ghost" @click="isCreateModalOpen = false">{{ t('common.cancel') }}</UButton>
-          <UButton @click="handleCreateProject">{{ t('common.create') }}</UButton>
+          <UButton :disabled="!newProjectName.trim()" @click="handleCreateProject">{{ t('common.create') }}</UButton>
         </div>
       </template>
     </UModal>

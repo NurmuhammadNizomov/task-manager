@@ -289,7 +289,9 @@
       "create": {
         "title": "Создать новый проект",
         "nameLabel": "Название проекта",
-        "namePlaceholder": "Мой проект..."
+        "namePlaceholder": "Мой отличный проект...",
+        "descriptionLabel": "Описание",
+        "descriptionPlaceholder": "О чём этот проект? (необязательно)"
       }
     },
     "members": {
@@ -317,6 +319,18 @@
       "inProgress": "В процессе",
       "inReview": "На проверке",
       "done": "Готово"
+    },
+    "details": {
+      "titleLabel": "Название",
+      "descriptionLabel": "Описание",
+      "descriptionPlaceholder": "Добавьте описание...",
+      "statusLabel": "Статус",
+      "priorityLabel": "Приоритет",
+      "dueDateLabel": "Срок выполнения",
+      "attachmentsLabel": "Вложения",
+      "upload": "Загрузить",
+      "noAttachments": "Вложений пока нет",
+      "saveChanges": "Сохранить изменения"
     }
   },
   "taskPage": {
