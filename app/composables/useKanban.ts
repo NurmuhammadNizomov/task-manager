@@ -44,20 +44,6 @@ export const useKanban = (projectId: string) => {
 
   const STATUS_ORDER: TaskStatus[] = ['planned', 'inProgress', 'inReview', 'done']
 
-  const filteredTasks = computed(() => {
-    return allTasks.value.filter((task) => {
-      const matchesSearch =
-        !searchQuery.value ||
-        task.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-        (task.description?.toLowerCase().includes(searchQuery.value.toLowerCase()) ?? false)
-
-      const matchesPriority = !filterPriority.value || task.priority === filterPriority.value
-      const matchesStatus = !filterStatus.value || task.status === filterStatus.value
-
-      return matchesSearch && matchesPriority && matchesStatus
-    })
-  })
-
   const columns = computed(() => {
     const cols: Record<TaskStatus, Task[]> = {
       planned: [],
@@ -65,24 +51,30 @@ export const useKanban = (projectId: string) => {
       inReview: [],
       done: []
     }
-
-    for (const task of filteredTasks.value) {
-      if (cols[task.status]) {
-        cols[task.status].push(task)
-      }
+    for (const task of allTasks.value) {
+      if (cols[task.status]) cols[task.status].push(task)
     }
-
     for (const status of STATUS_ORDER) {
       cols[status].sort((a, b) => a.position - b.position)
     }
-
     return cols
   })
+
+  const buildParams = () => {
+    const params: Record<string, string> = {}
+    if (searchQuery.value.trim()) params.search = searchQuery.value.trim()
+    if (filterPriority.value) params.priority = filterPriority.value
+    if (filterStatus.value) params.status = filterStatus.value
+    return params
+  }
 
   const fetchTasks = async () => {
     isLoading.value = true
     try {
-      const response = await $fetch<ApiSuccessResponse<Task[]>>(`/api/projects/${projectId}/tasks`)
+      const response = await $fetch<ApiSuccessResponse<Task[]>>(
+        `/api/projects/${projectId}/tasks`,
+        { params: buildParams() }
+      )
       allTasks.value = response.data
     } catch {
       toast.add({ title: t('common.error'), description: t('tasks.fetchError'), color: 'error' })
@@ -91,15 +83,27 @@ export const useKanban = (projectId: string) => {
     }
   }
 
-  // Refresh without showing the full-board loader (used after drag-drop)
   const refreshTasksSilent = async () => {
     try {
-      const response = await $fetch<ApiSuccessResponse<Task[]>>(`/api/projects/${projectId}/tasks`)
+      const response = await $fetch<ApiSuccessResponse<Task[]>>(
+        `/api/projects/${projectId}/tasks`,
+        { params: buildParams() }
+      )
       allTasks.value = response.data
     } catch {
-      // silent — don't show error toast for background refresh
+      // silent
     }
   }
+
+  // Debounced fetch triggered by search/filter changes
+  let debounceTimer: ReturnType<typeof setTimeout> | null = null
+  const debouncedFetch = () => {
+    if (debounceTimer) clearTimeout(debounceTimer)
+    debounceTimer = setTimeout(() => fetchTasks(), 300)
+  }
+
+  watch(searchQuery, debouncedFetch)
+  watch([filterPriority, filterStatus], () => fetchTasks())
 
   const createTask = async (title: string, status: TaskStatus) => {
     try {
@@ -147,7 +151,6 @@ export const useKanban = (projectId: string) => {
 
     const originalStatus = task.status
     const originalPosition = task.position
-    // Optimistic: update status immediately
     task.status = toStatus
 
     try {
@@ -155,7 +158,6 @@ export const useKanban = (projectId: string) => {
         method: 'PATCH',
         body: { status: toStatus, newPosition }
       })
-      // Silently refresh to get accurate positions (no loader)
       await refreshTasksSilent()
     } catch {
       task.status = originalStatus
@@ -164,7 +166,6 @@ export const useKanban = (projectId: string) => {
     }
   }
 
-  // Drag and drop handlers
   const onDragStart = (taskId: string, fromStatus: TaskStatus) => {
     draggingTaskId.value = taskId
     draggingFromStatus.value = fromStatus
@@ -192,8 +193,6 @@ export const useKanban = (projectId: string) => {
     }
 
     let newPosition: number | undefined
-
-    // If hovering over a specific task, insert before it
     if (dragOverTaskId.value && dragOverTaskId.value !== draggingTaskId.value) {
       const targetTask = allTasks.value.find((t) => t._id === dragOverTaskId.value)
       if (targetTask && targetTask.status === toStatus) {
@@ -201,7 +200,6 @@ export const useKanban = (projectId: string) => {
       }
     }
 
-    // Same column, no target task hovered → no-op
     if (draggingFromStatus.value === toStatus && newPosition === undefined) {
       onDragEnd()
       return
