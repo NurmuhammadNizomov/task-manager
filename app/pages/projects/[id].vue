@@ -272,6 +272,7 @@ onMounted(() => {
                   v-model="newTaskTitle"
                   :placeholder="t('tasks.newTaskPlaceholder')"
                   :rows="2"
+                  class="w-full"
                   autofocus
                   @keydown.enter.prevent="handleCreateTask"
                   @keydown.escape="columnForNewTask = null"
