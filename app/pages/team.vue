@@ -173,27 +173,32 @@ onMounted(fetchTeam)
     </div>
 
     <!-- Invite Member Modal -->
-    <UModal v-model:open="isAddOpen" :title="t('teamPage.inviteTitle')">
+    <UModal v-model:open="isAddOpen" :title="t('teamPage.inviteTitle')" size="lg">
       <template #body>
-        <div class="space-y-4">
-          <UFormField :label="t('teamPage.form.email')">
+        <div class="flex flex-col gap-4">
+          <UFormField :label="t('teamPage.form.email')" required>
             <UInput
               v-model="addEmail"
               type="email"
               :placeholder="t('teamPage.form.emailPlaceholder')"
+              class="w-full"
               autofocus
             />
           </UFormField>
-          <UFormField :label="t('teamPage.form.project')">
+          <UFormField :label="t('teamPage.form.project')" required>
             <USelect
               v-model="addProjectId"
               :items="ownedProjects.map(p => ({ label: p.name, value: p._id }))"
               value-key="value"
               label-key="label"
               :placeholder="t('teamPage.form.selectProject')"
+              class="w-full"
             />
           </UFormField>
-          <p class="text-xs text-gray-500">{{ t('teamPage.inviteHint') }}</p>
+          <div class="flex items-start gap-2 rounded-lg bg-gray-50 dark:bg-gray-800/60 px-4 py-3">
+            <Icon name="lucide:info" class="size-4 text-gray-400 shrink-0 mt-0.5" />
+            <p class="text-xs text-gray-500">{{ t('teamPage.inviteHint') }}</p>
+          </div>
         </div>
       </template>
 

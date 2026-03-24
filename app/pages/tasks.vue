@@ -387,24 +387,26 @@ const isOverdue = (task: Task) =>
     </p>
 
     <!-- Create Task Modal -->
-    <UModal v-model:open="isCreateOpen" :title="t('taskPage.createTitle')">
+    <UModal v-model:open="isCreateOpen" :title="t('taskPage.createTitle')" size="lg">
       <template #body>
-        <div class="space-y-4">
-          <UFormField :label="t('taskPage.form.title')">
+        <div class="flex flex-col gap-4">
+          <UFormField :label="t('taskPage.form.title')" required>
             <UInput
               v-model="newTask.title"
               :placeholder="t('tasks.newTaskPlaceholder')"
+              class="w-full"
               autofocus
             />
           </UFormField>
 
-          <UFormField :label="t('taskPage.form.project')">
+          <UFormField :label="t('taskPage.form.project')" required>
             <USelect
               v-model="newTask.projectId"
               :items="projects.map(p => ({ label: p.name, value: p._id }))"
               value-key="value"
               label-key="label"
               :placeholder="t('taskPage.form.selectProject')"
+              class="w-full"
             />
           </UFormField>
 
@@ -415,6 +417,7 @@ const isOverdue = (task: Task) =>
                 :items="taskStatusOptions"
                 value-key="value"
                 label-key="label"
+                class="w-full"
               />
             </UFormField>
             <UFormField :label="t('taskPage.form.priority')">
@@ -423,6 +426,7 @@ const isOverdue = (task: Task) =>
                 :items="taskPriorityOptions"
                 value-key="value"
                 label-key="label"
+                class="w-full"
               />
             </UFormField>
           </div>
