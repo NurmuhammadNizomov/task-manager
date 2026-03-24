@@ -91,6 +91,16 @@ export const useKanban = (projectId: string) => {
     }
   }
 
+  // Refresh without showing the full-board loader (used after drag-drop)
+  const refreshTasksSilent = async () => {
+    try {
+      const response = await $fetch<ApiSuccessResponse<Task[]>>(`/api/projects/${projectId}/tasks`)
+      allTasks.value = response.data
+    } catch {
+      // silent — don't show error toast for background refresh
+    }
+  }
+
   const createTask = async (title: string, status: TaskStatus) => {
     try {
       const maxPosition = Math.max(0, ...allTasks.value.filter((t) => t.status === status).map((t) => t.position))
@@ -145,8 +155,8 @@ export const useKanban = (projectId: string) => {
         method: 'PATCH',
         body: { status: toStatus, newPosition }
       })
-      // Refresh to get accurate positions after reorder
-      await fetchTasks()
+      // Silently refresh to get accurate positions (no loader)
+      await refreshTasksSilent()
     } catch {
       task.status = originalStatus
       task.position = originalPosition
