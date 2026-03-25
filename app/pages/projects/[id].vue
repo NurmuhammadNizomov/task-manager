@@ -186,7 +186,7 @@ onMounted(() => {
             <div
               v-for="status in (['planned', 'inProgress', 'inReview', 'done'] as TaskStatus[])"
               :key="status"
-              class="flex flex-col rounded-xl bg-gray-100/80 dark:bg-gray-800/60 p-3 min-w-[240px] transition-all duration-150"
+              class="flex flex-col rounded-xl bg-gray-100 dark:bg-gray-800/60 p-3 min-w-[240px] transition-all duration-150"
               :class="dragOverStatus === status ? 'ring-2 ring-primary-400 bg-primary-50/60 dark:bg-primary-900/20' : ''"
               @dragover.prevent="onDragOver(status)"
               @dragleave="dragOverStatus === status ? (dragOverStatus = null) : null"
@@ -209,11 +209,11 @@ onMounted(() => {
                 <div
                   v-for="task in columns[status]"
                   :key="task._id"
-                  class="group cursor-grab rounded-lg bg-white p-3 shadow-sm ring-1 transition-all duration-150 hover:shadow-md active:cursor-grabbing dark:bg-gray-900"
+                  class="group cursor-grab rounded-lg bg-white dark:bg-gray-800 p-3 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 transition-all duration-150 hover:shadow-md active:cursor-grabbing"
                   :class="[
                     isOverdue(task)
-                      ? 'ring-red-300 dark:ring-red-800 hover:ring-red-400'
-                      : 'ring-gray-200/80 dark:ring-gray-700 hover:ring-primary-300',
+                      ? '!ring-red-300 dark:!ring-red-700 hover:!ring-red-400'
+                      : 'hover:ring-primary-300 dark:hover:ring-primary-600',
                     dragOverTaskId === task._id && draggingTaskId !== task._id
                       ? 'border-t-2 border-primary-400'
                       : ''

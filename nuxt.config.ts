@@ -54,7 +54,7 @@ export default defineNuxtConfig({
   },
   vite: {
     optimizeDeps: {
-      include: ['dayjs', 'dayjs/plugin/relativeTime', 'zod', '@vue/devtools-core', '@vue/devtools-kit', 'ua-parser-js']
+      include: ['dayjs', 'dayjs/plugin/relativeTime', 'zod', '@vue/devtools-core', '@vue/devtools-kit']
     }
   },
   runtimeConfig: {

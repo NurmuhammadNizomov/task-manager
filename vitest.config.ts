@@ -26,7 +26,8 @@ export default defineConfig({
           setupFiles: ['./tests/setup/integration-setup.ts'],
           testTimeout: 30000,
           hookTimeout: 30000,
-          singleFork: true
+          singleFork: true,
+          fileParallelism: false
         }
       }
     ],

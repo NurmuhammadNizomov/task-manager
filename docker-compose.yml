@@ -8,7 +8,29 @@ services:
     environment:
       NODE_ENV: production
       HOST: 0.0.0.0
+      # MongoDB — container internal network
       NUXT_MONGODB_URI: mongodb://mongo:27017/task-manager
+      NUXT_MONGODB_DB_NAME: task-manager
+      # JWT
+      NUXT_JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      NUXT_JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      NUXT_JWT_ACCESS_EXPIRES_IN: ${JWT_ACCESS_EXPIRES_IN:-15m}
+      NUXT_JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN:-7d}
+      # Email
+      NUXT_SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
+      NUXT_SMTP_PORT: ${SMTP_PORT:-587}
+      NUXT_SMTP_USER: ${SMTP_USER}
+      NUXT_SMTP_PASS: ${SMTP_PASS}
+      NUXT_SMTP_FROM: ${SMTP_FROM}
+      # Cloudinary
+      NUXT_CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      NUXT_CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      NUXT_CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+      # Google OAuth
+      NUXT_GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      NUXT_PUBLIC_GOOGLE_CLIENT_ID: ${NUXT_PUBLIC_GOOGLE_CLIENT_ID}
+      NUXT_PUBLIC_GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-http://localhost:3000/google-redirect}
+      NUXT_PUBLIC_APP_BASE_URL: ${APP_BASE_URL:-http://localhost:3000}
     depends_on:
       mongo:
         condition: service_healthy
