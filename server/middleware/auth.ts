@@ -19,6 +19,9 @@ export default defineEventHandler(async (event) => {
   // Only apply to API routes
   if (!path.startsWith('/api/')) return
 
+  // Skip Nuxt internal API routes (icons, etc.)
+  if (path.startsWith('/api/_nuxt_icon/') || path.startsWith('/api/_')) return
+
   // Skip OPTIONS (CORS preflight)
   if (getMethod(event) === 'OPTIONS') return
 
