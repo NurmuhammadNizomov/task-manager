@@ -94,6 +94,8 @@
     "error": "Error",
     "loading": "Loading...",
     "create": "Create",
+    "save": "Save",
+    "delete": "Delete",
     "add": "Add",
     "cancel": "Cancel",
     "yes": "Yes",
@@ -121,8 +123,8 @@
     "allRightsReserved": "All rights reserved."
   },
   "home": {
-    "title": "Clean auth and dashboard starter for Task Manager",
-    "description": "Login, register, main and dashboard pages are split into separate layouts. UI flow is ready, next step is connecting API/auth logic fully.",
+    "title": "Task Manager",
+    "description": "Organize and track your tasks with ease.",
     "actions": {
       "login": "Login",
       "register": "Register",
@@ -208,11 +210,11 @@
     },
     "stats": {
       "openTasks": "Open tasks",
-      "openTasksHint": "7 high priority",
+      "highPriority": "high priority",
       "completedWeek": "Completed this week",
-      "completedWeekHint": "+18% vs last week",
+      "lastSevenDays": "last 7 days",
       "teamMembers": "Team members",
-      "teamMembersHint": "2 online now"
+      "acrossProjects": "across all projects"
     },
     "todayTasks": "Today's tasks",
     "tasks": {
@@ -252,15 +254,39 @@
     "fetchOneError": "Failed to fetch project.",
     "createSuccess": "Project created successfully.",
     "createError": "Failed to create project.",
+    "updateSuccess": "Project updated successfully.",
+    "updateError": "Failed to update project.",
+    "deleteSuccess": "Project deleted successfully.",
+    "deleteError": "Failed to delete project.",
+    "deleteConfirm": "Are you sure you want to delete this project? All tasks will be deleted too.",
     "actions": {
       "newProject": "New Project",
       "createFirstProject": "Create your first project"
+    },
+    "searchPlaceholder": "Search projects...",
+    "noResults": "No projects match your search.",
+    "loadMore": "Load more",
+    "filter": {
+      "all": "All",
+      "owned": "Mine",
+      "member": "Member"
+    },
+    "status": {
+      "active": "Active",
+      "archived": "Archived",
+      "completed": "Completed"
     },
     "noProjects": {
       "title": "No projects yet",
       "description": "Get started by creating your first project."
     },
     "modals": {
+      "edit": {
+        "title": "Edit project"
+      },
+      "delete": {
+        "title": "Delete project"
+      },
       "create": {
         "title": "Create a new project",
         "nameLabel": "Project name",
@@ -402,6 +428,13 @@
       "noAttachments": "No attachments yet",
       "saveChanges": "Save changes"
     }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all read",
+    "clear": "Clear",
+    "empty": "No notifications yet",
+    "loadMore": "Load more"
   },
   "errorPage": {
     "title": "Something went wrong",

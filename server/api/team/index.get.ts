@@ -18,7 +18,7 @@ export default defineApiHandler(async (event) => {
     {
       $match: {
         $or: [{ owner: userId }, { members: userId }],
-        isArchived: false
+        status: 'active'
       }
     },
     {
@@ -28,7 +28,13 @@ export default defineApiHandler(async (event) => {
             [{ userId: '$owner', isOwner: true }],
             {
               $map: {
-                input: '$members',
+                input: {
+                  $filter: {
+                    input: '$members',
+                    as: 'm',
+                    cond: { $ne: ['$$m', '$owner'] }
+                  }
+                },
                 as: 'm',
                 in: { userId: '$$m', isOwner: false }
               }
@@ -67,7 +73,7 @@ export default defineApiHandler(async (event) => {
 
   const ownedProjectIds = await ProjectModel.distinct('_id', {
     owner: userId,
-    isArchived: false
+    status: 'active'
   })
 
   return apiSuccess({ members, ownedProjectIds })

@@ -31,7 +31,7 @@ export default defineApiHandler(async (event) => {
             {
               $match: {
                 $or: [{ owner: userId }, { members: userId }],
-                isArchived: false
+                status: 'active'
               }
             },
             { $project: { _id: 1 } }
@@ -84,7 +84,7 @@ export default defineApiHandler(async (event) => {
       {
         $match: {
           $or: [{ owner: userId }, { members: userId }],
-          isArchived: false
+          status: 'active'
         }
       },
       {

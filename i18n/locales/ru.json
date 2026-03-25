@@ -94,6 +94,8 @@
     "error": "Ошибка",
     "loading": "Загрузка...",
     "create": "Создать",
+    "save": "Сохранить",
+    "delete": "Удалить",
     "add": "Добавить",
     "cancel": "Отмена",
     "yes": "Да",
@@ -208,11 +210,11 @@
     },
     "stats": {
       "openTasks": "Открытые задачи",
-      "openTasksHint": "7 высокого приоритета",
+      "highPriority": "высокого приоритета",
       "completedWeek": "Выполнено за неделю",
-      "completedWeekHint": "+18% к прошлой неделе",
+      "lastSevenDays": "за последние 7 дней",
       "teamMembers": "Участники команды",
-      "teamMembersHint": "2 сейчас онлайн"
+      "acrossProjects": "по всем проектам"
     },
     "todayTasks": "Задачи на сегодня",
     "tasks": {
@@ -269,12 +271,19 @@
     }
   },
   "projects": {
+    "title": "Проекты",
+    "subtitle": "Управляйте своими проектами и задачами.",
     "owner": "Владелец",
     "membersLabel": "участников",
     "fetchError": "Не удалось загрузить проекты.",
     "fetchOneError": "Не удалось загрузить проект.",
     "createSuccess": "Проект успешно создан.",
     "createError": "Не удалось создать проект.",
+    "updateSuccess": "Проект успешно обновлён.",
+    "updateError": "Не удалось обновить проект.",
+    "deleteSuccess": "Проект успешно удалён.",
+    "deleteError": "Не удалось удалить проект.",
+    "deleteConfirm": "Вы уверены? Все задачи проекта также будут удалены.",
     "backToProjects": "Назад к проектам",
     "tabs": {
       "board": "Доска",
@@ -287,7 +296,34 @@
       "invite": "Пригласить",
       "noMembers": "Участников пока нет"
     },
+    "actions": {
+      "newProject": "Новый проект",
+      "createFirstProject": "Создать первый проект"
+    },
+    "searchPlaceholder": "Поиск проектов...",
+    "noResults": "Проекты не найдены.",
+    "loadMore": "Загрузить ещё",
+    "filter": {
+      "all": "Все",
+      "owned": "Мои",
+      "member": "Участник"
+    },
+    "status": {
+      "active": "Активные",
+      "archived": "Архив",
+      "completed": "Завершённые"
+    },
+    "noProjects": {
+      "title": "Проектов пока нет",
+      "description": "Начните, создав свой первый проект."
+    },
     "modals": {
+      "edit": {
+        "title": "Редактировать проект"
+      },
+      "delete": {
+        "title": "Удалить проект"
+      },
       "create": {
         "title": "Создать новый проект",
         "nameLabel": "Название проекта",
@@ -392,6 +428,13 @@
       "project": "Добавить в проект",
       "selectProject": "Выберите проект..."
     }
+  },
+  "notifications": {
+    "title": "Уведомления",
+    "markAllRead": "Отметить все прочитанными",
+    "clear": "Очистить",
+    "empty": "Нет уведомлений",
+    "loadMore": "Загрузить ещё"
   },
   "errorPage": {
     "title": "Что-то пошло не так",

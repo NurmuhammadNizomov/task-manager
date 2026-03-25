@@ -20,6 +20,16 @@ nuxtApp.hook('page:finish', () => {
 
 const { y } = useWindowScroll()
 const route = useRoute()
+
+const { user } = useAuth()
+const { setLocale } = useI18n()
+const colorMode = useColorMode()
+
+watch(user, (u) => {
+  if (!u) return
+  if (u.language) setLocale(u.language)
+  if (u.theme) colorMode.preference = u.theme
+}, { immediate: true })
 </script>
 
 <template>

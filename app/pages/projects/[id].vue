@@ -186,7 +186,7 @@ onMounted(() => {
             <div
               v-for="status in (['planned', 'inProgress', 'inReview', 'done'] as TaskStatus[])"
               :key="status"
-              class="flex flex-col rounded-xl bg-gray-100 dark:bg-gray-800/60 p-3 min-w-[240px] transition-all duration-150"
+              class="flex flex-col rounded-xl bg-gray-200/60 dark:bg-gray-800/60 p-3 min-w-[240px] transition-all duration-150"
               :class="dragOverStatus === status ? 'ring-2 ring-primary-400 bg-primary-50/60 dark:bg-primary-900/20' : ''"
               @dragover.prevent="onDragOver(status)"
               @dragleave="dragOverStatus === status ? (dragOverStatus = null) : null"

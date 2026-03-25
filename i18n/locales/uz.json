@@ -97,6 +97,8 @@
     "error": "Xatolik",
     "loading": "Yuklanmoqda...",
     "create": "Yaratish",
+    "save": "Saqlash",
+    "delete": "O'chirish",
     "add": "Qo'shish",
     "cancel": "Bekor qilish",
     "yes": "Ha",
@@ -211,11 +213,11 @@
     },
     "stats": {
       "openTasks": "Ochiq vazifalar",
-      "openTasksHint": "7 ta yuqori prioritet",
+      "highPriority": "yuqori prioritetli",
       "completedWeek": "Haftada bajarilgan",
-      "completedWeekHint": "o'tgan haftaga nisbatan +18%",
+      "lastSevenDays": "so'nggi 7 kun",
       "teamMembers": "Jamoa a'zolari",
-      "teamMembersHint": "hozir 2 tasi online"
+      "acrossProjects": "barcha loyihalarda"
     },
     "todayTasks": "Bugungi vazifalar",
     "tasks": {
@@ -272,12 +274,19 @@
     }
   },
   "projects": {
+    "title": "Loyihalar",
+    "subtitle": "Loyiha va vazifalaringizni boshqaring.",
     "owner": "Egasi",
     "membersLabel": "a'zo",
     "fetchError": "Loyihalarni yuklashda xatolik.",
     "fetchOneError": "Loyihani yuklashda xatolik.",
     "createSuccess": "Loyiha muvaffaqiyatli yaratildi.",
     "createError": "Loyihani yaratishda xatolik.",
+    "updateSuccess": "Loyiha muvaffaqiyatli yangilandi.",
+    "updateError": "Loyihani yangilashda xatolik.",
+    "deleteSuccess": "Loyiha muvaffaqiyatli o'chirildi.",
+    "deleteError": "Loyihani o'chirishda xatolik.",
+    "deleteConfirm": "Ishonchingiz komilmi? Loyihaning barcha vazifalari ham o'chiriladi.",
     "backToProjects": "Loyihalarga qaytish",
     "tabs": {
       "board": "Kengash",
@@ -290,7 +299,34 @@
       "invite": "Taklif qilish",
       "noMembers": "Hali a'zolar yo'q"
     },
+    "actions": {
+      "newProject": "Yangi loyiha",
+      "createFirstProject": "Birinchi loyihani yarating"
+    },
+    "searchPlaceholder": "Loyihalarni qidirish...",
+    "noResults": "Qidiruvga mos loyihalar topilmadi.",
+    "loadMore": "Ko'proq yuklash",
+    "filter": {
+      "all": "Hammasi",
+      "owned": "Mening",
+      "member": "A'zoman"
+    },
+    "status": {
+      "active": "Faol",
+      "archived": "Arxiv",
+      "completed": "Yakunlangan"
+    },
+    "noProjects": {
+      "title": "Hali loyihalar yo'q",
+      "description": "Birinchi loyihangizni yaratib boshlang."
+    },
     "modals": {
+      "edit": {
+        "title": "Loyihani tahrirlash"
+      },
+      "delete": {
+        "title": "Loyihani o'chirish"
+      },
       "create": {
         "title": "Yangi loyiha yaratish",
         "nameLabel": "Loyiha nomi",
@@ -395,6 +431,13 @@
       "project": "Loyihaga qo'shish",
       "selectProject": "Loyihani tanlang..."
     }
+  },
+  "notifications": {
+    "title": "Bildirishnomalar",
+    "markAllRead": "Barchasini o'qilgan deb belgilash",
+    "clear": "Tozalash",
+    "empty": "Hali bildirishnomalar yo'q",
+    "loadMore": "Ko'proq yuklash"
   },
   "errorPage": {
     "title": "Xatolik yuz berdi",

@@ -6,6 +6,8 @@ import { useNotifications } from '~/composables/useNotifications'
 
 dayjs.extend(relativeTime)
 
+const { t } = useI18n()
+
 const {
   notifications,
   unreadCount,
@@ -65,7 +67,7 @@ const handleClick = async (notification: Notification) => {
         <!-- Header -->
         <div class="flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-gray-700">
           <div class="flex items-center gap-2">
-            <span class="text-sm font-semibold text-gray-900 dark:text-white">Notifications</span>
+            <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('notifications.title') }}</span>
             <UBadge v-if="unreadCount > 0" color="error" variant="solid" size="xs">
               {{ unreadCount }}
             </UBadge>
@@ -78,7 +80,7 @@ const handleClick = async (notification: Notification) => {
               size="xs"
               @click="markAllAsRead"
             >
-              Mark all read
+              {{ t('notifications.markAllRead') }}
             </UButton>
             <UButton
               v-if="notifications.length > 0"
@@ -87,7 +89,7 @@ const handleClick = async (notification: Notification) => {
               size="xs"
               @click="clearAll"
             >
-              Clear
+              {{ t('notifications.clear') }}
             </UButton>
           </div>
         </div>
@@ -100,7 +102,7 @@ const handleClick = async (notification: Notification) => {
 
           <div v-else-if="notifications.length === 0" class="flex flex-col items-center justify-center gap-2 py-10 text-center">
             <Icon name="lucide:bell-off" class="size-8 text-gray-300" />
-            <p class="text-sm text-gray-400">No notifications yet</p>
+            <p class="text-sm text-gray-400">{{ t('notifications.empty') }}</p>
           </div>
 
           <button
@@ -129,7 +131,7 @@ const handleClick = async (notification: Notification) => {
         <!-- Footer -->
         <div v-if="notifications.length > 0 && hasMore" class="border-t border-gray-200 p-2 dark:border-gray-700">
           <UButton variant="ghost" color="neutral" size="xs" block :loading="isLoading" @click.stop="loadMore">
-            Load more
+            {{ t('notifications.loadMore') }}
           </UButton>
         </div>
       </div>

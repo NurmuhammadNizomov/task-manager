@@ -1,11 +1,14 @@
 import mongoose, { Schema, type Document, type Model, type Types } from 'mongoose'
 
+export type ProjectStatus = 'active' | 'archived' | 'completed'
+
 export interface IProject extends Document {
   name: string
   description?: string
   owner: Types.ObjectId
   members: Types.ObjectId[]
-  isArchived: boolean
+  status: ProjectStatus
+  sortOrder: number
 }
 
 const projectSchema = new Schema<IProject>(
@@ -33,9 +36,15 @@ const projectSchema = new Schema<IProject>(
         ref: 'User'
       }
     ],
-    isArchived: {
-      type: Boolean,
-      default: false
+    status: {
+      type: String,
+      enum: ['active', 'archived', 'completed'],
+      default: 'active',
+      index: true
+    },
+    sortOrder: {
+      type: Number,
+      default: 0
     }
   },
   {
@@ -44,8 +53,8 @@ const projectSchema = new Schema<IProject>(
 )
 
 // Find projects for a specific user (owner or member)
-projectSchema.index({ owner: 1, isArchived: 1 })
-projectSchema.index({ members: 1, isArchived: 1 })
+projectSchema.index({ owner: 1, status: 1 })
+projectSchema.index({ members: 1, status: 1 })
 
 export const ProjectModel: Model<IProject> =
   (mongoose.models.Project as Model<IProject>) ||

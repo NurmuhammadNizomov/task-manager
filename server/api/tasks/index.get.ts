@@ -11,7 +11,7 @@ export default defineApiHandler(async (event) => {
   // Build project lookup match — restricts to user-accessible, non-archived projects
   const projectLookupMatch: Record<string, unknown> = {
     $or: [{ owner: userId }, { members: userId }],
-    isArchived: false
+    status: 'active'
   }
   if (query.projectId && typeof query.projectId === 'string') {
     projectLookupMatch._id = new mongoose.Types.ObjectId(query.projectId)
@@ -55,7 +55,7 @@ export default defineApiHandler(async (event) => {
     ]),
 
     ProjectModel.find(
-      { $or: [{ owner: userId }, { members: userId }], isArchived: false },
+      { $or: [{ owner: userId }, { members: userId }], status: 'active' },
       { name: 1 }
     ).lean()
   ])

@@ -12,12 +12,14 @@ export default defineApiHandler(async (event) => {
   const auth = event.context.auth
   const body = await readValidatedBody(event, projectCreateSchema)
 
-  const project = await ProjectModel.create({
+  const created = await ProjectModel.create({
     name: body.name,
     description: body.description,
     owner: auth.userId,
-    members: [auth.userId] // The owner is also a member
+    members: [auth.userId]
   })
+
+  const project = await ProjectModel.findById(created._id).populate('owner', 'fullName email')
 
   return apiSuccess(project)
 })

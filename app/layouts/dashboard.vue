@@ -59,15 +59,22 @@ watch(() => colorMode.preference, (value, oldValue) => {
   void savePreference({ theme: value as 'system' | 'light' | 'dark' })
 })
 
+const { user } = useAuth()
+watch(user, (u) => {
+  if (!u) return
+  if (u.language) void setLocale(u.language)
+  if (u.theme) colorMode.preference = u.theme
+}, { immediate: true })
+
 const route = useRoute()
 watch(() => route.path, () => { isMobileSidebarOpen.value = false })
 
-const navLinks = [
+const navLinks = computed(() => [
   { to: '/dashboard', icon: 'lucide:home', label: t('dashboard.overview') },
   { to: '/tasks', icon: 'lucide:check-square', label: t('dashboard.nav.tasks') },
   { to: '/team', icon: 'lucide:users', label: t('dashboard.nav.team') },
   { to: '/profile', icon: 'lucide:user', label: t('dashboard.nav.profile') }
-]
+])
 
 const isActive = (path: string) => {
   if (path === '/dashboard') return route.path === '/dashboard'

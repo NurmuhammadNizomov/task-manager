@@ -30,6 +30,7 @@ useSeoMeta({
   ogTitle: () => t('auth.register'),
 })
 
+const colorMode = useColorMode()
 const { register } = useAuthApi()
 const toast = useToast()
 const config = useRuntimeConfig()
@@ -65,14 +66,10 @@ const normalizeLanguage = (value: string | null | undefined): AppLanguage => {
 }
 
 const handleAuthError = (error: unknown, title: string) => {
-  let errorMessage = t('common.tryAgain')
-  if (error && typeof error === 'object' && error !== null) {
-    const errorObj = error as Record<string, unknown>
-    if (errorObj.data && typeof errorObj.data === 'object') {
-      const dataObj = errorObj.data as Record<string, unknown>
-      errorMessage = (dataObj.error?.message || dataObj.statusMessage || dataObj.message) as string || errorMessage
-    }
-  }
+  const data = (error as { data?: Record<string, unknown> })?.data
+  const errorMessage = (data?.error as { message?: string })?.message
+    || data?.statusMessage as string
+    || t('common.tryAgain')
   toast.add({ title, description: errorMessage, color: 'error', icon: 'lucide:circle-alert' })
 }
 
@@ -80,7 +77,8 @@ const submit = async (event: FormSubmitEvent<Schema>) => {
   isSubmitting.value = true
   try {
     const selectedLanguage = normalizeLanguage(locale.value as string)
-    await register({ ...event.data, language: selectedLanguage })
+    const selectedTheme = (colorMode.preference || 'light') as import('~/types/auth').AppTheme
+    await register({ ...event.data, language: selectedLanguage, theme: selectedTheme })
     toast.add({
       title: t('common.success'),
       description: t('auth.registerSuccess'),

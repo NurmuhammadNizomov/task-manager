@@ -25,7 +25,7 @@ export class NotificationService {
     return await NotificationModel.findOneAndUpdate(
       { _id: notificationId, recipient: recipientId },
       { isRead: true },
-      { new: true }
+      { returnDocument: 'after' }
     )
   }
 
