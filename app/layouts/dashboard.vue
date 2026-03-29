@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { AppLanguage } from '~/composables/useUserSettings'
 import NotificationDropdown from '~/components/layout/NotificationDropdown.vue'
-import OnboardingTour from '~/components/ui/OnboardingTour.vue'
 
 const colorMode = useColorMode()
 const { logout } = useAuth()
@@ -234,8 +233,5 @@ const isActive = (path: string) => {
       </main>
     </div>
 
-    <ClientOnly>
-      <OnboardingTour />
-    </ClientOnly>
   </div>
 </template>

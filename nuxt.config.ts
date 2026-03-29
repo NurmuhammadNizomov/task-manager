@@ -50,7 +50,8 @@ export default defineNuxtConfig({
   },
   nitro: {
     compressPublicAssets: true,
-    minify: true
+    minify: true,
+    preset: 'netlify'
   },
   vite: {
     optimizeDeps: {
