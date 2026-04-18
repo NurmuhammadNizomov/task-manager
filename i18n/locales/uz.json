@@ -126,8 +126,8 @@
     "allRightsReserved": "Barcha huquqlar himoyalangan."
   },
   "home": {
-    "title": "Task Manager uchun toza auth va dashboard bazasi",
-    "description": "Login, register, main va dashboard sahifalari alohida layoutlarda ishlaydi. UI flow tayyor, keyingi qadamda API/auth logikasini to'liq ulaymiz.",
+    "title": "Task Manager",
+    "description": "Vazifalaringizni oson tashkil qiling va kuzatib boring.",
     "actions": {
       "login": "Kirish",
       "register": "Ro'yxatdan o'tish",
@@ -146,7 +146,7 @@
     },
     "trustStats": {
       "users": "Faol foydalanuvchilar",
-      "tasks": "Bajarilgan vazifalar",
+      "tasks": "Boshqarilayotgan vazifalar",
       "uptime": "Ishlash vaqti"
     },
     "howItWorks": {
@@ -155,49 +155,49 @@
       "subheading": "Bir necha daqiqada boshlang va ishingizni to'liq nazorat qiling.",
       "step1": {
         "title": "Akkaunt yarating",
-        "desc": "Email yoki Google orqali bir necha soniyada ro'yxatdan o'ting."
+        "desc": "Email orqali bir necha soniyada ro'yxatdan o'ting yoki Google orqali davom eting."
       },
       "step2": {
         "title": "Vazifalarni tartibga soling",
-        "desc": "Loyihalar yarating, muhimlik darajasi va muddatlarini belgilang."
+        "desc": "Loyihalar yarating, ustuvorliklarni belgilang va jamoa uchun muddatlar o'rnating."
       },
       "step3": {
         "title": "Jarayonni kuzating",
-        "desc": "Bajarilish darajasini nazorat qiling va jamoangizni muvofiqlashtiring."
+        "desc": "Bajarilish holatini kuzating va butun jamoangizni bir yo'nalishda ushlab turing."
       }
     },
     "features": {
       "label": "Xususiyatlar",
-      "heading": "Zamonaviy Web uchun yaratilgan",
-      "subheading": "Keyingi katta g'oyangiz uchun tayyor, to'liq responsiv, dinamik va ajoyib dastur strukturasi.",
+      "heading": "Zamonaviy web uchun yaratilgan",
+      "subheading": "Keyingi katta g'oyangiz uchun tayyor bo'lgan, to'liq moslashuvchan, dinamik va chiroyli ilova tuzilmasi.",
       "speed": {
         "title": "Chaqmoqdek tez",
-        "desc": "Nol yuklanish vaqti va tezkor o'zaro ta'sirni ta'minlaydigan optimallashtirilgan ishlash."
+        "desc": "Yuklanish vaqtini kamaytiradigan va juda tezkor ishlashni ta'minlaydigan optimallashtirilgan unumdorlik."
       },
       "secure": {
         "title": "Sukut bo'yicha xavfsiz",
-        "desc": "Maxfiy ma'lumotlaringizni himoya qilish va ilovangizni xavfsiz saqlash uchun ilg'or xavfsizlik protokollari."
+        "desc": "Maxfiy ma'lumotlaringizni himoya qilish va ilovangiz xavfsizligini saqlash uchun tayyor ilg'or xavfsizlik protokollari."
       },
       "design": {
         "title": "Chiroyli UI",
-        "desc": "Zamonaviy dizayn estetikasi va foydalanuvchi tajribasiga kuchli e'tibor qaratilgan holda yaratilgan."
+        "desc": "Detallarga e'tibor va zamonaviy dizayn estetikasi bilan yaratilgan foydalanuvchi interfeysi."
       },
       "team": {
         "title": "Jamoa hamkorligi",
-        "desc": "Jamoangizni taklif qiling va real vaqtda birgalikda ishlang."
+        "desc": "Jamoangizni taklif qiling va vazifa hamda loyihalarda real vaqtda birga ishlang."
       },
       "notifications": {
         "title": "Aqlli bildirishnomalar",
-        "desc": "Muddatlarni o'tkazib yubormang — o'z vaqtida va aqlli bildirishnomalar bilan."
+        "desc": "O'z vaqtida keladigan aqlli bildirishnomalar bilan yangilanishlar va muddatlarni nazoratda tuting."
       },
       "analytics": {
         "title": "Analitika va hisobotlar",
-        "desc": "Grafiklar va hisobotlar orqali mahsuldorlik tendentsiyalarini ko'ring."
+        "desc": "Vizual grafiklar va hisobotlar orqali unumdorlik tendensiyalarini kuzating."
       }
     },
     "cta": {
       "heading": "Boshlashga tayyormisiz?",
-      "subheading": "Minglab jamoalar bilan qo'shiling va ishni aqlli boshqaring.",
+      "subheading": "Task Manager bilan ishini yanada aqlli boshqarayotgan minglab jamoalarga qo'shiling.",
       "button": "Bepul boshlash"
     }
   },
